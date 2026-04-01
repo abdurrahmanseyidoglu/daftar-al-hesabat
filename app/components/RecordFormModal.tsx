@@ -8,12 +8,10 @@ import {
   Radio,
   RadioGroup,
   Select,
-  SelectChangeEvent,
   TextField,
   Tooltip,
   Typography,
 } from "@mui/material";
-import Amount from "../types/amount";
 import NumberField from "./NumberField";
 import { MoneyDirection } from "../types/enums";
 import { useState } from "react";
@@ -21,26 +19,20 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import InputLabel from "@mui/material/InputLabel";
-import React from "react";
 import { enGB } from "date-fns/locale";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-const schema = z.object({
-  name: z.string().min(1, "Name is required"),
-  amount: z.number().positive("Amount must be bigger than 0"),
-  details: z.string().optional(),
-  direction: z.enum(MoneyDirection),
-  date: z.date().refine((d) => !!d, "Date is required"),
-  currency: z.string().min(1, "Currency is required"),
-});
+import { Record, schema } from "../schemas/record.schema";
+import { useRecordStore } from "../stores/recordStore";
+
 type FormValues = z.infer<typeof schema>;
 
 interface AmountFormModalProp {
   open: boolean;
-  amount: Amount;
+  record: Record | null;
   onDismiss: () => void;
 }
 
@@ -49,7 +41,8 @@ const modalStyle = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "500px",
+  width: "70%",
+  height: "90%",
   bgcolor: "background.paper",
   border: "1px solid text.primary",
   boxShadow: 24,
@@ -58,32 +51,37 @@ const modalStyle = {
   px: 8,
 };
 
-const AmountFormModal = ({ open, amount, onDismiss }: AmountFormModalProp) => {
-  const [moneyDirection, setMoneyDirection] = useState<MoneyDirection>(
-    MoneyDirection.ON,
-  );
-  // const [date, setDate] = React.useState<Dayjs | null>(dayjs("2022-04-17"));
-  const [currency, setCurrency] = React.useState("usd");
-
-  const handleCurrencyChange = (event: SelectChangeEvent) => {
-    setCurrency(event.target.value);
-  };
-
+const AmountFormModal = ({ open, record, onDismiss }: AmountFormModalProp) => {
   const { control, handleSubmit } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      direction: MoneyDirection.ON,
-      currency: "usd",
-      amount: 0,
-      date: new Date(),
-      name: "",
-      details: "",
+      direction: record?.direction ?? MoneyDirection.ON,
+      currency: record?.currency ?? "usd",
+      amount: record?.amount ?? 0,
+      date: record?.date ?? new Date(),
+      name: record?.name ?? "",
+      details: record?.details ?? "",
     },
   });
-  const saveAction = (data: FormValues) => {
-    console.log(data);
-  };
+  const addRecord = useRecordStore((state) => state.addRecord);
   const [savingForm, setSavingForm] = useState(false);
+
+  const saveAction = (data: FormValues) => {
+    setSavingForm(true);
+    const record: Record = {
+      amount: data.amount,
+      currency: data.currency,
+      name: data.name,
+      date: data.date,
+      direction: data.direction,
+      details: data.details,
+    };
+    console.log(record);
+    addRecord(record);
+    setSavingForm(false);
+    onDismiss();
+  };
+  const records = useRecordStore((state) => state.records);
   return (
     <Modal open={open} onClose={onDismiss}>
       <Box sx={modalStyle}>
@@ -231,7 +229,12 @@ const AmountFormModal = ({ open, amount, onDismiss }: AmountFormModalProp) => {
               )}
             />
 
-            <Button type="submit" variant="contained" fullWidth>
+            <Button
+              type="submit"
+              variant="contained"
+              fullWidth
+              loading={savingForm}
+            >
               Save
             </Button>
           </Box>
