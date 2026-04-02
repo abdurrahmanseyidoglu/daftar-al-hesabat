@@ -25,14 +25,19 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import { Record, schema } from "../schemas/record.schema";
+import {
+  formSchema,
+  RecordEntry,
+} from "../schemas/record.schema";
 import { useRecordStore } from "../stores/recordStore";
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+import { NameOptionType } from "../types/nameOptionType";
 
-type FormValues = z.infer<typeof schema>;
+type FormValuesType = { name: string } & { record: RecordEntry };
 
 interface AmountFormModalProp {
   open: boolean;
-  record: Record | null;
+  record: FormValuesType | null;
   onDismiss: () => void;
 }
 
@@ -51,37 +56,58 @@ const modalStyle = {
   px: 8,
 };
 
-const AmountFormModal = ({ open, record, onDismiss }: AmountFormModalProp) => {
-  const { control, handleSubmit } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+const filter = createFilterOptions<NameOptionType>();
+const AmountFormModal = ({
+  open,
+  record: recordWithName,
+  onDismiss,
+}: AmountFormModalProp) => {
+  const [value, setValue] = useState<NameOptionType | null>(null);
+  const addRecordToNewName = useRecordStore(
+    (state) => state.addRecordToNewName,
+  );
+  const addRecordToExistingName = useRecordStore(
+    (state) => state.addRecordToExistingName,
+  );
+  const doesNameExistInRecords = useRecordStore(
+    (state) => state.doesNameExistInRecords,
+  );
+  const { control, handleSubmit } = useForm<FormValuesType>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      direction: record?.direction ?? MoneyDirection.ON,
-      currency: record?.currency ?? "usd",
-      amount: record?.amount ?? 0,
-      date: record?.date ?? new Date(),
-      name: record?.name ?? "",
-      details: record?.details ?? "",
+      name: recordWithName?.name ?? "",
+      record: {
+        direction: recordWithName?.record.direction ?? MoneyDirection.ON,
+        currency: recordWithName?.record.currency ?? "usd",
+        amount: recordWithName?.record.amount ?? 0,
+        date: recordWithName?.record.date ?? new Date(),
+        details: recordWithName?.record.details ?? "",
+      },
     },
   });
-  const addRecord = useRecordStore((state) => state.addRecord);
+
   const [savingForm, setSavingForm] = useState(false);
 
-  const saveAction = (data: FormValues) => {
+  const saveAction = (data: FormValuesType) => {
     setSavingForm(true);
-    const record: Record = {
-      amount: data.amount,
-      currency: data.currency,
-      name: data.name,
-      date: data.date,
-      direction: data.direction,
-      details: data.details,
-    };
-    console.log(record);
-    addRecord(record);
+
+    const existing = doesNameExistInRecords(data.name);
+    if (!existing) {
+      console.log("addRecordToNewName was called");
+      addRecordToNewName(data.name, { ...data.record });
+    } else {
+      console.log("addRecordToExistingName was called");
+      addRecordToExistingName(data.name, { ...data.record });
+    }
     setSavingForm(false);
     onDismiss();
   };
   const records = useRecordStore((state) => state.records);
+  const namesOptions: Array<NameOptionType> = records.map((record) => ({
+    name: record.name,
+  }));
+  console.log(namesOptions);
+
   return (
     <Modal open={open} onClose={onDismiss}>
       <Box sx={modalStyle}>
@@ -102,19 +128,81 @@ const AmountFormModal = ({ open, record, onDismiss }: AmountFormModalProp) => {
               name="name"
               control={control}
               render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  label="Name"
-                  size="small"
-                  fullWidth
-                  error={!!fieldState.error}
-                  helperText={fieldState.error?.message}
-                />
+                <Autocomplete
+                  value={value}
+                  onChange={(event, newValue) => {
+                    if (typeof newValue === "string") {
+                      setValue({ name: newValue });
+                    } else if (newValue && newValue.inputValue) {
+                      // Create a new value from the user input
+                      setValue({
+                        name: newValue.inputValue,
+                      });
+                    } else {
+                      setValue(newValue);
+                    }
+                  }}
+                  filterOptions={(options, params) => {
+                    const filtered = filter(options, params);
+
+                    const { inputValue } = params;
+                    // Suggest the creation of a new value
+                    const isExisting = options.some(
+                      (option) => inputValue === option.name,
+                    );
+                    if (inputValue !== "" && !isExisting) {
+                      filtered.push({
+                        inputValue,
+                        name: `Add "${inputValue}"`,
+                      });
+                    }
+
+                    return filtered;
+                  }}
+                  selectOnFocus
+                  clearOnBlur
+                  handleHomeEndKeys
+                  id="free-solo-with-text"
+                  options={namesOptions}
+                  getOptionLabel={(option) => {
+                    // Value selected with enter, right from the input
+                    if (typeof option === "string") {
+                      return option;
+                    }
+                    // Add "xxx" option created dynamically
+                    if (option.name) {
+                      return option.name;
+                    }
+                    // Regular option
+                    return option.name;
+                  }}
+                  renderOption={(props, option) => {
+                    const { key, ...optionProps } = props;
+                    return (
+                      <li key={key} {...optionProps}>
+                        {option.name}
+                      </li>
+                    );
+                  }}
+                  sx={{ width: 300 }}
+                  freeSolo
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      {...field}
+                      label="Name"
+                      size="small"
+                      fullWidth
+                      error={!!fieldState.error}
+                      helperText={fieldState.error?.message}
+                    />
+                  )}
+                ></Autocomplete>
               )}
             />
 
             <Controller
-              name="amount"
+              name="record.amount"
               control={control}
               render={({ field, fieldState }) => (
                 <NumberField
@@ -132,7 +220,7 @@ const AmountFormModal = ({ open, record, onDismiss }: AmountFormModalProp) => {
             />
 
             <Controller
-              name="details"
+              name="record.details"
               control={control}
               render={({ field, fieldState }) => (
                 <TextField
@@ -148,7 +236,7 @@ const AmountFormModal = ({ open, record, onDismiss }: AmountFormModalProp) => {
             />
 
             <Controller
-              name="direction"
+              name="record.direction"
               control={control}
               render={({ field }) => (
                 <RadioGroup {...field} row>
@@ -192,7 +280,7 @@ const AmountFormModal = ({ open, record, onDismiss }: AmountFormModalProp) => {
               )}
             />
             <Controller
-              name="date"
+              name="record.date"
               control={control}
               render={({ field, fieldState }) => (
                 <LocalizationProvider
@@ -215,7 +303,7 @@ const AmountFormModal = ({ open, record, onDismiss }: AmountFormModalProp) => {
             />
 
             <Controller
-              name="currency"
+              name="record.currency"
               control={control}
               render={({ field, fieldState }) => (
                 <FormControl fullWidth size="small" error={!!fieldState.error}>

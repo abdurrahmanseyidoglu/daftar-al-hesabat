@@ -24,7 +24,7 @@ export default function HomePage() {
         }),
       }}
     >
-      {records.length === 0 && (
+      {true && (
         <Button variant="outlined" sx={{ p: 6 }} onClick={handleOpen}>
           <Typography fontSize={"3rem"}>Add a new amount</Typography>
           <AddCircleOutlineIcon

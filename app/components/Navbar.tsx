@@ -153,12 +153,12 @@ function Navbar() {
             </Search>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            {/* !TODO: handle avatar 1- hide if guest, show if logged in either a generic img or users selected profile pic. */}
+            {/* <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                {/* !TODO: handle avatar 1- hide if guest, show if logged in either a generic img or users selected profile pic. */}
                 <Avatar alt="Profile Pic" src="/static/images/avatar/2.jpg" />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
             <Menu
               sx={{ mt: "45px" }}
@@ -185,7 +185,7 @@ function Navbar() {
               ))}
             </Menu>
           </Box>
-          <Box>
+          {/* <Box>
             <Tooltip title="Open notifications">
               <IconButton
                 onClick={handleOpenNotificationMenu}
@@ -223,7 +223,7 @@ function Navbar() {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
+          </Box> */}
         </Toolbar>
       </Container>
     </AppBar>
