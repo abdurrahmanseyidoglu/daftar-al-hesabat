@@ -17,6 +17,7 @@
     "@mui/icons-material": "^7.3.9",
     "@mui/material": "^7.3.9",
     "@mui/material-nextjs": "^7.3.9",
+    "@mui/utils": "^7.3.9",
     "@mui/x-date-pickers": "^8.27.2",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.20",

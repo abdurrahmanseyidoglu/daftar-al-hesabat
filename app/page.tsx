@@ -6,6 +6,8 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import React from "react";
 import AmountFormModal from "./components/RecordFormModal";
 import { useRecordStore } from "./stores/recordStore";
+import { record } from "zod";
+import GlobalRecordsTable from "./components/GlobalRecordsTable";
 
 export default function HomePage() {
   const [open, setOpen] = React.useState(false);
@@ -24,7 +26,7 @@ export default function HomePage() {
         }),
       }}
     >
-      {true && (
+      {records.length === 0 && (
         <Button variant="outlined" sx={{ p: 6 }} onClick={handleOpen}>
           <Typography fontSize={"3rem"}>Add a new amount</Typography>
           <AddCircleOutlineIcon
@@ -32,9 +34,9 @@ export default function HomePage() {
           />
         </Button>
       )}
+      {records.length > 0 && <GlobalRecordsTable  />}
 
       <AmountFormModal open={open} record={null} onDismiss={handleClose} />
-      <h1>{records[0]?.name ?? ""}</h1>
     </Box>
   );
 }
