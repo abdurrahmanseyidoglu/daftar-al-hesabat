@@ -21,7 +21,6 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import InputLabel from "@mui/material/InputLabel";
 import { enGB } from "date-fns/locale";
 import { useForm, Controller } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -153,7 +152,7 @@ const AmountFormModal = ({
                     if (inputValue !== "" && !isExisting) {
                       filtered.push({
                         inputValue,
-                        name: `Add "${inputValue}"`,
+                        name: `Add "${inputValue}" ?`,
                       });
                     }
 
@@ -169,7 +168,6 @@ const AmountFormModal = ({
                     if (typeof option === "string") {
                       return option;
                     }
-                    // Add "xxx" option created dynamically
                     if (option.name) {
                       return option.name;
                     }
