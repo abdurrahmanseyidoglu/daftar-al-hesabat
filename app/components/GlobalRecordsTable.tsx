@@ -241,7 +241,7 @@ export default function EnhancedTable() {
   const [orderBy, setOrderBy] = React.useState<keyof Data>("name");
   const [selected, setSelected] = React.useState<readonly number[]>([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -341,8 +341,10 @@ export default function EnhancedTable() {
                       <Checkbox
                         color="primary"
                         checked={isItemSelected}
-                        inputProps={{
-                          "aria-labelledby": labelId,
+                        slotProps={{
+                          input: {
+                            "aria-labelledby": labelId,
+                          },
                         }}
                       />
                     </TableCell>
@@ -358,9 +360,13 @@ export default function EnhancedTable() {
                     <TableCell align="left">{row.total}</TableCell>
                     <TableCell align="left">
                       {row.direction === MoneyDirection.ON ? (
-                        <ArrowUpwardIcon sx={{ color: "success.main" }} />
+                        <Tooltip title="He should pay you">
+                          <ArrowUpwardIcon sx={{ color: "success.main" }} />
+                        </Tooltip>
                       ) : (
-                        <ArrowDownwardIcon sx={{ color: "error.main" }} />
+                        <Tooltip title="You should pay him">
+                          <ArrowDownwardIcon sx={{ color: "error.main" }} />
+                        </Tooltip>
                       )}
                     </TableCell>
                   </TableRow>
@@ -379,7 +385,7 @@ export default function EnhancedTable() {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[10, 100, 500]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}

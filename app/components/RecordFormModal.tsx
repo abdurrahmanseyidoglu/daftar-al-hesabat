@@ -24,10 +24,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import {
-  formSchema,
-  RecordEntry,
-} from "../schemas/record.schema";
+import { formSchema, RecordEntry } from "../schemas/record.schema";
 import { useRecordStore } from "../stores/recordStore";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import { NameOptionType } from "../types/nameOptionType";
@@ -61,7 +58,6 @@ const AmountFormModal = ({
   record: recordWithName,
   onDismiss,
 }: AmountFormModalProp) => {
-  const [value, setValue] = useState<NameOptionType | null>(null);
   const addRecordToNewName = useRecordStore(
     (state) => state.addRecordToNewName,
   );
@@ -128,24 +124,31 @@ const AmountFormModal = ({
               control={control}
               render={({ field, fieldState }) => (
                 <Autocomplete
-                  value={value}
+                  value={field.value ?? null}
                   onChange={(event, newValue) => {
+                    let resolvedName = "";
+
                     if (typeof newValue === "string") {
-                      setValue({ name: newValue });
-                    } else if (newValue && newValue.inputValue) {
-                      // Create a new value from the user input
-                      setValue({
-                        name: newValue.inputValue,
-                      });
-                    } else {
-                      setValue(newValue);
+                      resolvedName = newValue;
+                    } else if (newValue?.inputValue) {
+                      resolvedName = newValue.inputValue;
+                    } else if (newValue?.name) {
+                      resolvedName = newValue.name;
+                    }
+                    field.onChange(resolvedName);
+                  }}
+                  inputValue={field.value ?? ""}
+                  onInputChange={(event, newInputValue, reason) => {
+                    if (reason === "input") {
+                      field.onChange(newInputValue);
+                    }
+                    if (reason === "clear") {
+                      field.onChange("");
                     }
                   }}
                   filterOptions={(options, params) => {
                     const filtered = filter(options, params);
-
                     const { inputValue } = params;
-                    // Suggest the creation of a new value
                     const isExisting = options.some(
                       (option) => inputValue === option.name,
                     );
@@ -155,7 +158,6 @@ const AmountFormModal = ({
                         name: `Add "${inputValue}" ?`,
                       });
                     }
-
                     return filtered;
                   }}
                   selectOnFocus
@@ -164,15 +166,8 @@ const AmountFormModal = ({
                   id="free-solo-with-text"
                   options={namesOptions}
                   getOptionLabel={(option) => {
-                    // Value selected with enter, right from the input
-                    if (typeof option === "string") {
-                      return option;
-                    }
-                    if (option.name) {
-                      return option.name;
-                    }
-                    // Regular option
-                    return option.name;
+                    if (typeof option === "string") return option;
+                    return option.inputValue ?? option.name ?? "";
                   }}
                   renderOption={(props, option) => {
                     const { key, ...optionProps } = props;
@@ -182,20 +177,18 @@ const AmountFormModal = ({
                       </li>
                     );
                   }}
-                  sx={{ width: 300 }}
-                  freeSolo
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      {...field}
                       label="Name"
                       size="small"
                       fullWidth
+                      onBlur={field.onBlur}
                       error={!!fieldState.error}
                       helperText={fieldState.error?.message}
                     />
                   )}
-                ></Autocomplete>
+                />
               )}
             />
 
@@ -205,7 +198,7 @@ const AmountFormModal = ({
               render={({ field, fieldState }) => (
                 <NumberField
                   value={field.value}
-                  onValueChange={(value) => field.onChange(value)} // value is already a number
+                  onValueChange={(value) => field.onChange(value)}
                   onBlur={field.onBlur}
                   name={field.name}
                   label="Amount"

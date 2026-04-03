@@ -6,11 +6,10 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import React from "react";
 import AmountFormModal from "./components/RecordFormModal";
 import { useRecordStore } from "./stores/recordStore";
-import { record } from "zod";
 import GlobalRecordsTable from "./components/GlobalRecordsTable";
 
 export default function HomePage() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const t = useTranslations();
@@ -34,7 +33,7 @@ export default function HomePage() {
           />
         </Button>
       )}
-      {records.length > 0 && <GlobalRecordsTable  />}
+      {records.length > 0 && <GlobalRecordsTable />}
 
       <AmountFormModal open={open} record={null} onDismiss={handleClose} />
     </Box>
