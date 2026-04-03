@@ -16,6 +16,10 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import Badge from "@mui/material/Badge";
 import SearchIcon from "@mui/icons-material/Search";
 import { alpha, InputBase, styled } from "@mui/material";
+import { useModalStore } from "../stores/modalStore";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { useRecordStore } from "../stores/recordStore";
+
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 const notifications = [
@@ -67,6 +71,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function Navbar() {
+  const records = useRecordStore((state) => state.records);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [anchorElNotification, setAnchorElNotification] =
@@ -90,6 +95,8 @@ function Navbar() {
   const handleCloseNotificationMenu = () => {
     setAnchorElNotification(null);
   };
+  const handleModalStore = useModalStore((state) => state.handleModalState);
+
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
@@ -141,7 +148,22 @@ function Navbar() {
               </Button>
             ))}
           </Box>
-          <Box>
+
+          <Box sx={{ display: "flex" }}>
+            {records.length > 0 && (
+              <Button
+                variant="outlined"
+                color="white"
+                sx={{ p: 1 }}
+                onClick={() => handleModalStore(true)}
+              >
+                <Typography fontSize={"1rem"}>Add new</Typography>
+                <AddCircleOutlineIcon
+                  sx={{ fontSize: "1.5rem", marginInlineStart: 1 }}
+                />
+              </Button>
+            )}
+
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />

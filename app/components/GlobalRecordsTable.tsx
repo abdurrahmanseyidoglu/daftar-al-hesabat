@@ -1,29 +1,34 @@
-import * as React from "react";
-import { alpha } from "@mui/material/styles";
+import { useState, useMemo } from "react";
 import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
 import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridRowId,
+  GridRowSelectionModel,
+  GridToolbarColumnsButton,
+  GridToolbarProps,
+  Toolbar,
+  ToolbarPropsOverrides,
+} from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
-import FilterListIcon from "@mui/icons-material/FilterList";
-import { visuallyHidden } from "@mui/utils";
+import EditIcon from "@mui/icons-material/Edit";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import SearchIcon from "@mui/icons-material/Search";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { useRecordStore } from "../stores/recordStore";
 import { MoneyDirection } from "../types/enums";
 import { RecordEntry } from "../schemas/record.schema";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-interface Data {
+
+interface RowData {
   id: number;
   name: string;
   recordsCount: number;
@@ -31,367 +36,273 @@ interface Data {
   direction: MoneyDirection;
 }
 
-const calculateTotal = (namedRecords: RecordEntry[]) => {
+declare module "@mui/x-data-grid" {
+  interface ToolbarPropsOverrides {
+    searchValue: string;
+    onSearchChange: (value: string) => void;
+    numSelected: number;
+    onDeleteSelected: () => void;
+  }
+}
+
+const calculateTotal = (namedRecords: RecordEntry[]): number => {
   let total = 0;
   namedRecords.forEach((record) => {
-    if (record.direction === MoneyDirection.ON) {
-      total += record.amount;
-    }
-    if (record.direction === MoneyDirection.TO) {
-      total -= record.amount;
-    }
+    if (record.direction === MoneyDirection.ON) total += record.amount;
+    if (record.direction === MoneyDirection.TO) total -= record.amount;
   });
   return total;
 };
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-type Order = "asc" | "desc";
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key,
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string },
-) => number {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-interface EnhancedTableProps {
-  numSelected: number;
-  onRequestSort: (
-    event: React.MouseEvent<unknown>,
-    property: keyof Data,
-  ) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  order: Order;
-  orderBy: string;
-  rowCount: number;
-}
-
-function GlobalRecordsTable(props: EnhancedTableProps) {
-  interface HeadCell {
-    disablePadding: boolean;
-    id: keyof Data;
-    label: string;
-    numeric: boolean;
-  }
-
-  const headCells: readonly HeadCell[] = [
-    {
-      id: "name",
-      numeric: false,
-      disablePadding: true,
-      label: "Name",
-    },
-    {
-      id: "recordsCount",
-      numeric: true,
-      disablePadding: false,
-      label: "Records Count",
-    },
-    {
-      id: "total",
-      numeric: true,
-      disablePadding: false,
-      label: "Total",
-    },
-    {
-      id: "direction",
-      numeric: false,
-      disablePadding: false,
-      label: "To/On",
-    },
-  ];
-
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
-  const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
-
+function CustomToolbar({
+  searchValue,
+  onSearchChange,
+  numSelected,
+  onDeleteSelected,
+}: GridToolbarProps & ToolbarPropsOverrides) {
   return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all Records",
-            }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={"left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-}
-interface EnhancedTableToolbarProps {
-  numSelected: number;
-}
-function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-  const { numSelected } = props;
-  return (
-    <Toolbar
-      sx={[
-        {
-          pl: { sm: 2 },
-          pr: { xs: 1, sm: 1 },
-        },
-        numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(
-              theme.palette.primary.main,
-              theme.palette.action.activatedOpacity,
+    <Toolbar>
+      <Typography
+        variant="h6"
+        sx={{ flex: "1 1 auto", fontWeight: 600, color: "text.primary" }}
+      >
+        {numSelected > 0 ? `${numSelected} selected` : "Global Records"}
+      </Typography>
+
+      <TextField
+        size="small"
+        placeholder="Search anything…"
+        value={searchValue}
+        onChange={(e) => onSearchChange(e.target.value)}
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
             ),
-        },
-      ]}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          Records
-        </Typography>
-      )}
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
+          },
+        }}
+        sx={{ width: 220 }}
+      />
+
+      <GridToolbarColumnsButton />
+
+      {numSelected > 0 && (
+        <Tooltip title="Delete selected">
+          <IconButton color="error" onClick={onDeleteSelected} size="small">
             <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
           </IconButton>
         </Tooltip>
       )}
     </Toolbar>
   );
 }
-export default function EnhancedTable() {
+
+export default function GlobalRecordsTable() {
   const records = useRecordStore((state) => state.records);
-
-  const rows: Data[] = records.map((record, index) => ({
-    id: index,
-    name: record.name,
-    recordsCount: record.records.length,
-    total: calculateTotal(record.records),
-    direction:
-      calculateTotal(record.records) > 0
-        ? MoneyDirection.ON
-        : MoneyDirection.TO,
-  }));
-
-  const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof Data>("name");
-  const [selected, setSelected] = React.useState<readonly number[]>([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: keyof Data,
-  ) => {
-    const isAsc = orderBy === property && order === "asc";
-    setOrder(isAsc ? "desc" : "asc");
-    setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
-  };
-
-  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected: readonly number[] = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-    setSelected(newSelected);
-  };
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  const visibleRows = React.useMemo(
-    () =>
-      [...rows]
-        .sort(getComparator(order, orderBy))
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-    [order, orderBy, page, rowsPerPage, rows],
+  const removeUsersByIndexes = useRecordStore(
+    (state) => state.removeUsersByIndexes,
   );
+
+  const [searchValue, setSearchValue] = useState("");
+  const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
+    type: "include",
+    ids: new Set<GridRowId>(),
+  });
+  const selectedIds = Array.from(selectionModel.ids).map(Number);
+
+  const rows: RowData[] = useMemo(
+    () =>
+      records.map((record, index) => {
+        const total = calculateTotal(record.records);
+        return {
+          id: index,
+          name: record.name,
+          recordsCount: record.records.length,
+          total,
+          direction: total >= 0 ? MoneyDirection.ON : MoneyDirection.TO,
+        };
+      }),
+    [records],
+  );
+
+  const filteredRows = useMemo(() => {
+    const q = searchValue.trim().toLowerCase();
+    if (!q) return rows;
+    return rows.filter((row) =>
+      [row.name, row.recordsCount, row.total, row.direction]
+        .map((v) => String(v).toLowerCase())
+        .some((v) => v.includes(q)),
+    );
+  }, [rows, searchValue]);
+
+  const handleDeleteSelected = () => {
+    removeUsersByIndexes(selectedIds);
+    setSelectionModel({ type: "include", ids: new Set<GridRowId>() });
+  };
+
+  const handleDeleteRow = (id: number) => {
+    removeUsersByIndexes([id]);
+    setSelectionModel((prev) => {
+      const next = new Set(prev.ids);
+      next.delete(id);
+      return { type: "include", ids: next };
+    });
+  };
+
+  const handleEditRow = (id: number) => {
+    // TODO: Add edit logic
+    console.log("Edit row", id);
+  };
+
+  const handleGoToDetails = (id: number) => {
+    // TODO: Add details page
+    console.log("Go to details for row", id);
+  };
+
+  const columns: GridColDef<RowData>[] = [
+    {
+      field: "name",
+      headerName: "Name",
+      flex: 2,
+      minWidth: 140,
+    },
+    {
+      field: "recordsCount",
+      headerName: "Records Count",
+      type: "number",
+      flex: 1,
+      minWidth: 120,
+      align: "left",
+      headerAlign: "left",
+    },
+    {
+      field: "total",
+      headerName: "Total",
+      type: "number",
+      flex: 1,
+      minWidth: 100,
+      align: "left",
+      headerAlign: "left",
+      renderCell: (params: GridRenderCellParams<RowData, number>) => (
+        <Typography
+          sx={{
+            fontWeight: 600,
+            textAlign: "left",
+            marginBlock: "auto",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "start",
+            justifyContent: "center",
+            height: "100%",
+            color: (params.value ?? 0) >= 0 ? "success.main" : "error.main",
+          }}
+        >
+          {params.value}
+        </Typography>
+      ),
+    },
+    {
+      field: "direction",
+      headerName: "To / On",
+      flex: 1,
+      minWidth: 90,
+      renderCell: (params: GridRenderCellParams<RowData, MoneyDirection>) =>
+        params.value === MoneyDirection.ON ? (
+          <Tooltip title="He should pay you">
+            <ArrowUpwardIcon sx={{ color: "success.main" }} />
+          </Tooltip>
+        ) : (
+          <Tooltip title="You should pay him">
+            <ArrowDownwardIcon sx={{ color: "error.main" }} />
+          </Tooltip>
+        ),
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      width: 120,
+      renderCell: (params: GridRenderCellParams<RowData>) => (
+        <Stack direction="row" spacing={0.5} alignItems="center" height="100%">
+          <Tooltip title="Go to details">
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleGoToDetails(params.row.id);
+              }}
+            >
+              <OpenInNewIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Edit">
+            <IconButton
+              size="small"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleEditRow(params.row.id);
+              }}
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <IconButton
+              size="small"
+              color="error"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteRow(params.row.id);
+              }}
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Stack>
+      ),
+    },
+  ];
 
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={"medium"}
-          >
-            <GlobalRecordsTable
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {visibleRows.map((row, index) => {
-                const isItemSelected = selected.includes(row.id);
-                const labelId = `enhanced-table-checkbox-${index}`;
-
-                return (
-                  <TableRow
-                    hover
-                    onClick={(event) => handleClick(event, row.id)}
-                    role="checkbox"
-                    aria-checked={isItemSelected}
-                    tabIndex={-1}
-                    key={row.id}
-                    selected={isItemSelected}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        color="primary"
-                        checked={isItemSelected}
-                        slotProps={{
-                          input: {
-                            "aria-labelledby": labelId,
-                          },
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="left">{row.recordsCount}</TableCell>
-                    <TableCell align="left">{row.total}</TableCell>
-                    <TableCell align="left">
-                      {row.direction === MoneyDirection.ON ? (
-                        <Tooltip title="He should pay you">
-                          <ArrowUpwardIcon sx={{ color: "success.main" }} />
-                        </Tooltip>
-                      ) : (
-                        <Tooltip title="You should pay him">
-                          <ArrowDownwardIcon sx={{ color: "error.main" }} />
-                        </Tooltip>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 53 * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={5} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10, 100, 500]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
+        <DataGrid
+          initialState={{
+            density: "comfortable",
+          }}
+          rows={filteredRows}
+          columns={columns}
+          checkboxSelection
+          disableRowSelectionOnClick={false}
+          rowSelectionModel={selectionModel}
+          onRowSelectionModelChange={(model) => setSelectionModel(model)}
+          pageSizeOptions={[10, 100, 500]}
+          paginationModel={{ page: 0, pageSize: 10 }}
+          slots={{
+            toolbar: CustomToolbar,
+          }}
+          slotProps={{
+            toolbar: {
+              searchValue,
+              onSearchChange: setSearchValue,
+              numSelected: selectedIds.length,
+              onDeleteSelected: handleDeleteSelected,
+            },
+          }}
+          sx={{
+            border: "none",
+            "& .MuiDataGrid-columnHeaders": {
+              fontSize: "1rem",
+              fontWeight: 700,
+            },
+            "& .MuiDataGrid-cell": {
+              fontSize: "1rem",
+            },
+          }}
         />
       </Paper>
     </Box>

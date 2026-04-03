@@ -28,14 +28,9 @@ import { formSchema, RecordEntry } from "../schemas/record.schema";
 import { useRecordStore } from "../stores/recordStore";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import { NameOptionType } from "../types/nameOptionType";
+import { useModalStore } from "../stores/modalStore";
 
 type FormValuesType = { name: string } & { record: RecordEntry };
-
-interface AmountFormModalProp {
-  open: boolean;
-  record: FormValuesType | null;
-  onDismiss: () => void;
-}
 
 const modalStyle = {
   position: "absolute",
@@ -53,11 +48,13 @@ const modalStyle = {
 };
 
 const filter = createFilterOptions<NameOptionType>();
-const AmountFormModal = ({
-  open,
-  record: recordWithName,
-  onDismiss,
-}: AmountFormModalProp) => {
+const RecordFormModal = () => {
+  const isModalOpen = useModalStore((state) => state.isModalOpen);
+  const modalPredefinedProps = useModalStore(
+    (state) => state.modalPredefinedProps,
+  );
+  const handleModalState = useModalStore((state) => state.handleModalState);
+
   const addRecordToNewName = useRecordStore(
     (state) => state.addRecordToNewName,
   );
@@ -70,13 +67,13 @@ const AmountFormModal = ({
   const { control, handleSubmit } = useForm<FormValuesType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: recordWithName?.name ?? "",
+      name: modalPredefinedProps?.name ?? "",
       record: {
-        direction: recordWithName?.record.direction ?? MoneyDirection.ON,
-        currency: recordWithName?.record.currency ?? "usd",
-        amount: recordWithName?.record.amount ?? 0,
-        date: recordWithName?.record.date ?? new Date(),
-        details: recordWithName?.record.details ?? "",
+        direction: modalPredefinedProps?.record.direction ?? MoneyDirection.ON,
+        currency: modalPredefinedProps?.record.currency ?? "usd",
+        amount: modalPredefinedProps?.record.amount ?? 0,
+        date: modalPredefinedProps?.record.date ?? new Date(),
+        details: modalPredefinedProps?.record.details ?? "",
       },
     },
   });
@@ -88,23 +85,20 @@ const AmountFormModal = ({
 
     const existing = doesNameExistInRecords(data.name);
     if (!existing) {
-      console.log("addRecordToNewName was called");
       addRecordToNewName(data.name, { ...data.record });
     } else {
-      console.log("addRecordToExistingName was called");
       addRecordToExistingName(data.name, { ...data.record });
     }
     setSavingForm(false);
-    onDismiss();
+    handleModalState(false);
   };
   const records = useRecordStore((state) => state.records);
   const namesOptions: Array<NameOptionType> = records.map((record) => ({
     name: record.name,
   }));
-  console.log(namesOptions);
 
   return (
-    <Modal open={open} onClose={onDismiss}>
+    <Modal open={isModalOpen} onClose={() => handleModalState(false)}>
       <Box sx={modalStyle}>
         <Typography
           id="modal-modal-title"
@@ -124,7 +118,7 @@ const AmountFormModal = ({
               control={control}
               render={({ field, fieldState }) => (
                 <Autocomplete
-                  value={field.value ?? null}
+                  value={field.value ? { name: field.value } : null}
                   onChange={(event, newValue) => {
                     let resolvedName = "";
 
@@ -323,4 +317,4 @@ const AmountFormModal = ({
   );
 };
 
-export default AmountFormModal;
+export default RecordFormModal;

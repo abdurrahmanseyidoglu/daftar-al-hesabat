@@ -4,14 +4,12 @@ import { Box, Button, Typography } from "@mui/material";
 import { useTranslations } from "next-intl";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import React from "react";
-import AmountFormModal from "./components/RecordFormModal";
+import RecordFormModal from "./components/RecordFormModal";
 import { useRecordStore } from "./stores/recordStore";
 import GlobalRecordsTable from "./components/GlobalRecordsTable";
-
+import { useModalStore } from "./stores/modalStore";
 export default function HomePage() {
-  const [open, setOpen] = React.useState(true);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleModalStore = useModalStore((state) => state.handleModalState);
   const t = useTranslations();
   const records = useRecordStore((state) => state.records);
   return (
@@ -26,7 +24,11 @@ export default function HomePage() {
       }}
     >
       {records.length === 0 && (
-        <Button variant="outlined" sx={{ p: 6 }} onClick={handleOpen}>
+        <Button
+          variant="outlined"
+          sx={{ p: 6 }}
+          onClick={() => handleModalStore(true)}
+        >
           <Typography fontSize={"3rem"}>Add a new amount</Typography>
           <AddCircleOutlineIcon
             sx={{ fontSize: "4rem", marginInlineStart: 3 }}
@@ -34,8 +36,7 @@ export default function HomePage() {
         </Button>
       )}
       {records.length > 0 && <GlobalRecordsTable />}
-
-      <AmountFormModal open={open} record={null} onDismiss={handleClose} />
+      <RecordFormModal />
     </Box>
   );
 }
