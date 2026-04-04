@@ -13,8 +13,8 @@ import {
   GridRenderCellParams,
   GridRowId,
   GridRowSelectionModel,
-  GridToolbarColumnsButton,
   GridToolbarProps,
+  ColumnsPanelTrigger,
   Toolbar,
   ToolbarPropsOverrides,
 } from "@mui/x-data-grid";
@@ -86,7 +86,7 @@ function CustomToolbar({
         sx={{ width: 220 }}
       />
 
-      <GridToolbarColumnsButton />
+      <ColumnsPanelTrigger />
 
       {numSelected > 0 && (
         <Tooltip title="Delete selected">
