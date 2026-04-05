@@ -71,7 +71,7 @@ function CustomToolbar({
 
       <TextField
         size="small"
-        placeholder="Search anything…"
+        placeholder="Search..."
         value={searchValue}
         onChange={(e) => onSearchChange(e.target.value)}
         slotProps={{
@@ -271,6 +271,7 @@ export default function GlobalRecordsTable() {
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <DataGrid
+          showToolbar
           initialState={{
             density: "comfortable",
           }}
@@ -291,6 +292,8 @@ export default function GlobalRecordsTable() {
               onSearchChange: setSearchValue,
               numSelected: selectedIds.length,
               onDeleteSelected: handleDeleteSelected,
+              showQuickFilter: true,
+              quickFilterProps: { debounceMs: 500 },
             },
           }}
           sx={{
