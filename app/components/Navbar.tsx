@@ -19,6 +19,7 @@ import { alpha, InputBase, styled } from "@mui/material";
 import { useModalStore } from "../stores/modalStore";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useRecordStore } from "../stores/recordStore";
+import { useTranslations } from "next-intl";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -72,6 +73,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function Navbar() {
   const records = useRecordStore((state) => state.records);
+  const t = useTranslations();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [anchorElNotification, setAnchorElNotification] =
@@ -154,25 +156,15 @@ function Navbar() {
               <Button
                 variant="outlined"
                 color="white"
-                sx={{ p: 1 }}
+                sx={{ py: 1, px: 4 }}
                 onClick={() => handleModalStore(true)}
               >
-                <Typography fontSize={"1rem"}>Add new</Typography>
+                <Typography fontSize={"1rem"}>{t("addNew")}</Typography>
                 <AddCircleOutlineIcon
                   sx={{ fontSize: "1.5rem", marginInlineStart: 1 }}
                 />
               </Button>
             )}
-
-            <Search>
-              <SearchIconWrapper>
-                <SearchIcon />
-              </SearchIconWrapper>
-              <StyledInputBase
-                placeholder="Search…"
-                inputProps={{ "aria-label": "search" }}
-              />
-            </Search>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             {/* !TODO: handle avatar 1- hide if guest, show if logged in either a generic img or users selected profile pic. */}

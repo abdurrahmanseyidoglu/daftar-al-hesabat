@@ -29,7 +29,7 @@ export default function HomePage() {
           sx={{ p: 6 }}
           onClick={() => handleModalStore(true)}
         >
-          <Typography fontSize={"3rem"}>Add a new amount</Typography>
+          <Typography fontSize={"3rem"}>{t("addAmount")}</Typography>
           <AddCircleOutlineIcon
             sx={{ fontSize: "4rem", marginInlineStart: 3 }}
           />

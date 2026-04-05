@@ -29,6 +29,7 @@ import { useRecordStore } from "../stores/recordStore";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import { NameOptionType } from "../types/nameOptionType";
 import { useModalStore } from "../stores/modalStore";
+import { useTranslations } from "next-intl";
 
 type FormValuesType = { name: string } & { record: RecordEntry };
 
@@ -49,6 +50,7 @@ const modalStyle = {
 
 const filter = createFilterOptions<NameOptionType>();
 const RecordFormModal = () => {
+  const t = useTranslations();
   const isModalOpen = useModalStore((state) => state.isModalOpen);
   const modalPredefinedProps = useModalStore(
     (state) => state.modalPredefinedProps,
@@ -109,7 +111,7 @@ const RecordFormModal = () => {
           textTransform="uppercase"
           fontWeight="500"
         >
-          Add amount
+          {t("addAmount")}
         </Typography>
         <form onSubmit={handleSubmit(saveAction)} noValidate>
           <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
