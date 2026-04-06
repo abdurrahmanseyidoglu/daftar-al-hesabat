@@ -27,6 +27,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { useRecordStore } from "../stores/recordStore";
 import { MoneyDirection } from "../types/enums";
 import { RecordEntry } from "../schemas/record.schema";
+import { useTranslations } from "next-intl";
 
 interface RowData {
   id: number;
@@ -100,6 +101,7 @@ function CustomToolbar({
 }
 
 export default function GlobalRecordsTable() {
+  const t = useTranslations();
   const records = useRecordStore((state) => state.records);
   const removeUsersByIndexes = useRecordStore(
     (state) => state.removeUsersByIndexes,
@@ -164,13 +166,13 @@ export default function GlobalRecordsTable() {
   const columns: GridColDef<RowData>[] = [
     {
       field: "name",
-      headerName: "Name",
+      headerName: `${t("name")}`,
       flex: 2,
       minWidth: 140,
     },
     {
       field: "recordsCount",
-      headerName: "Records Count",
+      headerName: `${t("recordsCount")}`,
       type: "number",
       flex: 1,
       minWidth: 120,
@@ -179,7 +181,7 @@ export default function GlobalRecordsTable() {
     },
     {
       field: "total",
-      headerName: "Total",
+      headerName: `${t("total")}`,
       type: "number",
       flex: 1,
       minWidth: 100,
@@ -205,7 +207,7 @@ export default function GlobalRecordsTable() {
     },
     {
       field: "direction",
-      headerName: "To / On",
+      headerName: `${t("to")} / ${t("on")}`,
       flex: 1,
       minWidth: 90,
       renderCell: (params: GridRenderCellParams<RowData, MoneyDirection>) =>
@@ -221,7 +223,7 @@ export default function GlobalRecordsTable() {
     },
     {
       field: "actions",
-      headerName: "Actions",
+      headerName: `${t("actions")}`,
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
@@ -277,6 +279,10 @@ export default function GlobalRecordsTable() {
           }}
           rows={filteredRows}
           columns={columns}
+          localeText={{
+            footerRowSelected: (count) => ``,
+            paginationRowsPerPage: `${t("rowsPerPage")}`,
+          }}
           checkboxSelection
           disableRowSelectionOnClick={false}
           rowSelectionModel={selectionModel}

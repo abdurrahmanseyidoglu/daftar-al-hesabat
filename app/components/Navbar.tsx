@@ -150,8 +150,7 @@ function Navbar() {
               </Button>
             ))}
           </Box>
-
-          <Box sx={{ display: "flex" }}>
+          <Box sx={{ display: "flex", height: "2.5rem" }}>
             {records.length > 0 && (
               <Button
                 variant="outlined"
@@ -166,6 +165,7 @@ function Navbar() {
               </Button>
             )}
           </Box>
+
           <Box sx={{ flexGrow: 0 }}>
             {/* !TODO: handle avatar 1- hide if guest, show if logged in either a generic img or users selected profile pic. */}
             {/* <Tooltip title="Open settings">

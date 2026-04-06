@@ -1,3 +1,13 @@
 {
-    "test" : "تجربة"
+  "addAmount": "Add a new amount",
+  "addNew": "Add new",
+  "globalRecords": "Global records",
+  "selected": "selected",
+  "recordsCount": "Records count",
+  "total": "Total",
+  "to": "to",
+  "on": "on",
+  "actions": "Actions",
+  "rowsPerPage": "Rows per page",
+  "name": "Name"
 }
