@@ -20,6 +20,7 @@ import { useModalStore } from "../stores/modalStore";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useRecordStore } from "../stores/recordStore";
 import { useTranslations } from "next-intl";
+import { LanguageSwitcher } from "./LangaugeSwitcher";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -150,7 +151,7 @@ function Navbar() {
               </Button>
             ))}
           </Box>
-          <Box sx={{ display: "flex", height: "2.5rem" }}>
+          <Box sx={{ display: "flex", height: "2.5rem", gap: ".5rem" }}>
             {records.length > 0 && (
               <Button
                 variant="outlined"
@@ -164,6 +165,7 @@ function Navbar() {
                 />
               </Button>
             )}
+            <LanguageSwitcher />
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

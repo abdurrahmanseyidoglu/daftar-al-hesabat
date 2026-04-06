@@ -1,13 +1,13 @@
 {
-  "addAmount": "Add a new amount",
-  "addNew": "Add new",
-  "globalRecords": "Global records",
-  "selected": "selected",
-  "recordsCount": "Records count",
-  "total": "Total",
-  "to": "to",
-  "on": "on",
-  "actions": "Actions",
-  "rowsPerPage": "Rows per page",
-  "name": "Name"
+  "addAmount": "إضافة مبلغ جديد",
+  "addNew": "إضافة جديد",
+  "globalRecords": "السجلات العامة",
+  "selected": "محدد",
+  "recordsCount": "عدد السجلات",
+  "total": "الإجمالي",
+  "to": "إلى",
+  "on": "على",
+  "actions": "الإجراءات",
+  "rowsPerPage": "صفوف لكل صفحة",
+  "name": "الاسم"
 }

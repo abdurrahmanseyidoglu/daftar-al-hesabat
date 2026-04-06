@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { Record, RecordEntry } from "../schemas/record.schema";
-import { persist } from "zustand/middleware";
-import { devtools } from "zustand/middleware";
+import { persist, devtools } from "zustand/middleware";
 
 type RecordWithId = Record;
 interface RecordStore {

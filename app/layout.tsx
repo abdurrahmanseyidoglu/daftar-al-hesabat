@@ -6,6 +6,7 @@ import theme from "./theme";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import { Box } from "@mui/material";
+import { LocaleSync } from "./components/LocaleSync";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -32,6 +33,7 @@ export default async function RootLayout({ children }: Props) {
                 }}
               >
                 <Navbar />
+                <LocaleSync />
                 {children}
               </Box>
             </NextIntlClientProvider>
