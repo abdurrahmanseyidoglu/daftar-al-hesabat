@@ -3,13 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useLocaleStore } from "../stores/localStore";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDownIcon";
-import {
-  Select,
-  MenuItem,
-  FormControl,
-  SelectChangeEvent,
-} from "@mui/material";
+import { Select, MenuItem } from "@mui/material";
 
 export function LanguageSwitcher() {
   const router = useRouter();
@@ -18,9 +12,9 @@ export function LanguageSwitcher() {
 
   const switchLocale = (newLocale: "en" | "ar") => {
     setLocale(newLocale);
+    document.cookie = `locale=${newLocale}; path=/; max-age=${60 * 60 * 24 * 365}`;
     document.documentElement.dir = newLocale === "ar" ? "rtl" : "ltr";
     document.documentElement.lang = newLocale;
-    document.cookie = `locale=${newLocale}; path=/; max-age=${60 * 60 * 24 * 365}`;
     startTransition(() => {
       router.refresh();
     });
@@ -49,9 +43,7 @@ export function LanguageSwitcher() {
         },
       }}
       value={locale}
-      onChange={(e: SelectChangeEvent) =>
-        switchLocale(e.target.value as "en" | "ar")
-      }
+      onChange={(e) => switchLocale(e.target.value as "en" | "ar")}
       disabled={isPending}
       MenuProps={{
         sx: {
