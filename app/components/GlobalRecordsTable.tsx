@@ -19,7 +19,6 @@ import {
   ToolbarPropsOverrides,
 } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -28,6 +27,7 @@ import { useRecordStore } from "../stores/recordStore";
 import { MoneyDirection } from "../types/enums";
 import { RecordEntry } from "../schemas/record.schema";
 import { useTranslations } from "next-intl";
+import ConfirmDialog from "./ConfirmDialog";
 
 interface RowData {
   id: number;
@@ -58,18 +58,9 @@ const calculateTotal = (namedRecords: RecordEntry[]): number => {
 function CustomToolbar({
   searchValue,
   onSearchChange,
-  numSelected,
-  onDeleteSelected,
 }: GridToolbarProps & ToolbarPropsOverrides) {
   return (
     <Toolbar>
-      <Typography
-        variant="h6"
-        sx={{ flex: "1 1 auto", fontWeight: 600, color: "text.primary" }}
-      >
-        {numSelected > 0 ? `${numSelected} selected` : "Global Records"}
-      </Typography>
-
       <TextField
         size="small"
         placeholder="Search..."
@@ -86,33 +77,45 @@ function CustomToolbar({
         }}
         sx={{ width: 220 }}
       />
-
-      <ColumnsPanelTrigger />
-
-      {numSelected > 0 && (
-        <Tooltip title="Delete selected">
-          <IconButton color="error" onClick={onDeleteSelected} size="small">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      )}
     </Toolbar>
   );
 }
 
 export default function GlobalRecordsTable() {
   const t = useTranslations();
+  const [open, setOpen] = useState(false);
+  const [selectedRowNameToDelete, setSelectedRowNameToDelete] = useState<
+    string | null
+  >(null);
+  const [selectedValue, setSelectedValue] = useState(false);
+  const handleClickOpen = (name: string) => {
+    setOpen(true);
+    setSelectedRowNameToDelete(name);
+  };
+
+  const handleClose = (value: boolean) => {
+    console.log("handle close called: " + value);
+    setOpen(false);
+    setSelectedValue(value);
+    if (value) {
+      console.log(
+        "Run the delete function with the name of: " + selectedRowNameToDelete,
+      );
+      setSelectedRowNameToDelete(null);
+    } else {
+      console.log(
+        "Damn! the user cancelled the deletion of: " + selectedRowNameToDelete,
+      );
+      setSelectedRowNameToDelete(null);
+    }
+  };
   const records = useRecordStore((state) => state.records);
-  const removeUsersByIndexes = useRecordStore(
-    (state) => state.removeUsersByIndexes,
-  );
 
   const [searchValue, setSearchValue] = useState("");
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
     type: "include",
     ids: new Set<GridRowId>(),
   });
-  const selectedIds = Array.from(selectionModel.ids).map(Number);
 
   const rows: RowData[] = useMemo(
     () =>
@@ -139,28 +142,13 @@ export default function GlobalRecordsTable() {
     );
   }, [rows, searchValue]);
 
-  const handleDeleteSelected = () => {
-    removeUsersByIndexes(selectedIds);
-    setSelectionModel({ type: "include", ids: new Set<GridRowId>() });
+  const handleDeleteRow = (name: string) => {
+    console.log("Rows name to delete: " + name);
   };
 
-  const handleDeleteRow = (id: number) => {
-    removeUsersByIndexes([id]);
-    setSelectionModel((prev) => {
-      const next = new Set(prev.ids);
-      next.delete(id);
-      return { type: "include", ids: next };
-    });
-  };
-
-  const handleEditRow = (id: number) => {
-    // TODO: Add edit logic
-    console.log("Edit row", id);
-  };
-
-  const handleGoToDetails = (id: number) => {
+  const handleGoToDetails = (name: string) => {
     // TODO: Add details page
-    console.log("Go to details for row", id);
+    console.log(name);
   };
 
   const columns: GridColDef<RowData>[] = [
@@ -235,30 +223,24 @@ export default function GlobalRecordsTable() {
               size="small"
               onClick={(e) => {
                 e.stopPropagation();
-                handleGoToDetails(params.row.id);
+                handleGoToDetails(params.row.name);
               }}
             >
               <OpenInNewIcon fontSize="small" />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Edit">
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleEditRow(params.row.id);
-              }}
-            >
-              <EditIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
+          <ConfirmDialog
+            selectedValue={selectedValue}
+            open={open}
+            onClose={handleClose}
+          />
           <Tooltip title="Delete">
             <IconButton
               size="small"
               color="error"
               onClick={(e) => {
                 e.stopPropagation();
-                handleDeleteRow(params.row.id);
+                handleClickOpen(params.row.name);
               }}
             >
               <DeleteIcon fontSize="small" />
@@ -271,7 +253,16 @@ export default function GlobalRecordsTable() {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
+      <Paper
+        sx={{
+          maxWidth: "100%",
+          p: 4,
+          mt: 3,
+          mx: 2,
+          border: "2px solid #8cbbe9",
+          boxShadow: "none",
+        }}
+      >
         <DataGrid
           showToolbar
           initialState={{
@@ -283,7 +274,6 @@ export default function GlobalRecordsTable() {
             footerRowSelected: (count) => ``,
             paginationRowsPerPage: `${t("rowsPerPage")}`,
           }}
-          checkboxSelection
           disableRowSelectionOnClick={false}
           rowSelectionModel={selectionModel}
           onRowSelectionModelChange={(model) => setSelectionModel(model)}
@@ -296,8 +286,6 @@ export default function GlobalRecordsTable() {
             toolbar: {
               searchValue,
               onSearchChange: setSearchValue,
-              numSelected: selectedIds.length,
-              onDeleteSelected: handleDeleteSelected,
               showQuickFilter: true,
               quickFilterProps: { debounceMs: 500 },
             },
@@ -305,7 +293,7 @@ export default function GlobalRecordsTable() {
           sx={{
             border: "none",
             "& .MuiDataGrid-columnHeaders": {
-              fontSize: "1rem",
+              fontSize: "1.4rem",
               fontWeight: 700,
             },
             "& .MuiDataGrid-cell": {

@@ -12,7 +12,6 @@ interface RecordStore {
   updateRecord: (name: string, id: string, updatedRecord: RecordEntry) => void;
   getRecordById: (name: string, id: string) => RecordWithId | undefined;
   getRecordsArrayByName: (name: string) => RecordWithId | undefined;
-  removeUsersByIndexes: (indexes: number[]) => void;
 }
 export const useRecordStore = create<RecordStore>()(
   persist(
@@ -112,12 +111,6 @@ export const useRecordStore = create<RecordStore>()(
         }
         return recordsByName[0];
       },
-      removeUsersByIndexes: (indexes: number[]) =>
-        set((state) => ({
-          records: state.records.filter(
-            (record, index) => !indexes.includes(index),
-          ),
-        })),
     })),
     {
       name: "record-storage",
