@@ -8,6 +8,8 @@ import RecordFormModal from "./components/RecordFormModal";
 import { useRecordStore } from "./stores/recordStore";
 import GlobalRecordsTable from "./components/GlobalRecordsTable";
 import { useModalStore } from "./stores/modalStore";
+import { enqueueSnackbar, SnackbarProvider } from "notistack";
+
 export default function HomePage() {
   const handleModalStore = useModalStore((state) => state.handleModalState);
   const t = useTranslations();
@@ -23,6 +25,8 @@ export default function HomePage() {
         }),
       }}
     >
+      <SnackbarProvider />
+
       {records.length === 0 && (
         <Button
           variant="outlined"

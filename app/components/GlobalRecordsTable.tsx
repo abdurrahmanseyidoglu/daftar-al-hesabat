@@ -14,7 +14,6 @@ import {
   GridRowId,
   GridRowSelectionModel,
   GridToolbarProps,
-  ColumnsPanelTrigger,
   Toolbar,
   ToolbarPropsOverrides,
 } from "@mui/x-data-grid";
@@ -28,9 +27,12 @@ import { MoneyDirection } from "../types/enums";
 import { RecordEntry } from "../schemas/record.schema";
 import { useTranslations } from "next-intl";
 import ConfirmDialog from "./ConfirmDialog";
+import { enqueueSnackbar } from "notistack";
+import { getValueOptions } from "@mui/x-data-grid/internals";
+import Link from "next/link";
 
 interface RowData {
-  id: number;
+  id: string;
   name: string;
   recordsCount: number;
   total: number;
@@ -61,36 +63,56 @@ function CustomToolbar({
 }: GridToolbarProps & ToolbarPropsOverrides) {
   return (
     <Toolbar>
-      <TextField
-        size="small"
-        placeholder="Search..."
-        value={searchValue}
-        onChange={(e) => onSearchChange(e.target.value)}
-        slotProps={{
-          input: {
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon fontSize="small" />
-              </InputAdornment>
-            ),
-          },
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
         }}
-        sx={{ width: 220 }}
-      />
+      >
+        <Typography
+          fontSize={"2rem"}
+          fontWeight={500}
+          sx={{ textAlign: "end" }}
+        >
+          All Records
+        </Typography>
+        <TextField
+          size="small"
+          placeholder="Search..."
+          value={searchValue}
+          onChange={(e) => onSearchChange(e.target.value)}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon fontSize="small" />
+                </InputAdornment>
+              ),
+            },
+          }}
+          sx={{ width: 220 }}
+        />
+      </Box>
     </Toolbar>
   );
 }
 
 export default function GlobalRecordsTable() {
+  const records = useRecordStore((state) => state.records);
+  const removeNameWithHisRecords = useRecordStore(
+    (state) => state.removeNameWithHisRecords,
+  );
   const t = useTranslations();
   const [open, setOpen] = useState(false);
-  const [selectedRowNameToDelete, setSelectedRowNameToDelete] = useState<
+  const [selectedNameToDelete, setSelectedNameToDelete] = useState<
     string | null
   >(null);
   const [selectedValue, setSelectedValue] = useState(false);
   const handleClickOpen = (name: string) => {
     setOpen(true);
-    setSelectedRowNameToDelete(name);
+    setSelectedNameToDelete(name);
   };
 
   const handleClose = (value: boolean) => {
@@ -98,18 +120,22 @@ export default function GlobalRecordsTable() {
     setOpen(false);
     setSelectedValue(value);
     if (value) {
-      console.log(
-        "Run the delete function with the name of: " + selectedRowNameToDelete,
-      );
-      setSelectedRowNameToDelete(null);
+      const successRemove = removeNameWithHisRecords(selectedNameToDelete);
+      if (successRemove) {
+        enqueueSnackbar(`deleted`, { variant: "success" });
+      } else {
+        enqueueSnackbar(`Something went wrong`, { variant: "error" });
+      }
+      setSelectedNameToDelete(null);
     } else {
       console.log(
-        "Damn! the user cancelled the deletion of: " + selectedRowNameToDelete,
+        "Damn! the user cancelled the deletion of: " + selectedNameToDelete,
       );
-      setSelectedRowNameToDelete(null);
+      setTimeout(() => {
+        setSelectedNameToDelete(null); // Wait foe the modal closing animation to finish
+      }, 200);
     }
   };
-  const records = useRecordStore((state) => state.records);
 
   const [searchValue, setSearchValue] = useState("");
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
@@ -119,10 +145,10 @@ export default function GlobalRecordsTable() {
 
   const rows: RowData[] = useMemo(
     () =>
-      records.map((record, index) => {
+      records.toReversed().map((record) => {
         const total = calculateTotal(record.records);
         return {
-          id: index,
+          id: record.name,
           name: record.name,
           recordsCount: record.records.length,
           total,
@@ -157,6 +183,11 @@ export default function GlobalRecordsTable() {
       headerName: `${t("name")}`,
       flex: 2,
       minWidth: 140,
+      renderCell: (params: GridRenderCellParams<RowData>) => (
+        <Link className="underline " href={`person/${params.row.name}`}>
+          {params.row.name}
+        </Link>
+      ),
     },
     {
       field: "recordsCount",
@@ -219,21 +250,19 @@ export default function GlobalRecordsTable() {
       renderCell: (params: GridRenderCellParams<RowData>) => (
         <Stack direction="row" spacing={0.5} alignItems="center" height="100%">
           <Tooltip title="Go to details">
-            <IconButton
-              size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleGoToDetails(params.row.name);
-              }}
-            >
-              <OpenInNewIcon fontSize="small" />
-            </IconButton>
+            <Link href={`/person/${params.row.name}`}>
+              <IconButton
+                size="small"
+                // onClick={(e) => {
+                //   e.stopPropagation();
+                //   handleGoToDetails(params.row.name);
+                // }}
+              >
+                <OpenInNewIcon fontSize="small" />
+              </IconButton>
+            </Link>
           </Tooltip>
-          <ConfirmDialog
-            selectedValue={selectedValue}
-            open={open}
-            onClose={handleClose}
-          />
+
           <Tooltip title="Delete">
             <IconButton
               size="small"
@@ -263,6 +292,14 @@ export default function GlobalRecordsTable() {
           boxShadow: "none",
         }}
       >
+        <ConfirmDialog
+          selectedValue={selectedValue}
+          open={open}
+          onClose={handleClose}
+          title={`Are you sure you want to delete ${selectedNameToDelete}?`}
+          description={`Deleting ${selectedNameToDelete} will delete all its records!`}
+          descriptionColor="error"
+        />
         <DataGrid
           showToolbar
           initialState={{
@@ -277,7 +314,7 @@ export default function GlobalRecordsTable() {
           disableRowSelectionOnClick={false}
           rowSelectionModel={selectionModel}
           onRowSelectionModelChange={(model) => setSelectionModel(model)}
-          pageSizeOptions={[10, 100, 500]}
+          pageSizeOptions={[10, 50, 100]}
           paginationModel={{ page: 0, pageSize: 10 }}
           slots={{
             toolbar: CustomToolbar,
@@ -287,7 +324,6 @@ export default function GlobalRecordsTable() {
               searchValue,
               onSearchChange: setSearchValue,
               showQuickFilter: true,
-              quickFilterProps: { debounceMs: 500 },
             },
           }}
           sx={{

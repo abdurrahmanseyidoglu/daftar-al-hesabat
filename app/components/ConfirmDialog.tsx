@@ -3,20 +3,31 @@ import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
-import { DialogContent } from "@mui/material";
+import { Box, DialogContent } from "@mui/material";
+import { Palette } from "@mui/material/styles";
 
-const emails = ["username@gmail.com", "user02@gmail.com"];
+type MuiColor = keyof Palette;
 
 export interface Props {
   open: boolean;
   selectedValue: boolean;
-  onClose: (value: boolean) => boolean;
+  onClose: (value: boolean) => void;
   title?: string;
+  titleColor?: MuiColor;
   description?: string;
+  descriptionColor?: MuiColor;
 }
 
 export default function ConfirmDialog(props: Props) {
-  const { onClose, selectedValue, open, title, description } = props;
+  const {
+    onClose,
+    selectedValue,
+    open,
+    title,
+    description,
+    descriptionColor,
+    titleColor,
+  } = props;
 
   const handleClose = () => {
     onClose(selectedValue);
@@ -28,21 +39,41 @@ export default function ConfirmDialog(props: Props) {
 
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>{title ?? "Are you sure?"}</DialogTitle>
+      <DialogTitle color={titleColor}>{title ?? "Are you sure?"}</DialogTitle>
       <DialogContent>
         <Typography
           sx={{
-            fontSize: "2rem",
+            fontSize: "1rem",
           }}
+          color={descriptionColor}
         >
           {description}
         </Typography>
-        <Button onClick={() => handleConformation(true)} color="primary">
-          YES
-        </Button>
-        <Button onClick={() => handleConformation(false)} color="error">
-          NO
-        </Button>
+        <Box
+          sx={{
+            mt: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "2rem",
+            width: "100%",
+          }}
+        >
+          <Button
+            variant="outlined"
+            onClick={() => handleConformation(false)}
+            color="error"
+          >
+            NO
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => handleConformation(true)}
+            color="primary"
+          >
+            YES
+          </Button>
+        </Box>
       </DialogContent>
     </Dialog>
   );

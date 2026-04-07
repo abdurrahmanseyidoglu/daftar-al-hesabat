@@ -21,6 +21,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useRecordStore } from "../stores/recordStore";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "./LangaugeSwitcher";
+import { enqueueSnackbar } from "notistack";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];

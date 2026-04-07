@@ -2,16 +2,16 @@ import { create } from "zustand";
 import { Record, RecordEntry } from "../schemas/record.schema";
 import { persist, devtools } from "zustand/middleware";
 
-type RecordWithId = Record;
 interface RecordStore {
-  records: RecordWithId[];
+  records: Record[];
   doesNameExistInRecords: (name: string) => boolean;
   addRecordToExistingName: (name: string, record: RecordEntry) => void;
   addRecordToNewName: (name: string, record: RecordEntry) => void;
   removeRecord: (name: string, id: string) => void;
   updateRecord: (name: string, id: string, updatedRecord: RecordEntry) => void;
-  getRecordById: (name: string, id: string) => RecordWithId | undefined;
-  getRecordsArrayByName: (name: string) => RecordWithId | undefined;
+  getRecordById: (name: string, id: string) => Record | undefined;
+  getRecordsArrayByName: (name: string) => RecordEntry[] | undefined;
+  removeNameWithHisRecords: (name: string | null) => boolean; // true -> Deleted / false -> Not Deleted
 }
 export const useRecordStore = create<RecordStore>()(
   persist(
@@ -109,7 +109,14 @@ export const useRecordStore = create<RecordStore>()(
         if (recordsByName.length === 0) {
           return;
         }
-        return recordsByName[0];
+        return recordsByName[0].records;
+      },
+      removeNameWithHisRecords: (name) => {
+        if (!name || !get().doesNameExistInRecords(name)) return false;
+        set((state) => ({
+          records: state.records.filter((r) => r.name !== name),
+        }));
+        return true;
       },
     })),
     {
