@@ -4,10 +4,10 @@ import { persist, devtools } from "zustand/middleware";
 
 interface RecordStore {
   records: Record[];
-  doesNameExistInRecords: (name: string) => boolean;
+  doesNameExistInRecords: (name: string | null) => boolean;
   addRecordToExistingName: (name: string, record: RecordEntry) => void;
   addRecordToNewName: (name: string, record: RecordEntry) => void;
-  removeRecord: (name: string, id: string) => void;
+  removeRecord: (name: string | null, id: string | null) => boolean;
   updateRecord: (name: string, id: string, updatedRecord: RecordEntry) => void;
   getRecordById: (name: string, id: string) => Record | undefined;
   getRecordsArrayByName: (name: string) => RecordEntry[] | undefined;
@@ -17,7 +17,7 @@ export const useRecordStore = create<RecordStore>()(
   persist(
     devtools((set, get) => ({
       records: [],
-      doesNameExistInRecords: (name: string) => {
+      doesNameExistInRecords: (name: string | null) => {
         const records = get().records;
         return records.some((r) => r.name === name);
       },
@@ -59,23 +59,20 @@ export const useRecordStore = create<RecordStore>()(
         })),
 
       removeRecord: (name, id) => {
-        if (!get().doesNameExistInRecords(name)) return;
-        else {
-          // loop through the records using the map
-          // find the record by name and then make a new array that has all its original elements except the record with the passed id.
-          set((state) => ({
-            records: state.records.map((r) => {
-              if (r.name !== name) {
-                return r;
-              } else {
-                return {
-                  name: r.name,
-                  records: r.records.filter((record) => record.id !== id),
-                };
-              }
-            }),
-          }));
-        }
+        if (!name && !get().doesNameExistInRecords(name)) return false;
+        let removed = false;
+
+        // loop through the records using the map
+        // find the record by name and then make a new array that has all its original elements except the record with the passed id.
+        set((state) => ({
+          records: state.records.map((r) => {
+            if (r.name !== name) return r;
+            const filtered = r.records.filter((record) => record.id !== id);
+            if (filtered.length < r.records.length) removed = true;
+            return { name: r.name, records: filtered };
+          }),
+        }));
+        return removed;
       },
       updateRecord: (name, id, updatedRecord) => {
         if (!get().doesNameExistInRecords(name)) return;
@@ -106,9 +103,15 @@ export const useRecordStore = create<RecordStore>()(
       },
       getRecordsArrayByName: (name) => {
         const recordsByName = get().records.filter((rs) => rs.name === name);
+        console.log(name);
+
         if (recordsByName.length === 0) {
+          console.log("sksksks");
+
           return;
         }
+        console.log("hehehehe " + recordsByName[0].records);
+
         return recordsByName[0].records;
       },
       removeNameWithHisRecords: (name) => {

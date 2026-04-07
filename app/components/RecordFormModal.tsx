@@ -71,11 +71,11 @@ const RecordFormModal = () => {
     defaultValues: {
       name: modalPredefinedProps?.name ?? "",
       record: {
-        direction: modalPredefinedProps?.record.direction ?? MoneyDirection.ON,
-        currency: modalPredefinedProps?.record.currency ?? "usd",
-        amount: modalPredefinedProps?.record.amount ?? 0,
-        date: modalPredefinedProps?.record.date ?? new Date(),
-        details: modalPredefinedProps?.record.details ?? "",
+        direction: modalPredefinedProps?.record?.direction ?? MoneyDirection.ON,
+        currency: modalPredefinedProps?.record?.currency ?? "usd",
+        amount: modalPredefinedProps?.record?.amount ?? 0,
+        date: modalPredefinedProps?.record?.date ?? new Date(),
+        details: modalPredefinedProps?.record?.details ?? "",
       },
     },
   });
