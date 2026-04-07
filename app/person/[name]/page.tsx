@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import { useRecordStore } from "@/app/stores/recordStore";
 import { MoneyDirection } from "@/app/types/enums";
 import { RecordEntry } from "@/app/schemas/record.schema";
@@ -156,7 +156,11 @@ export default function ProfilePage() {
   const resetModalPredefinedProps = useModalStore(
     (state) => state.resetModalPredefinedProps,
   );
-  populateModalPredefinedProps({ name: recordsOwner });
+  useEffect(() => {
+    if (recordsOwner) {
+      populateModalPredefinedProps({ name: recordsOwner });
+    }
+  }, [recordsOwner, populateModalPredefinedProps]);
   const rows: RecordEntry[] | undefined = useMemo(
     () =>
       personsRecords?.toReversed().map((record) => {

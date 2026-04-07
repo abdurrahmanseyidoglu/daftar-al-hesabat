@@ -8,10 +8,17 @@ import RecordFormModal from "./components/RecordFormModal";
 import { useRecordStore } from "./stores/recordStore";
 import GlobalRecordsTable from "./components/GlobalRecordsTable";
 import { useModalStore } from "./stores/modalStore";
-import { enqueueSnackbar, SnackbarProvider } from "notistack";
+import { SnackbarProvider } from "notistack";
+import { useOnMount } from "@mui/x-data-grid";
 
 export default function HomePage() {
   const handleModalStore = useModalStore((state) => state.handleModalState);
+  const resetModalPredefinedProps = useModalStore(
+    (state) => state.resetModalPredefinedProps,
+  );
+  // useOnMount(() => {
+  //   resetModalPredefinedProps();
+  // });
   const t = useTranslations();
   const records = useRecordStore((state) => state.records);
   return (

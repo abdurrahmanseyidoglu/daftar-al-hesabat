@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import NumberField from "./NumberField";
 import { MoneyDirection } from "../types/enums";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -66,19 +66,46 @@ const RecordFormModal = () => {
   const doesNameExistInRecords = useRecordStore(
     (state) => state.doesNameExistInRecords,
   );
-  const { control, handleSubmit } = useForm<FormValuesType>({
+  const { control, handleSubmit, reset } = useForm<FormValuesType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: modalPredefinedProps?.name ?? "",
+      name: "",
       record: {
-        direction: modalPredefinedProps?.record?.direction ?? MoneyDirection.ON,
-        currency: modalPredefinedProps?.record?.currency ?? "usd",
-        amount: modalPredefinedProps?.record?.amount ?? 0,
-        date: modalPredefinedProps?.record?.date ?? new Date(),
-        details: modalPredefinedProps?.record?.details ?? "",
+        direction: MoneyDirection.ON,
+        currency: "usd",
+        amount: 0,
+        date: new Date(),
+        details: "",
       },
     },
   });
+  useEffect(() => {
+    if (isModalOpen && modalPredefinedProps) {
+      // Check if any property exists (name or record fields)
+      const hasName = modalPredefinedProps.name != null;
+      const hasRecordProps =
+        modalPredefinedProps.record &&
+        (modalPredefinedProps.record.direction != null ||
+          modalPredefinedProps.record.currency != null ||
+          modalPredefinedProps.record.amount != null ||
+          modalPredefinedProps.record.date != null ||
+          modalPredefinedProps.record.details != null);
+
+      if (hasName || hasRecordProps) {
+        reset({
+          name: modalPredefinedProps.name ?? "",
+          record: {
+            direction:
+              modalPredefinedProps.record?.direction ?? MoneyDirection.ON,
+            currency: modalPredefinedProps.record?.currency ?? "usd",
+            amount: modalPredefinedProps.record?.amount ?? 0,
+            date: modalPredefinedProps.record?.date ?? new Date(),
+            details: modalPredefinedProps.record?.details ?? "",
+          },
+        });
+      }
+    }
+  }, [isModalOpen, modalPredefinedProps, reset]);
 
   const [savingForm, setSavingForm] = useState(false);
 

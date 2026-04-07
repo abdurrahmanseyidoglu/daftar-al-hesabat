@@ -1,1 +1,5 @@
 1- i18 needs to be worked on things like Directions (some MUI component needs explicit rtl attrebuites)
+2- displaying the date needs a better way, display the time + the date
+3- Add the edit action to the record single page
+4- fix displaying currency (USD)? ($?)
+5- add the footer with all the necessary calculations
