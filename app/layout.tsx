@@ -7,6 +7,9 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import { Box } from "@mui/material";
 import SnackbarWrapper from "./components/SnackBarWrapper";
+import { ViewTransition } from "react";
+import { InitialAppLoader } from "./components/AppLoader/InitialAppLoader";
+import { AppLoaderDismiss } from "./components/AppLoader/AppLoaderDismiss";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -25,18 +28,22 @@ export default async function RootLayout({ children }: Props) {
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <NextIntlClientProvider>
-              <SnackbarWrapper>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    height: "100dvh",
-                  }}
-                >
-                  <Navbar />
-                  {children}
-                </Box>
-              </SnackbarWrapper>
+              <InitialAppLoader />
+              <AppLoaderDismiss />
+              <ViewTransition>
+                <SnackbarWrapper>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      height: "100dvh",
+                    }}
+                  >
+                    <Navbar />
+                    {children}
+                  </Box>
+                </SnackbarWrapper>
+              </ViewTransition>
             </NextIntlClientProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
