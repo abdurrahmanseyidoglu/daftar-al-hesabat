@@ -61,17 +61,17 @@ export default function ConfirmDialog(props: Props) {
         >
           <Button
             variant="outlined"
-            onClick={() => handleConformation(false)}
-            color="error"
-          >
-            NO
-          </Button>
-          <Button
-            variant="outlined"
             onClick={() => handleConformation(true)}
             color="primary"
           >
             YES
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={() => handleConformation(false)}
+            color="error"
+          >
+            NO
           </Button>
         </Box>
       </DialogContent>

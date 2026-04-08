@@ -30,7 +30,6 @@ import {
   Paper,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { enqueueSnackbar, SnackbarProvider } from "notistack";
 import { useTranslations } from "next-intl";
 import ConfirmDialog from "@/app/components/ConfirmDialog";
 import { useParams } from "next/navigation";
@@ -38,6 +37,7 @@ import { json } from "zod";
 import RecordFormModal from "@/app/components/RecordFormModal";
 import { useModalStore } from "@/app/stores/modalStore";
 import { formatDate } from "@/utils";
+import { useSnackbar } from "notistack";
 
 declare module "@mui/x-data-grid" {
   interface ToolbarPropsOverrides {
@@ -105,14 +105,15 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
   );
 }
 export default function ProfilePage() {
+  const { enqueueSnackbar } = useSnackbar();
+
   const { name: recordsOwner } = useParams<{ name: string }>();
 
-  const findRecordsByName = useRecordStore(
-    (state) => state.getRecordsArrayByName,
-  );
-  const t = useTranslations();
-  const personsRecords = findRecordsByName(recordsOwner);
   const removeRecord = useRecordStore((state) => state.removeRecord);
+  const t = useTranslations();
+  const personsRecords = useRecordStore((state) =>
+    state.getRecordsArrayByName(recordsOwner),
+  );
   const [open, setOpen] = useState(false);
   const [recordIdToDelete, setRecordIdToDelete] = useState<string | null>(null);
   const [selectedValue, setSelectedValue] = useState(false);
@@ -137,9 +138,6 @@ export default function ProfilePage() {
       }
       setRecordIdToDelete(null);
     } else {
-      console.log(
-        "Damn! the user cancelled the deletion of: " + recordIdToDelete,
-      );
       setTimeout(() => {
         setRecordIdToDelete(null); // Wait foe the modal closing animation to finish
       }, 200);
@@ -150,13 +148,10 @@ export default function ProfilePage() {
     type: "include",
     ids: new Set<GridRowId>(),
   });
-  const total = calculateTotal(personsRecords);
   const populateModalPredefinedProps = useModalStore(
     (state) => state.populateModalPredefinedProps,
   );
-  const resetModalPredefinedProps = useModalStore(
-    (state) => state.resetModalPredefinedProps,
-  );
+
   useEffect(() => {
     if (recordsOwner) {
       populateModalPredefinedProps({ name: recordsOwner });
@@ -186,15 +181,13 @@ export default function ProfilePage() {
         .some((v) => v.includes(q)),
     );
   }, [rows, searchValue]);
-  const handleDeleteRow = (id: string) => {
-    console.log("Rows name to delete: " + id);
-  };
   const columns: GridColDef<RecordEntry>[] = [
     {
       field: "date",
       headerName: `Date`,
       flex: 2,
-      minWidth: 140,
+      minWidth: 210,
+      maxWidth: 210,
       renderCell: (params: GridRenderCellParams<RecordEntry, Date>) => (
         <div>{params.value ? `${formatDate(params.value)}` : ""}</div>
       ),
@@ -204,27 +197,31 @@ export default function ProfilePage() {
       headerName: `Amount`,
       type: "number",
       flex: 1,
-      minWidth: 120,
+      minWidth: 250,
+      maxWidth: 250,
       align: "left",
       headerAlign: "left",
     },
     {
-      field: "details",
-      headerName: "Details",
+      field: "currency",
+      headerName: `Currency`,
+      type: "string",
       flex: 1,
-      minWidth: 100,
-      maxWidth: 1000,
+      minWidth: 150,
+      maxWidth: 150,
       align: "left",
       headerAlign: "left",
       renderCell: (params: GridRenderCellParams<RecordEntry, string>) => (
-        <div style={{ whiteSpace: "normal" }}>{params.value || "-"}</div>
+        <div className="uppercase"> {params.value}</div>
       ),
     },
+
     {
       field: "direction",
       headerName: `TO / ON`,
       flex: 1,
-      minWidth: 90,
+      minWidth: 150,
+      maxWidth: 150,
       renderCell: (
         params: GridRenderCellParams<RecordEntry, MoneyDirection>,
       ) =>
@@ -239,13 +236,21 @@ export default function ProfilePage() {
         ),
     },
     {
-      field: "currency",
-      headerName: `Currency`,
-      type: "string",
+      field: "details",
+      headerName: "Details",
+      minWidth: 200,
       flex: 1,
-      minWidth: 100,
       align: "left",
       headerAlign: "left",
+      renderCell: (params: GridRenderCellParams<RecordEntry, string>) => {
+        return params.value ? (
+          <Tooltip title={params.value}>
+            <div style={{ whiteSpace: "normal" }}>{params.value}</div>
+          </Tooltip>
+        ) : (
+          <h1>-</h1>
+        );
+      },
     },
     {
       field: "actions",
@@ -255,7 +260,13 @@ export default function ProfilePage() {
       disableColumnMenu: true,
       width: 120,
       renderCell: (params: GridRenderCellParams<RecordEntry>) => (
-        <Stack direction="row" spacing={0.5} alignItems="start" height="100%">
+        <Stack
+          direction="row"
+          spacing={0.5}
+          alignItems="center"
+          justifyContent="center"
+          height="100%"
+        >
           <Tooltip title="Delete">
             <IconButton
               size="small"
@@ -292,7 +303,7 @@ export default function ProfilePage() {
           p: 4,
           mt: 3,
           mx: 2,
-          border: "2px solid #8cbbe9",
+          border: "none",
           boxShadow: "none",
         }}
       >
@@ -304,14 +315,12 @@ export default function ProfilePage() {
           descriptionColor="error"
         />
         <DataGrid
-          autosizeOnMount
           autosizeOptions={{
             includeHeaders: true,
             includeOutliers: true,
             outliersFactor: 1.5,
-            expand: false,
+            expand: false, // don't stretch to fill remaining space
           }}
-          getRowHeight={() => "auto"}
           showToolbar
           initialState={{
             density: "comfortable",
@@ -350,7 +359,6 @@ export default function ProfilePage() {
           }}
         />
       </Paper>
-      <SnackbarProvider />
       <RecordFormModal />
     </Box>
   );

@@ -103,15 +103,10 @@ export const useRecordStore = create<RecordStore>()(
       },
       getRecordsArrayByName: (name) => {
         const recordsByName = get().records.filter((rs) => rs.name === name);
-        console.log(name);
 
         if (recordsByName.length === 0) {
-          console.log("sksksks");
-
           return;
         }
-        console.log("hehehehe " + recordsByName[0].records);
-
         return recordsByName[0].records;
       },
       removeNameWithHisRecords: (name) => {

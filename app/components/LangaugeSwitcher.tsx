@@ -24,7 +24,7 @@ export function LanguageSwitcher() {
     <Select
       sx={{
         color: "#ffffff",
-
+        height: "42px",
         "& .MuiSelect-icon": {
           color: "#ffffff",
         },

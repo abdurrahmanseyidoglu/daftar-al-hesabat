@@ -1,5 +1,5 @@
-1- i18 needs to be worked on things like Directions (some MUI component needs explicit rtl attrebuites)
-2- displaying the date needs a better way, display the time + the date
-3- Add the edit action to the record single page
-4- fix displaying currency (USD)? ($?)
-5- add the footer with all the necessary calculations
+- i18 needs to be worked on things like Directions (some MUI component needs explicit rtl attributes)
+- Add the edit action to the record single page
+- add tow footers 
+    1- for the total over all per currency: user can select the currency and based on that the footer calculations changes 
+    2- per person calculations with currency: when user enters a persons records the footer content changes to calculate this persons total not the global total

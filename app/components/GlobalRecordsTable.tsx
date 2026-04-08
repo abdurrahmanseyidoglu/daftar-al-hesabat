@@ -116,7 +116,6 @@ export default function GlobalRecordsTable() {
   };
 
   const handleClose = (value: boolean) => {
-    console.log("handle close called: " + value);
     setOpen(false);
     setSelectedValue(value);
     if (value) {
@@ -128,9 +127,6 @@ export default function GlobalRecordsTable() {
       }
       setSelectedNameToDelete(null);
     } else {
-      console.log(
-        "Damn! the user cancelled the deletion of: " + selectedNameToDelete,
-      );
       setTimeout(() => {
         setSelectedNameToDelete(null); // Wait foe the modal closing animation to finish
       }, 200);
@@ -307,11 +303,7 @@ export default function GlobalRecordsTable() {
           }}
           rows={filteredRows}
           columns={columns}
-          localeText={{
-            footerRowSelected: (count) => ``,
-            paginationRowsPerPage: `${t("rowsPerPage")}`,
-          }}
-          disableRowSelectionOnClick={false}
+          disableRowSelectionOnClick={true}
           rowSelectionModel={selectionModel}
           onRowSelectionModelChange={(model) => setSelectionModel(model)}
           pageSizeOptions={[10, 50, 100]}

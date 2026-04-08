@@ -8,13 +8,10 @@ import RecordFormModal from "./components/RecordFormModal";
 import { useRecordStore } from "./stores/recordStore";
 import GlobalRecordsTable from "./components/GlobalRecordsTable";
 import { useModalStore } from "./stores/modalStore";
-import { SnackbarProvider } from "notistack";
 
 export default function HomePage() {
   const handleModalStore = useModalStore((state) => state.handleModalState);
-  const resetModalPredefinedProps = useModalStore(
-    (state) => state.resetModalPredefinedProps,
-  );
+
   // useOnMount(() => {
   //   resetModalPredefinedProps();
   // });
@@ -31,8 +28,6 @@ export default function HomePage() {
         }),
       }}
     >
-      <SnackbarProvider />
-
       {records.length === 0 && (
         <Button
           variant="outlined"
