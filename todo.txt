@@ -3,3 +3,4 @@
 - add tow footers 
     1- for the total over all per currency: user can select the currency and based on that the footer calculations changes 
     2- per person calculations with currency: when user enters a persons records the footer content changes to calculate this persons total not the global total
+- refactor currencies to be enum instead of a string

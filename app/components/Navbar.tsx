@@ -36,7 +36,7 @@ function Navbar() {
   const handleModalStore = useModalStore((state) => state.handleModalState);
 
   return (
-    <AppBar position="static">
+    <AppBar position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box
@@ -46,7 +46,7 @@ function Navbar() {
               gap: ".5rem",
               alignItems: "center",
               width: "100%",
-              
+
               justifyContent: "flex-end",
             }}
           >
@@ -65,8 +65,6 @@ function Navbar() {
             )}
             <LanguageSwitcher />
           </Box>
-
-       
         </Toolbar>
       </Container>
     </AppBar>

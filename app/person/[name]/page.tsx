@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRecordStore } from "@/app/stores/recordStore";
 import { MoneyDirection } from "@/app/types/enums";
 import { RecordEntry } from "@/app/schemas/record.schema";
@@ -33,11 +33,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useTranslations } from "next-intl";
 import ConfirmDialog from "@/app/components/ConfirmDialog";
 import { useParams } from "next/navigation";
-import { json } from "zod";
 import RecordFormModal from "@/app/components/RecordFormModal";
 import { useModalStore } from "@/app/stores/modalStore";
 import { formatDate } from "@/utils";
 import { useSnackbar } from "notistack";
+import Footer from "@/app/components/Footer";
 
 declare module "@mui/x-data-grid" {
   interface ToolbarPropsOverrides {
@@ -47,17 +47,7 @@ declare module "@mui/x-data-grid" {
     onDeleteSelected: () => void;
   }
 }
-const calculateTotal = (namedRecords: RecordEntry[] | undefined): number => {
-  if (!namedRecords) {
-    return 0;
-  }
-  let total = 0;
-  namedRecords.forEach((record) => {
-    if (record.direction === MoneyDirection.ON) total += record.amount;
-    if (record.direction === MoneyDirection.TO) total -= record.amount;
-  });
-  return total;
-};
+
 type CustomToolbarProps = GridToolbarProps &
   ToolbarPropsOverrides & {
     searchValue: string;
@@ -108,6 +98,15 @@ export default function ProfilePage() {
   const { enqueueSnackbar } = useSnackbar();
 
   const { name: recordsOwner } = useParams<{ name: string }>();
+  const calculateTotalPerPerson = useRecordStore(
+    (state) => state.calculateTotalPerPerson,
+  );
+  const [selectedCurrency, setSelectedCurrency] = useState("usd");
+
+  const calculationObject = calculateTotalPerPerson(
+    recordsOwner,
+    selectedCurrency,
+  );
 
   const removeRecord = useRecordStore((state) => state.removeRecord);
   const t = useTranslations();
@@ -121,6 +120,9 @@ export default function ProfilePage() {
     if (!id) return;
     setOpen(true);
     setRecordIdToDelete(id);
+  };
+  const handleCurrencyChange = (currency: string): void => {
+    setSelectedCurrency(currency);
   };
   const handleEditOpen = (id: string | undefined) => {
     if (!id) return;
@@ -360,6 +362,14 @@ export default function ProfilePage() {
         />
       </Paper>
       <RecordFormModal />
+      <Footer
+        totalOnHim={calculationObject?.totalOnHim}
+        totalToHim={calculationObject?.totalToHim}
+        total={calculationObject?.total}
+        direction={calculationObject?.direction}
+        currency={selectedCurrency}
+        currencyChange={handleCurrencyChange}
+      />
     </Box>
   );
 }

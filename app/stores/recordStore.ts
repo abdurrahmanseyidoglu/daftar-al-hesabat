@@ -1,7 +1,19 @@
 import { create } from "zustand";
 import { Record, RecordEntry } from "../schemas/record.schema";
 import { persist, devtools } from "zustand/middleware";
-
+import { MoneyDirection } from "../types/enums";
+interface PersonTotal {
+  totalOnHim: number;
+  totalToHim: number;
+  total: number;
+  direction: MoneyDirection | 0;
+}
+interface GlobalTotal {
+  totalOnThem: number;
+  totalToThem: number;
+  total: number;
+  direction: MoneyDirection | 0;
+}
 interface RecordStore {
   records: Record[];
   doesNameExistInRecords: (name: string | null) => boolean;
@@ -12,6 +24,11 @@ interface RecordStore {
   getRecordById: (name: string, id: string) => Record | undefined;
   getRecordsArrayByName: (name: string) => RecordEntry[] | undefined;
   removeNameWithHisRecords: (name: string | null) => boolean; // true -> Deleted / false -> Not Deleted
+  calculateTotalPerPerson: (
+    name: string,
+    currency: string,
+  ) => PersonTotal | undefined;
+  calculateTotalGlobally: (currency: string) => GlobalTotal | undefined;
 }
 export const useRecordStore = create<RecordStore>()(
   persist(
@@ -115,6 +132,39 @@ export const useRecordStore = create<RecordStore>()(
           records: state.records.filter((r) => r.name !== name),
         }));
         return true;
+      },
+      calculateTotalPerPerson: (name, currency) => {
+        if (!name || !get().doesNameExistInRecords(name)) {
+          console.log("there is no such name " + name);
+        }
+        const records = get().getRecordsArrayByName(name);
+        const filteredRecords = records?.filter(
+          (record) => record.currency === currency,
+        );
+        if (filteredRecords?.length === 0) {
+          return;
+        }
+
+        let total = 0;
+        let totalOnHim = 0;
+        let totalToHim = 0;
+        filteredRecords?.forEach((record) => {
+          if (record.direction === MoneyDirection.ON) {
+            totalOnHim += record.amount;
+          }
+          if (record.direction === MoneyDirection.TO) {
+            totalToHim += record.amount;
+          }
+        });
+        total = totalOnHim - totalToHim;
+
+        return {
+          totalOnHim,
+          totalToHim,
+          total,
+          direction:
+            total < 0 ? MoneyDirection.TO : total > 0 ? MoneyDirection.ON : 0,
+        };
       },
     })),
     {
