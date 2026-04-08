@@ -9,7 +9,6 @@ import { useRecordStore } from "./stores/recordStore";
 import GlobalRecordsTable from "./components/GlobalRecordsTable";
 import { useModalStore } from "./stores/modalStore";
 import { SnackbarProvider } from "notistack";
-import { useOnMount } from "@mui/x-data-grid";
 
 export default function HomePage() {
   const handleModalStore = useModalStore((state) => state.handleModalState);

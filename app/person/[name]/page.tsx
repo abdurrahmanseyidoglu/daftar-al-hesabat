@@ -37,6 +37,7 @@ import { useParams } from "next/navigation";
 import { json } from "zod";
 import RecordFormModal from "@/app/components/RecordFormModal";
 import { useModalStore } from "@/app/stores/modalStore";
+import { formatDate } from "@/utils";
 
 declare module "@mui/x-data-grid" {
   interface ToolbarPropsOverrides {
@@ -194,6 +195,9 @@ export default function ProfilePage() {
       headerName: `Date`,
       flex: 2,
       minWidth: 140,
+      renderCell: (params: GridRenderCellParams<RecordEntry, Date>) => (
+        <div>{params.value ? `${formatDate(params.value)}` : ""}</div>
+      ),
     },
     {
       field: "amount",
@@ -206,12 +210,15 @@ export default function ProfilePage() {
     },
     {
       field: "details",
-      headerName: `Details`,
-      type: "number",
+      headerName: "Details",
       flex: 1,
       minWidth: 100,
+      maxWidth: 1000,
       align: "left",
       headerAlign: "left",
+      renderCell: (params: GridRenderCellParams<RecordEntry, string>) => (
+        <div style={{ whiteSpace: "normal" }}>{params.value || "-"}</div>
+      ),
     },
     {
       field: "direction",
@@ -248,7 +255,7 @@ export default function ProfilePage() {
       disableColumnMenu: true,
       width: 120,
       renderCell: (params: GridRenderCellParams<RecordEntry>) => (
-        <Stack direction="row" spacing={0.5} alignItems="center" height="100%">
+        <Stack direction="row" spacing={0.5} alignItems="start" height="100%">
           <Tooltip title="Delete">
             <IconButton
               size="small"
@@ -297,6 +304,14 @@ export default function ProfilePage() {
           descriptionColor="error"
         />
         <DataGrid
+          autosizeOnMount
+          autosizeOptions={{
+            includeHeaders: true,
+            includeOutliers: true,
+            outliersFactor: 1.5,
+            expand: false,
+          }}
+          getRowHeight={() => "auto"}
           showToolbar
           initialState={{
             density: "comfortable",
@@ -307,7 +322,7 @@ export default function ProfilePage() {
             footerRowSelected: (count) => ``,
             paginationRowsPerPage: `${t("rowsPerPage")}`,
           }}
-          disableRowSelectionOnClick={false}
+          disableRowSelectionOnClick={true}
           rowSelectionModel={selectionModel}
           onRowSelectionModelChange={(model) => setSelectionModel(model)}
           pageSizeOptions={[10, 50, 100]}
@@ -325,11 +340,12 @@ export default function ProfilePage() {
           sx={{
             border: "none",
             "& .MuiDataGrid-columnHeaders": {
-              fontSize: "1.4rem",
+              fontSize: "1.1rem",
               fontWeight: 700,
             },
             "& .MuiDataGrid-cell": {
-              fontSize: "1rem",
+              fontSize: "1.2rem",
+              border: "1px solid #e0e0e0",
             },
           }}
         />
