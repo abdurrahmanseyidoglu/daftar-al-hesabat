@@ -28,8 +28,9 @@ import { RecordEntry } from "../schemas/record.schema";
 import { useTranslations } from "next-intl";
 import ConfirmDialog from "./ConfirmDialog";
 import { enqueueSnackbar } from "notistack";
-import { getValueOptions } from "@mui/x-data-grid/internals";
 import Link from "next/link";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import { useModalStore } from "../stores/modalStore";
 
 interface RowData {
   id: string;
@@ -100,6 +101,7 @@ function CustomToolbar({
 }
 
 export default function GlobalRecordsTable() {
+  const handleModalStore = useModalStore((state) => state.handleModalState);
   const records = useRecordStore((state) => state.records);
   const removeNameWithHisRecords = useRecordStore(
     (state) => state.removeNameWithHisRecords,
@@ -247,18 +249,16 @@ export default function GlobalRecordsTable() {
         <Stack direction="row" spacing={0.5} alignItems="center" height="100%">
           <Tooltip title="Go to details">
             <Link href={`/person/${params.row.name}`}>
-              <IconButton
-                size="small"
-                // onClick={(e) => {
-                //   e.stopPropagation();
-                //   handleGoToDetails(params.row.name);
-                // }}
-              >
+              <IconButton size="small">
                 <OpenInNewIcon fontSize="small" />
               </IconButton>
             </Link>
           </Tooltip>
-
+          <Tooltip title="Edit name">
+            <IconButton size="small" onClick={() => handleModalStore(true)}>
+              <EditOutlinedIcon fontSize="small" sx={{ color: "green" }} />
+            </IconButton>
+          </Tooltip>
           <Tooltip title="Delete">
             <IconButton
               size="small"
