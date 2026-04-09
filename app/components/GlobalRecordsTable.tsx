@@ -284,7 +284,7 @@ export default function GlobalRecordsTable() {
           p: 4,
           mt: 3,
           mx: 2,
-          border: "2px solid #8cbbe9",
+          border: "none",
           boxShadow: "none",
         }}
       >
@@ -300,6 +300,12 @@ export default function GlobalRecordsTable() {
           showToolbar
           initialState={{
             density: "comfortable",
+          }}
+          autosizeOptions={{
+            includeHeaders: true,
+            includeOutliers: true,
+            outliersFactor: 1.5,
+            expand: false,
           }}
           rows={filteredRows}
           columns={columns}
@@ -321,11 +327,12 @@ export default function GlobalRecordsTable() {
           sx={{
             border: "none",
             "& .MuiDataGrid-columnHeaders": {
-              fontSize: "1.4rem",
+              fontSize: "1.1rem",
               fontWeight: 700,
             },
             "& .MuiDataGrid-cell": {
-              fontSize: "1rem",
+              fontSize: "1.2rem",
+              border: "1px solid #e0e0e0",
             },
           }}
         />
