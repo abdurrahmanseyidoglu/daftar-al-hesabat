@@ -5,12 +5,15 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-
+import CottageOutlinedIcon from "@mui/icons-material/CottageOutlined";
 import { useModalStore } from "../stores/modalStore";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useRecordStore } from "../stores/recordStore";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "./LangaugeSwitcher";
+import { IconButton, Tooltip } from "@mui/material";
+import Link from "next/link";
+import { GoHome } from "./GoHome";
 
 function Navbar() {
   const records = useRecordStore((state) => state.records);
@@ -27,11 +30,12 @@ function Navbar() {
               display: "flex",
               height: "2.5rem",
               gap: ".5rem",
-              alignItems: "space-between",
+              alignItems: "center",
+              justifyContent: "space-between",
               width: "100%",
             }}
           >
-            <Box>his is a test</Box>
+            <GoHome/>
 
             <Box
               sx={{

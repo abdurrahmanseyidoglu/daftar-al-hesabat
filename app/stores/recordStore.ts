@@ -138,21 +138,21 @@ export const useRecordStore = create<RecordStore>()(
           console.log("there is no such name " + name);
         }
         const records = get().getRecordsArrayByName(name);
-        const filteredRecords = records?.filter(
-          (record) => record.currency === currency,
-        );
-        if (filteredRecords?.length === 0) {
-          return;
-        }
 
         let total = 0;
         let totalOnHim = 0;
         let totalToHim = 0;
-        filteredRecords?.forEach((record) => {
-          if (record.direction === MoneyDirection.ON) {
+        records?.forEach((record) => {
+          if (
+            record.direction === MoneyDirection.ON &&
+            record.currency === currency
+          ) {
             totalOnHim += record.amount;
           }
-          if (record.direction === MoneyDirection.TO) {
+          if (
+            record.direction === MoneyDirection.TO &&
+            record.currency === currency
+          ) {
             totalToHim += record.amount;
           }
         });
@@ -161,6 +161,30 @@ export const useRecordStore = create<RecordStore>()(
         return {
           totalOnHim,
           totalToHim,
+          total,
+          direction:
+            total < 0 ? MoneyDirection.TO : total > 0 ? MoneyDirection.ON : 0,
+        };
+      },
+      calculateTotalGlobally: (currency) => {
+        let total = 0;
+        let totalOnThem = 0;
+        let totalToThem = 0;
+        get().records?.forEach((recordObject) => {
+          recordObject.records.forEach((r) => {
+            if (r.direction === MoneyDirection.ON && r.currency === currency) {
+              totalOnThem += r.amount;
+            }
+            if (r.direction === MoneyDirection.TO && r.currency === currency) {
+              totalToThem += r.amount;
+            }
+          });
+        });
+        total = totalOnThem - totalToThem;
+
+        return {
+          totalOnThem,
+          totalToThem,
           total,
           direction:
             total < 0 ? MoneyDirection.TO : total > 0 ? MoneyDirection.ON : 0,

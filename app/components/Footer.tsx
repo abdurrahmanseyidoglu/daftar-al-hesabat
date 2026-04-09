@@ -13,8 +13,8 @@ import {
 import AmountDisplay from "./AmountDisplay";
 import { useState } from "react";
 interface Props {
-  totalOnHim: number | undefined;
-  totalToHim: number | undefined;
+  totalOn: number | undefined;
+  totalTo: number | undefined;
   total: number | undefined;
   direction: MoneyDirection | 0 | undefined;
   currency: string;
@@ -50,21 +50,21 @@ const Footer = (props: Props) => {
           }}
         >
           <Typography color="white" fontSize={16}>
-            he needs to pay you
+            You are owed
             <AmountDisplay
-              amount={props.totalOnHim ?? 0}
+              amount={props.totalOn ?? 0}
               currency={props.currency}
             />
-            and You need to pay him
+            You owe
             <AmountDisplay
-              amount={props.totalToHim ?? 0}
+              amount={props.totalTo ?? 0}
               currency={props.currency}
             />
           </Typography>
           <Typography color="white" fontSize={20}>
             {props.direction === MoneyDirection.TO
-              ? "Total: You need to pay him"
-              : "Total: He needs to pay you"}
+              ? "Total: You owe"
+              : "Total: You are owed "}
             <AmountDisplay
               amount={props.total ?? 0}
               currency={props.currency}

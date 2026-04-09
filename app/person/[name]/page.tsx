@@ -8,7 +8,7 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   DataGrid,
   GridColDef,
@@ -38,6 +38,7 @@ import { useModalStore } from "@/app/stores/modalStore";
 import { formatDate } from "@/utils";
 import { useSnackbar } from "notistack";
 import Footer from "@/app/components/Footer";
+import Link from "next/link";
 
 declare module "@mui/x-data-grid" {
   interface ToolbarPropsOverrides {
@@ -67,13 +68,30 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
           justifyContent: "space-between",
         }}
       >
-        <Typography
-          fontSize={"2rem"}
-          fontWeight={500}
-          sx={{ textAlign: "end" }}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            gap: "1rem",
+          }}
         >
-          All Records for {recordOwner}
-        </Typography>
+          <Link href={"/"}>
+            <Tooltip title={"Back Home"}>
+              <IconButton aria-label="home" sx={{ padding: 2 }}>
+                <ArrowBackIcon />
+              </IconButton>
+            </Tooltip>
+          </Link>
+          <Typography
+            fontSize={"2rem"}
+            fontWeight={500}
+            sx={{ textAlign: "end" }}
+          >
+            All Records for {recordOwner}
+          </Typography>
+        </Box>
+
         <TextField
           size="small"
           placeholder="Search..."
@@ -363,8 +381,8 @@ export default function ProfilePage() {
       </Paper>
       <RecordFormModal />
       <Footer
-        totalOnHim={calculationObject?.totalOnHim}
-        totalToHim={calculationObject?.totalToHim}
+        totalOn={calculationObject?.totalOnHim}
+        totalTo={calculationObject?.totalToHim}
         total={calculationObject?.total}
         direction={calculationObject?.direction}
         currency={selectedCurrency}
