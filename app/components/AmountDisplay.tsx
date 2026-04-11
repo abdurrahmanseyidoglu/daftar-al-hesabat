@@ -7,8 +7,13 @@ const AmountDisplay = (props: Props) => {
   return (
     <>
       <span>{` < `}</span>
-      <span className="font-semibold">{`${Math.abs(props.amount)}`}</span>
-      <span className="font-semibold uppercase">{` ${props.currency}`} </span>
+      <span
+        className="font-semibold"
+        suppressHydrationWarning
+      >{`${Math.abs(props.amount)}`}</span>
+      <span className="font-semibold uppercase" suppressHydrationWarning>
+        {` ${props.currency}`}{" "}
+      </span>
       <span>{` > `}</span>
     </>
   );

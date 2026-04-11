@@ -4,4 +4,4 @@
 - implement the edit for person/page
 - implement the edit for home page
 - Enhance the add new modal style
-- finish the modal for editing globalrow (make the modal controlled via props and callbacks.) <Taking the state as a prop sounds good.>
+- finish the modal for editing global row (make the modal controlled via props and callbacks.) <Taking the state as a prop sounds good.>

@@ -16,6 +16,8 @@ interface GlobalTotal {
 }
 interface RecordStore {
   records: Record[];
+  selectedCurrency: string;
+  updateSelectedCurrency: (currency: string) => void;
   doesNameExistInRecords: (name: string | null) => boolean;
   addRecordToExistingName: (name: string, record: RecordEntry) => void;
   addRecordToNewName: (name: string, record: RecordEntry) => void;
@@ -34,6 +36,10 @@ export const useRecordStore = create<RecordStore>()(
   persist(
     devtools((set, get) => ({
       records: [],
+      selectedCurrency: "usd",
+      updateSelectedCurrency: (currency: string) => {
+        set({ selectedCurrency: currency });
+      },
       doesNameExistInRecords: (name: string | null) => {
         const records = get().records;
         return records.some((r) => r.name === name);

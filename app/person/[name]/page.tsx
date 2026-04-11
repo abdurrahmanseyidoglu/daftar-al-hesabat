@@ -39,6 +39,7 @@ import { formatDate } from "@/utils";
 import { useSnackbar } from "notistack";
 import Footer from "@/app/components/Footer";
 import Link from "next/link";
+import { useAppStore } from "@/app/stores/appStore";
 
 declare module "@mui/x-data-grid" {
   interface ToolbarPropsOverrides {
@@ -119,12 +120,11 @@ export default function ProfilePage() {
   const calculateTotalPerPerson = useRecordStore(
     (state) => state.calculateTotalPerPerson,
   );
-  const [selectedCurrency, setSelectedCurrency] = useState("usd");
-
-  const calculationObject = calculateTotalPerPerson(
-    recordsOwner,
-    selectedCurrency,
-  );
+  const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
+  const initialized = useAppStore((state) => state.initialized);
+  const calculationObject = initialized
+    ? calculateTotalPerPerson(recordsOwner, selectedCurrency)
+    : undefined;
 
   const removeRecord = useRecordStore((state) => state.removeRecord);
   const t = useTranslations();
@@ -139,9 +139,7 @@ export default function ProfilePage() {
     setOpen(true);
     setRecordIdToDelete(id);
   };
-  const handleCurrencyChange = (currency: string): void => {
-    setSelectedCurrency(currency);
-  };
+
   const handleEditOpen = (id: string | undefined) => {
     if (!id) return;
     //  !TODO: handlee editing a row
@@ -385,8 +383,6 @@ export default function ProfilePage() {
         totalTo={calculationObject?.totalToHim}
         total={calculationObject?.total}
         direction={calculationObject?.direction}
-        currency={selectedCurrency}
-        currencyChange={handleCurrencyChange}
       />
     </Box>
   );

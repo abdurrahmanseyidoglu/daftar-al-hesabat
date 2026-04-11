@@ -11,18 +11,21 @@ import {
   Typography,
 } from "@mui/material";
 import AmountDisplay from "./AmountDisplay";
-import { useState } from "react";
+import { useRecordStore } from "../stores/recordStore";
+
 interface Props {
   totalOn: number | undefined;
   totalTo: number | undefined;
   total: number | undefined;
   direction: MoneyDirection | 0 | undefined;
-  currency: string;
-  currencyChange: (currency: string) => void;
 }
 const Footer = (props: Props) => {
+  const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
+  const updateCurrency = useRecordStore(
+    (state) => state.updateSelectedCurrency,
+  );
   const handleChange = (event: SelectChangeEvent) => {
-    props.currencyChange(event.target.value as string);
+    updateCurrency(event.target.value as string);
   };
   return (
     <Box sx={{ marginTop: "4rem" }}>
@@ -53,21 +56,21 @@ const Footer = (props: Props) => {
             You are owed
             <AmountDisplay
               amount={props.totalOn ?? 0}
-              currency={props.currency}
+              currency={selectedCurrency}
             />
             You owe
             <AmountDisplay
               amount={props.totalTo ?? 0}
-              currency={props.currency}
+              currency={selectedCurrency}
             />
           </Typography>
-          <Typography color="white" fontSize={20}>
+          <Typography color="white" fontSize={20} suppressHydrationWarning>
             {props.direction === MoneyDirection.TO
               ? "Total: You owe"
               : "Total: You are owed "}
             <AmountDisplay
               amount={props.total ?? 0}
-              currency={props.currency}
+              currency={selectedCurrency}
             />
           </Typography>
         </Box>
@@ -82,7 +85,7 @@ const Footer = (props: Props) => {
             <Select
               labelId="currency-selector"
               id="currency-select"
-              value={props.currency}
+              value={selectedCurrency}
               label="Currency"
               onChange={handleChange}
               sx={{

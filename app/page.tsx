@@ -3,27 +3,27 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useTranslations } from "next-intl";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import RecordFormModal from "./components/RecordFormModal";
 import { useRecordStore } from "./stores/recordStore";
 import GlobalRecordsTable from "./components/GlobalRecordsTable";
 import { useModalStore } from "./stores/modalStore";
 import Footer from "./components/Footer";
+import { useAppStore } from "./stores/appStore";
 
 export default function HomePage() {
   const handleModalStore = useModalStore((state) => state.handleModalState);
-  const [selectedCurrency, setSelectedCurrency] = useState("usd");
 
   const calculateTotalGlobally = useRecordStore(
     (state) => state.calculateTotalGlobally,
   );
-  const handleCurrencyChange = (currency: string): void => {
-    setSelectedCurrency(currency);
-  };
-  const calculationObject = calculateTotalGlobally(selectedCurrency);
-  // useOnMount(() => {
-  //   resetModalPredefinedProps();
-  // });
+  const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
+  const initialized = useAppStore((state) => state.initialized);
+
+  const calculationObject = initialized
+    ? calculateTotalGlobally(selectedCurrency)
+    : undefined;
+
   const t = useTranslations();
   const records = useRecordStore((state) => state.records);
   return (
@@ -58,8 +58,6 @@ export default function HomePage() {
         totalTo={calculationObject?.totalToThem}
         total={calculationObject?.total}
         direction={calculationObject?.direction}
-        currency={selectedCurrency}
-        currencyChange={handleCurrencyChange}
       />
     </>
   );
