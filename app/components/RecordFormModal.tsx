@@ -123,10 +123,6 @@ const RecordFormModal = () => {
     handleModalState(false);
     enqueueSnackbar(`Added to ${data.name} records`, {
       variant: "success",
-      anchorOrigin: {
-        vertical: "top",
-        horizontal: "right",
-      },
     });
   };
   const records = useRecordStore((state) => state.records);

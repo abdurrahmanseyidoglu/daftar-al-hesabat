@@ -3,7 +3,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useTranslations } from "next-intl";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import { useEffect, useState } from "react";
 import RecordFormModal from "./components/RecordFormModal";
 import { useRecordStore } from "./stores/recordStore";
 import GlobalRecordsTable from "./components/GlobalRecordsTable";
