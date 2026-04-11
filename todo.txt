@@ -1,5 +1,4 @@
 - i18 needs to be worked on things like Directions (some MUI component needs explicit rtl attributes)
-- Add the edit action to the record single page
 - refactor currencies to be enum instead of a string
 - implement the edit for person/page
 - implement the edit for home page
