@@ -1,10 +1,24 @@
-import { Box } from "@mui/material";
+import { useRecordStore } from "@/app/stores/recordStore";
+import {
+  Alert,
+  AlertTitle,
+  Box,
+  Button,
+  Stack,
+  TextField,
+} from "@mui/material";
 import Modal from "@mui/material/Modal";
+import { enqueueSnackbar } from "notistack";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+type Inputs = {
+  updatedName: string;
+};
 
 interface Props {
   isOpen: boolean;
-  closeModal: (state: boolean, name: string | null) => void;
-  name: string | null;
+  closeModal: (state: boolean, name: string) => void;
+  name: string;
 }
 const modalStyle = {
   position: "absolute",
@@ -16,11 +30,39 @@ const modalStyle = {
   boxShadow: 24,
   borderRadius: 3,
   py: 4,
-  px: 8,
+  px: 6,
 };
 
 export default function EditNameModal(props: Props) {
-  const handleClose = () => props.closeModal(false, null);
+  const updateRecordOwnerName = useRecordStore(
+    (state) => state.updateRecordOwnerName,
+  );
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
+    values: {
+      updatedName: props.name,
+    },
+  });
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    const isUpdated = updateRecordOwnerName(props.name, data.updatedName);
+    if (!!isUpdated) {
+      enqueueSnackbar(`${props.name} has been updated to ${data.updatedName}`, {
+        variant: "success",
+      });
+    } else {
+      enqueueSnackbar(`${props.name} name does not exist`, {
+        variant: "error",
+      });
+    }
+
+    props.closeModal(false, "");
+  };
+
+  const handleClose = () => props.closeModal(false, "");
 
   return (
     <div>
@@ -31,7 +73,28 @@ export default function EditNameModal(props: Props) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={modalStyle}>
-          <h1>{props.name}</h1>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Stack spacing={2}>
+              <TextField
+                label="Update Records Name"
+                {...register("updatedName", {
+                  required: "Name cannot be empty",
+                })}
+                error={!!errors.updatedName}
+                helperText={errors.updatedName && "Name Can not be empty"}
+              />
+
+              <Button type="submit" variant="contained" fullWidth>
+                Save
+              </Button>
+              <Alert severity="warning">
+                <AlertTitle>Heads up!</AlertTitle>
+                Renaming <strong>{props.name}</strong> will update all records
+                associated with this name. This action cannot be undone. Make
+                sure you want to proceed before saving.
+              </Alert>
+            </Stack>
+          </form>
         </Box>
       </Modal>
     </div>

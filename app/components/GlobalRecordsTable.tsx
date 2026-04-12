@@ -176,8 +176,8 @@ export default function GlobalRecordsTable() {
     console.log(name);
   };
   const [nameModalState, setNameModalState] = useState(false);
-  const [nameModalName, setNameModalName] = useState<string | null>(null);
-  const handleNameModal = (state: boolean, name: string | null) => {
+  const [nameModalName, setNameModalName] = useState<string>("");
+  const handleNameModal = (state: boolean, name: string) => {
     setNameModalState(state);
     setNameModalName(name);
   };

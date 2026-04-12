@@ -89,7 +89,7 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
             fontWeight={500}
             sx={{ textAlign: "end" }}
           >
-            All Records for {recordOwner}
+            All Records for {decodeURIComponent(recordOwner)}
           </Typography>
         </Box>
 

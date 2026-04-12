@@ -4,3 +4,7 @@
 - implement the edit for home page
 - Enhance the add new modal style
 - finish the modal for editing global row (make the modal controlled via props and callbacks.) <Taking the state as a prop sounds good.>
+
+- bugs: 
+    1- when editing a name the name gets edited successfully but with this message: <name> name does not exist
+    2- if the name has a space in it its record won't show when visiting the person/[name] page

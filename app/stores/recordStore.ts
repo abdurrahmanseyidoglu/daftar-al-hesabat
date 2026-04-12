@@ -31,7 +31,10 @@ interface RecordStore {
     currency: string,
   ) => PersonTotal | undefined;
   calculateTotalGlobally: (currency: string) => GlobalTotal | undefined;
-  updateRecordOwnerName: (name: string | undefined) => Record | undefined;
+  updateRecordOwnerName: (
+    name: string,
+    updatesName: string,
+  ) => Record | undefined;
 }
 export const useRecordStore = create<RecordStore>()(
   persist(
@@ -198,17 +201,19 @@ export const useRecordStore = create<RecordStore>()(
             total < 0 ? MoneyDirection.TO : total > 0 ? MoneyDirection.ON : 0,
         };
       },
-      updateRecordOwnerName: (name) => {
+      updateRecordOwnerName: (name, updatedName) => {
         if (!name || !get().doesNameExistInRecords(name)) {
           console.log("there is no such name " + name);
           return;
         }
+        console.log("updated name is:" + updatedName + " old name is " + name);
+
         set((state) => ({
           records: state.records.map((r) => {
             if (r.name !== name) return r;
 
             return {
-              name: name,
+              name: updatedName,
               records: [...r.records],
             };
           }),
