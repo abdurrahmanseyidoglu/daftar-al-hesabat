@@ -33,7 +33,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useTranslations } from "next-intl";
 import ConfirmDialog from "@/app/components/ConfirmDialog";
 import { useParams } from "next/navigation";
-import RecordFormModal from "@/app/components/RecordFormModal";
+import RecordFormModal from "@/app/components/Modals/RecordFormModal";
 import { useModalStore } from "@/app/stores/modalStore";
 import { formatDate } from "@/utils";
 import { useSnackbar } from "notistack";

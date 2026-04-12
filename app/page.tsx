@@ -3,7 +3,7 @@
 import { Box, Button, Typography } from "@mui/material";
 import { useTranslations } from "next-intl";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import RecordFormModal from "./components/RecordFormModal";
+import RecordFormModal from "./components/Modals/RecordFormModal";
 import { useRecordStore } from "./stores/recordStore";
 import GlobalRecordsTable from "./components/GlobalRecordsTable";
 import { useModalStore } from "./stores/modalStore";

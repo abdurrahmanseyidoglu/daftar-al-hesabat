@@ -12,8 +12,8 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import NumberField from "./NumberField";
-import { MoneyDirection } from "../types/enums";
+import NumberField from "../NumberField";
+import { MoneyDirection } from "../../types/enums";
 import { useEffect, useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -24,11 +24,11 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import { formSchema, RecordEntry } from "../schemas/record.schema";
-import { useRecordStore } from "../stores/recordStore";
+import { formSchema, RecordEntry } from "../../schemas/record.schema";
+import { useRecordStore } from "../../stores/recordStore";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import { NameOptionType } from "../types/nameOptionType";
-import { useModalStore } from "../stores/modalStore";
+import { NameOptionType } from "../../types/nameOptionType";
+import { useModalStore } from "../../stores/modalStore";
 import { useTranslations } from "next-intl";
 import { useSnackbar } from "notistack";
 type FormValuesType = { name: string } & { record: RecordEntry };

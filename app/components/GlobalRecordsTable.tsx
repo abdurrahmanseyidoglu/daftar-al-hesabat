@@ -31,6 +31,7 @@ import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import { useModalStore } from "../stores/modalStore";
+import EditNameModal from "./Modals/EditNameModal";
 
 interface RowData {
   id: string;
@@ -174,7 +175,12 @@ export default function GlobalRecordsTable() {
     // TODO: Add details page
     console.log(name);
   };
-
+  const [nameModalState, setNameModalState] = useState(false);
+  const [nameModalName, setNameModalName] = useState<string | null>(null);
+  const handleNameModal = (state: boolean, name: string | null) => {
+    setNameModalState(state);
+    setNameModalName(name);
+  };
   const columns: GridColDef<RowData>[] = [
     {
       field: "name",
@@ -255,7 +261,10 @@ export default function GlobalRecordsTable() {
             </Link>
           </Tooltip>
           <Tooltip title="Edit name">
-            <IconButton size="small" onClick={() => handleModalStore(true)}>
+            <IconButton
+              size="small"
+              onClick={() => handleNameModal(true, params.row.name)}
+            >
               <EditOutlinedIcon fontSize="small" sx={{ color: "green" }} />
             </IconButton>
           </Tooltip>
@@ -337,6 +346,11 @@ export default function GlobalRecordsTable() {
           }}
         />
       </Paper>
+      <EditNameModal
+        isOpen={nameModalState}
+        closeModal={handleNameModal}
+        name={nameModalName}
+      />
     </Box>
   );
 }
