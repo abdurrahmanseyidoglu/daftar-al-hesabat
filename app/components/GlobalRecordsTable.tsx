@@ -50,6 +50,7 @@ declare module "@mui/x-data-grid" {
   }
 }
 
+//Fix this
 const calculateTotal = (namedRecords: RecordEntry[]): number => {
   let total = 0;
   namedRecords.forEach((record) => {
@@ -102,8 +103,8 @@ function CustomToolbar({
 }
 
 export default function GlobalRecordsTable() {
-  const handleModalStore = useModalStore((state) => state.handleModalState);
   const records = useRecordStore((state) => state.records);
+  const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
   const removeNameWithHisRecords = useRecordStore(
     (state) => state.removeNameWithHisRecords,
   );
@@ -149,6 +150,7 @@ export default function GlobalRecordsTable() {
         return {
           id: record.name,
           name: record.name,
+          //Fix this
           recordsCount: record.records.length,
           total,
           direction: total >= 0 ? MoneyDirection.ON : MoneyDirection.TO,
