@@ -57,7 +57,8 @@ type CustomToolbarProps = GridToolbarProps &
   };
 
 function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
-  const { name: recordOwner } = useParams<{ name: string }>();
+  const { name } = useParams<{ name: string }>();
+  const decodedRecordOwner = decodeURI(name);
 
   return (
     <Toolbar>
@@ -80,7 +81,7 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
           <Link href={"/"}>
             <Tooltip title={"Back Home"}>
               <IconButton aria-label="home" sx={{ padding: 2 }}>
-                <ArrowBackIcon />
+                <ArrowBackIcon sx={{ color: "#000000" }} />
               </IconButton>
             </Tooltip>
           </Link>
@@ -89,7 +90,7 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
             fontWeight={500}
             sx={{ textAlign: "end" }}
           >
-            All Records for {decodeURIComponent(recordOwner)}
+            All Records for {decodeURIComponent(decodedRecordOwner)}
           </Typography>
         </Box>
 
@@ -116,7 +117,8 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
 export default function ProfilePage() {
   const { enqueueSnackbar } = useSnackbar();
 
-  const { name: recordsOwner } = useParams<{ name: string }>();
+  const { name } = useParams<{ name: string }>();
+  const recordsOwner = decodeURI(name);
   const calculateTotalPerPerson = useRecordStore(
     (state) => state.calculateTotalPerPerson,
   );

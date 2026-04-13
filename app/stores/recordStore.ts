@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { Record, RecordEntry } from "../schemas/record.schema";
 import { persist, devtools } from "zustand/middleware";
 import { MoneyDirection } from "../types/enums";
+import { enqueueSnackbar } from "notistack";
 interface PersonTotal {
   totalOnHim: number;
   totalToHim: number;
@@ -129,7 +130,10 @@ export const useRecordStore = create<RecordStore>()(
         return recordsByName[0].records.filter((r) => r.id === id);
       },
       getRecordsArrayByName: (name) => {
-        const recordsByName = get().records.filter((rs) => rs.name === name);
+        const decodedName = decodeURI(name);
+        const recordsByName = get().records.filter(
+          (rs) => rs.name === decodedName,
+        );
 
         if (recordsByName.length === 0) {
           return;
@@ -203,15 +207,18 @@ export const useRecordStore = create<RecordStore>()(
       },
       updateRecordOwnerName: (name, updatedName) => {
         if (!name || !get().doesNameExistInRecords(name)) {
-          console.log("there is no such name " + name);
+          enqueueSnackbar(`${name} name does not exist`, {
+            variant: "error",
+          });
           return;
         }
-        console.log("updated name is:" + updatedName + " old name is " + name);
 
         set((state) => ({
           records: state.records.map((r) => {
             if (r.name !== name) return r;
-
+            enqueueSnackbar(`${name} has been updated to ${updatedName}`, {
+              variant: "success",
+            });
             return {
               name: updatedName,
               records: [...r.records],
