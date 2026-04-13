@@ -113,9 +113,9 @@ const RecordFormModal = () => {
 
   const saveAction = (data: FormValuesType) => {
     setSavingForm(true);
-    const existing = doesNameExistInRecords(data.name);
+    const existing = doesNameExistInRecords(data.name.trim());
     if (!existing) {
-      addRecordToNewName(data.name, { ...data.record });
+      addRecordToNewName(data.name.trim(), { ...data.record });
     } else {
       addRecordToExistingName(data.name, { ...data.record });
     }
