@@ -3,3 +3,5 @@
 - implement the edit for person/page
 - implement the edit for home page
 - Enhance the add new modal style
+- displaying all records should be linked to the selected currency in the footer
+- adding a new amount in the person page should have the name as disables to prevent accidental name edits

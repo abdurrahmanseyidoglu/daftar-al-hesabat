@@ -59,6 +59,7 @@ const RecordFormModal = () => {
   );
   const handleModalState = useModalStore((state) => state.handleModalState);
 
+
   const addRecordToNewName = useRecordStore(
     (state) => state.addRecordToNewName,
   );
@@ -132,7 +133,12 @@ const RecordFormModal = () => {
 
   return (
     <>
-      <Modal open={isModalOpen} onClose={() => handleModalState(false)}>
+      <Modal
+        open={isModalOpen}
+        onClose={() => {
+          handleModalState(false);
+        }}
+      >
         <Box sx={modalStyle}>
           <Typography
             id="modal-modal-title"
@@ -152,6 +158,10 @@ const RecordFormModal = () => {
                 control={control}
                 render={({ field, fieldState }) => (
                   <Autocomplete
+                    disabled={
+                      !!modalPredefinedProps?.name &&
+                      modalPredefinedProps?.name?.length > 0
+                    }
                     value={field.value ? { name: field.value } : null}
                     onChange={(event, newValue) => {
                       let resolvedName = "";

@@ -9,6 +9,7 @@ import GlobalRecordsTable from "./components/GlobalRecordsTable";
 import { useModalStore } from "./stores/modalStore";
 import Footer from "./components/Footer";
 import { useAppStore } from "./stores/appStore";
+import { useEffect } from "react";
 
 export default function HomePage() {
   const handleModalStore = useModalStore((state) => state.handleModalState);
@@ -16,6 +17,12 @@ export default function HomePage() {
   const calculateTotalGlobally = useRecordStore(
     (state) => state.calculateTotalGlobally,
   );
+  const resetModalPredefinedProps = useModalStore(
+    (state) => state.resetModalPredefinedProps,
+  );
+  useEffect(() => {
+    resetModalPredefinedProps();
+  }, []);
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
   const initialized = useAppStore((state) => state.initialized);
 
