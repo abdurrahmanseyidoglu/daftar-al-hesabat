@@ -48,9 +48,7 @@ export default function EditNameModal(props: Props) {
     },
   });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    const isUpdated = updateRecordOwnerName(props.name, data.updatedName);
-    console.log(isUpdated);
-
+    updateRecordOwnerName(props.name, data.updatedName);
     props.closeModal(false, "");
   };
 
