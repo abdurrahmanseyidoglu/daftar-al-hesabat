@@ -5,3 +5,12 @@
 - Enhance the add new modal style
 - displaying all records should be linked to the selected currency in the footer
 - the total and direction in the all records should be tight to the selected currency (basically the whole app functionality needs a rewrite)
+- move filtering / sorting / calculations function from Zustand to utility folder fpr best practice
+
+
+- home page: Add a clear indication that you are displaying the result of a specific currency
+- home page: Add the currency code next to the number in total cell
+- home page and person page: the total should be currency formatted
+- home page: try to format the total in similar way the amount is formatted in person page
+- person page: fix the search (by date, amount,currency,to/on,details)
+- refactor currency to be an enum, and add a list of all the currencies available in a searchable dropdown

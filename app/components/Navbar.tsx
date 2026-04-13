@@ -14,6 +14,7 @@ import { LanguageSwitcher } from "./LangaugeSwitcher";
 import { IconButton, Tooltip } from "@mui/material";
 import Link from "next/link";
 import { GoHome } from "./GoHome";
+import CurrencySelector from "./CurrencySelector";
 
 function Navbar() {
   const records = useRecordStore((state) => state.records);
@@ -35,7 +36,7 @@ function Navbar() {
               width: "100%",
             }}
           >
-            <GoHome/>
+            <GoHome />
 
             <Box
               sx={{
@@ -59,7 +60,8 @@ function Navbar() {
                   />
                 </Button>
               )}
-              <LanguageSwitcher />
+              <CurrencySelector />
+              {/* <LanguageSwitcher /> */}
             </Box>
           </Box>
         </Toolbar>

@@ -30,8 +30,8 @@ import ConfirmDialog from "./ConfirmDialog";
 import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import { useModalStore } from "../stores/modalStore";
 import EditNameModal from "./Modals/EditNameModal";
+import { getRecordsFilteredByCurrency } from "@/utils";
 
 interface RowData {
   id: string;
@@ -103,8 +103,8 @@ function CustomToolbar({
 }
 
 export default function GlobalRecordsTable() {
-  const records = useRecordStore((state) => state.records);
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
+  const records = getRecordsFilteredByCurrency(selectedCurrency);
   const removeNameWithHisRecords = useRecordStore(
     (state) => state.removeNameWithHisRecords,
   );
