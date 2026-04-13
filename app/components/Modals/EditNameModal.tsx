@@ -49,15 +49,7 @@ export default function EditNameModal(props: Props) {
   });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const isUpdated = updateRecordOwnerName(props.name, data.updatedName);
-    if (!!isUpdated) {
-      enqueueSnackbar(`${props.name} has been updated to ${data.updatedName}`, {
-        variant: "success",
-      });
-    } else {
-      enqueueSnackbar(`${props.name} name does not exist`, {
-        variant: "error",
-      });
-    }
+    console.log(isUpdated);
 
     props.closeModal(false, "");
   };
