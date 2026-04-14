@@ -64,6 +64,8 @@ function CustomToolbar({
   searchValue,
   onSearchChange,
 }: GridToolbarProps & ToolbarPropsOverrides) {
+  const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
+
   return (
     <Toolbar>
       <Box
@@ -79,7 +81,7 @@ function CustomToolbar({
           fontWeight={500}
           sx={{ textAlign: "end" }}
         >
-          All Records
+          {`All Records for ${selectedCurrency.toUpperCase()}`}
         </Typography>
         <TextField
           size="small"
@@ -226,7 +228,7 @@ export default function GlobalRecordsTable() {
             color: (params.value ?? 0) >= 0 ? "success.main" : "error.main",
           }}
         >
-          {params.value}
+          {params.value} {selectedCurrency.toUpperCase()}
         </Typography>
       ),
     },
