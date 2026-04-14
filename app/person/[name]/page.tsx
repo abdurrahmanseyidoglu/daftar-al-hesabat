@@ -196,7 +196,7 @@ export default function ProfilePage() {
     if (!rows) return;
     if (!q) return rows;
     return rows.filter((row) =>
-      [row.amount, row.details, row.direction, row.details, row.date]
+      [row.amount, row.details, row.direction, row.currency, row.date]
         .map((v) => String(v).toLowerCase())
         .some((v) => v.includes(q)),
     );
@@ -208,8 +208,9 @@ export default function ProfilePage() {
       flex: 2,
       minWidth: 210,
       maxWidth: 210,
+      valueFormatter: (value: Date) => (value ? formatDate(value) : ""),
       renderCell: (params: GridRenderCellParams<RecordEntry, Date>) => (
-        <div>{params.value ? `${formatDate(params.value)}` : ""}</div>
+        <div>{params.value ? formatDate(params.value) : ""}</div>
       ),
     },
     {
