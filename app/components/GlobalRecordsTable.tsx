@@ -31,7 +31,7 @@ import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import EditNameModal from "./Modals/EditNameModal";
-import { getRecordsFilteredByCurrency } from "@/utils";
+import { formatMoney, getRecordsFilteredByCurrency } from "@/utils";
 
 interface RowData {
   id: string;
@@ -105,8 +105,12 @@ function CustomToolbar({
 }
 
 export default function GlobalRecordsTable() {
+  const storeRecords = useRecordStore((state) => state.records);
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
-  const records = getRecordsFilteredByCurrency(selectedCurrency);
+  const records = useMemo(
+    () => getRecordsFilteredByCurrency(selectedCurrency, storeRecords),
+    [selectedCurrency, storeRecords],
+  );
   const removeNameWithHisRecords = useRecordStore(
     (state) => state.removeNameWithHisRecords,
   );
@@ -228,7 +232,7 @@ export default function GlobalRecordsTable() {
             color: (params.value ?? 0) >= 0 ? "success.main" : "error.main",
           }}
         >
-          {params.value} {selectedCurrency.toUpperCase()}
+          {formatMoney(params.value ?? 0)} {selectedCurrency.toUpperCase()}
         </Typography>
       ),
     },

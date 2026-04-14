@@ -59,7 +59,6 @@ const RecordFormModal = () => {
   );
   const handleModalState = useModalStore((state) => state.handleModalState);
 
-
   const addRecordToNewName = useRecordStore(
     (state) => state.addRecordToNewName,
   );
@@ -240,7 +239,7 @@ const RecordFormModal = () => {
                     onBlur={field.onBlur}
                     name={field.name}
                     label="Amount"
-                    min={1}
+                    min={0}
                     size="small"
                     error={!!fieldState.error}
                     helperText={fieldState.error?.message}
