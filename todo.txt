@@ -1,13 +1,5 @@
 - i18 needs to be worked on things like Directions (some MUI component needs explicit rtl attributes)
-- refactor currencies to be enum instead of a string
 - implement the edit for person/page
-- implement the edit for home page
 - Enhance the add new modal style
-- displaying all records should be linked to the selected currency in the footer
-- the total and direction in the all records should be tight to the selected currency (basically the whole app functionality needs a rewrite)
 - move filtering / sorting / calculations function from Zustand to utility folder fpr best practice
 
-
-
-- person page: fix the search (by date,currency,to/on,details)
-- refactor currency to be an enum, and add a list of all the currencies available in a searchable dropdown
