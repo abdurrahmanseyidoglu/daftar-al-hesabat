@@ -20,7 +20,7 @@ function Navbar() {
   const records = useRecordStore((state) => state.records);
   const t = useTranslations();
 
-  const handleModalStore = useModalStore((state) => state.handleModalState);
+  const handleModalState = useModalStore((state) => state.handleModalState);
 
   return (
     <AppBar position="sticky">
@@ -52,7 +52,7 @@ function Navbar() {
                   variant="outlined"
                   color="white"
                   sx={{ py: 1, px: 4 }}
-                  onClick={() => handleModalStore(true)}
+                  onClick={() => handleModalState(true)}
                 >
                   <Typography fontSize={"1rem"}>{t("addNew")}</Typography>
                   <AddCircleOutlineIcon

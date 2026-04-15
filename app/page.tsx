@@ -12,7 +12,7 @@ import { useAppStore } from "./stores/appStore";
 import { useEffect } from "react";
 
 export default function HomePage() {
-  const handleModalStore = useModalStore((state) => state.handleModalState);
+  const handleModalState = useModalStore((state) => state.handleModalState);
 
   const calculateTotalGlobally = useRecordStore(
     (state) => state.calculateTotalGlobally,
@@ -48,7 +48,7 @@ export default function HomePage() {
           <Button
             variant="outlined"
             sx={{ p: 6 }}
-            onClick={() => handleModalStore(true)}
+            onClick={() => handleModalState(true)}
           >
             <Typography fontSize={"3rem"}>{t("addAmount")}</Typography>
             <AddCircleOutlineIcon

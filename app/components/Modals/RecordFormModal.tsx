@@ -31,6 +31,7 @@ import { NameOptionType } from "../../types/nameOptionType";
 import { useModalStore } from "../../stores/modalStore";
 import { useTranslations } from "next-intl";
 import { useSnackbar } from "notistack";
+import { useParams } from "next/navigation";
 type FormValuesType = { name: string } & { record: RecordEntry };
 
 const modalStyle = {
@@ -68,6 +69,13 @@ const RecordFormModal = () => {
   const doesNameExistInRecords = useRecordStore(
     (state) => state.doesNameExistInRecords,
   );
+  const updateRecord = useRecordStore((state) => state.updateRecord);
+  const resetModalPredefinedProps = useModalStore(
+    (state) => state.resetModalPredefinedProps,
+  );
+
+  const { name } = useParams<{ name: string }>();
+  const recordsOwner = decodeURI(name);
   const { control, handleSubmit, reset } = useForm<FormValuesType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -91,7 +99,8 @@ const RecordFormModal = () => {
           modalPredefinedProps.record.currency != null ||
           modalPredefinedProps.record.amount != null ||
           modalPredefinedProps.record.date != null ||
-          modalPredefinedProps.record.details != null);
+          modalPredefinedProps.record.details != null ||
+          modalPredefinedProps.record.id != null);
 
       if (hasName || hasRecordProps) {
         reset({
@@ -101,8 +110,11 @@ const RecordFormModal = () => {
               modalPredefinedProps.record?.direction ?? MoneyDirection.ON,
             currency: modalPredefinedProps.record?.currency ?? "usd",
             amount: modalPredefinedProps.record?.amount ?? 0,
-            date: modalPredefinedProps.record?.date ?? new Date(),
+            date: modalPredefinedProps.record?.date
+              ? new Date(modalPredefinedProps.record.date)
+              : new Date(),
             details: modalPredefinedProps.record?.details ?? "",
+            id: modalPredefinedProps.record?.id ?? "",
           },
         });
       }
@@ -116,6 +128,8 @@ const RecordFormModal = () => {
     const existing = doesNameExistInRecords(data.name.trim());
     if (!existing) {
       addRecordToNewName(data.name.trim(), { ...data.record });
+    } else if (!!data.record.id) {
+      updateRecord(recordsOwner, data.record.id, { ...data.record });
     } else {
       addRecordToExistingName(data.name, { ...data.record });
     }
@@ -136,6 +150,9 @@ const RecordFormModal = () => {
         open={isModalOpen}
         onClose={() => {
           handleModalState(false);
+          resetModalPredefinedProps();
+          console.log("closed and should be reset");
+          reset();
         }}
       >
         <Box sx={modalStyle}>
