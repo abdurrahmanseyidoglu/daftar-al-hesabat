@@ -4,20 +4,13 @@
 - move filtering / sorting / calculations function from Zustand to utility folder fpr best practice
 
 
-This should be tow functions one for opening the modal and one for updating on submit.
-you need to clear that out. also the populated props should have the date as well
-  const handleEditOpen = (rowData: RecordEntry) => {
-    if (!rowData) return;
-    populateModalPredefinedProps({ name: recordsOwner, record: rowData });
-    console.log({ name: recordsOwner, record: rowData });
-
-    handleModalState(true);
-    updateRecord(recordsOwner, rowData.id, {
-      amount: rowData.amount,
-      direction: rowData.direction,
-      date: rowData.date,
-      currency: rowData.currency,
-      details: rowData.details,
-      id: rowData.id,
-    });
-  };
+Record modal not getting reset 
+<Modal
+        open={isModalOpen}
+        onClose={() => {
+          handleModalState(false);
+          resetModalPredefinedProps();
+          console.log("closed and should be reset");
+          reset();
+        }}
+      >
