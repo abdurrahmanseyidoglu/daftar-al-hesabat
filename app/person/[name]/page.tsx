@@ -116,6 +116,7 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
 }
 export default function ProfilePage() {
   const { enqueueSnackbar } = useSnackbar();
+  const handleModalState = useModalStore((state) => state.handleModalState);
 
   const { name } = useParams<{ name: string }>();
   const recordsOwner = decodeURI(name);
@@ -129,22 +130,36 @@ export default function ProfilePage() {
     : undefined;
 
   const removeRecord = useRecordStore((state) => state.removeRecord);
+  const updateRecord = useRecordStore((state) => state.updateRecord);
   const t = useTranslations();
   const personsRecords = useRecordStore((state) =>
     state.getRecordsArrayByName(recordsOwner),
   );
+
   const [open, setOpen] = useState(false);
   const [recordIdToDelete, setRecordIdToDelete] = useState<string | null>(null);
   const [selectedValue, setSelectedValue] = useState(false);
+
   const handleClickOpen = (id: string | undefined) => {
     if (!id) return;
     setOpen(true);
     setRecordIdToDelete(id);
   };
 
-  const handleEditOpen = (id: string | undefined) => {
-    if (!id) return;
-    //  !TODO: handlee editing a row
+  const handleEditOpen = (rowData: RecordEntry) => {
+    if (!rowData) return;
+    populateModalPredefinedProps({ name: recordsOwner, record: rowData });
+    console.log({ name: recordsOwner, record: rowData });
+
+    handleModalState(true);
+    updateRecord(recordsOwner, rowData.id, {
+      amount: rowData.amount,
+      direction: rowData.direction,
+      date: rowData.date,
+      currency: rowData.currency,
+      details: rowData.details,
+      id: rowData.id,
+    });
   };
   const handleClose = (value: boolean) => {
     setOpen(false);
@@ -172,6 +187,7 @@ export default function ProfilePage() {
     (state) => state.populateModalPredefinedProps,
   );
 
+  //Set the name in RecordFormModal so user can add to this recordOwner without updating the name
   useEffect(() => {
     if (recordsOwner) {
       populateModalPredefinedProps({ name: recordsOwner });
@@ -306,7 +322,7 @@ export default function ProfilePage() {
               color="error"
               onClick={(e) => {
                 e.stopPropagation();
-                handleEditOpen(params.row.id);
+                handleEditOpen(params.row);
               }}
             >
               <EditOutlinedIcon fontSize="small" />

@@ -148,7 +148,7 @@ const RecordFormModal = () => {
             textTransform="uppercase"
             fontWeight="500"
           >
-            {t("addAmount")}
+            {!!modalPredefinedProps?.name ? "Update Record" : t("addAmount")}
           </Typography>
           <form onSubmit={handleSubmit(saveAction)} noValidate>
             <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
