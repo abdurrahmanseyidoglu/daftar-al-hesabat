@@ -4,13 +4,5 @@
 - move filtering / sorting / calculations function from Zustand to utility folder fpr best practice
 
 
-Record modal not getting reset 
-<Modal
-        open={isModalOpen}
-        onClose={() => {
-          handleModalState(false);
-          resetModalPredefinedProps();
-          console.log("closed and should be reset");
-          reset();
-        }}
-      >
+
+Record modal is getting reset but the name also getting reset in peson page which is not what I want (Fix)
