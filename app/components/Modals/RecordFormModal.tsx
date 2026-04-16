@@ -63,6 +63,7 @@ const RecordFormModal = () => {
   const addRecordToNewName = useRecordStore(
     (state) => state.addRecordToNewName,
   );
+  const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
   const addRecordToExistingName = useRecordStore(
     (state) => state.addRecordToExistingName,
   );
@@ -82,7 +83,7 @@ const RecordFormModal = () => {
       name: "",
       record: {
         direction: MoneyDirection.ON,
-        currency: "usd",
+        currency: selectedCurrency,
         amount: 0,
         date: new Date(),
         details: "",
@@ -90,25 +91,26 @@ const RecordFormModal = () => {
     },
   });
   useEffect(() => {
+    if (!isModalOpen) return;
+
     if (isModalOpen && modalPredefinedProps) {
-      // Check if any property exists (name or record fields)
-      const hasName = modalPredefinedProps.name != null;
       const hasRecordProps =
         modalPredefinedProps.record &&
-        (modalPredefinedProps.record.direction != null ||
+        (modalPredefinedProps.name ||
+          modalPredefinedProps.record.direction != null ||
           modalPredefinedProps.record.currency != null ||
           modalPredefinedProps.record.amount != null ||
           modalPredefinedProps.record.date != null ||
           modalPredefinedProps.record.details != null ||
           modalPredefinedProps.record.id != null);
 
-      if (hasName || hasRecordProps) {
+      if (hasRecordProps) {
         reset({
           name: modalPredefinedProps.name ?? "",
           record: {
             direction:
               modalPredefinedProps.record?.direction ?? MoneyDirection.ON,
-            currency: modalPredefinedProps.record?.currency ?? "usd",
+            currency: modalPredefinedProps.record?.currency ?? selectedCurrency,
             amount: modalPredefinedProps.record?.amount ?? 0,
             date: modalPredefinedProps.record?.date
               ? new Date(modalPredefinedProps.record.date)
@@ -117,10 +119,32 @@ const RecordFormModal = () => {
             id: modalPredefinedProps.record?.id ?? "",
           },
         });
-      }
-    }
-  }, [isModalOpen, modalPredefinedProps, reset]);
+      } else if (recordsOwner.length > 0) {
+        console.log("there is an owner heeey");
 
+        reset({
+          name: recordsOwner ?? "",
+        });
+      }
+    } else {
+      reset({
+        name: "",
+        record: {
+          direction: MoneyDirection.ON,
+          currency: selectedCurrency,
+          amount: 0,
+          date: new Date(),
+          details: "",
+        },
+      });
+    }
+  }, [
+    recordsOwner,
+    isModalOpen,
+    modalPredefinedProps,
+    reset,
+    selectedCurrency,
+  ]);
   const [savingForm, setSavingForm] = useState(false);
 
   const saveAction = (data: FormValuesType) => {
@@ -129,7 +153,7 @@ const RecordFormModal = () => {
     if (!existing) {
       addRecordToNewName(data.name.trim(), { ...data.record });
     } else if (!!data.record.id) {
-      updateRecord(recordsOwner, data.record.id, { ...data.record });
+      updateRecord(data.name, data.record.id, { ...data.record });
     } else {
       addRecordToExistingName(data.name, { ...data.record });
     }
@@ -151,8 +175,6 @@ const RecordFormModal = () => {
         onClose={() => {
           handleModalState(false);
           resetModalPredefinedProps();
-          console.log("closed and should be reset");
-          reset();
         }}
       >
         <Box sx={modalStyle}>

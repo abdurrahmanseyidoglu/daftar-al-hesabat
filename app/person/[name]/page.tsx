@@ -148,18 +148,10 @@ export default function ProfilePage() {
 
   const handleEditOpen = (rowData: RecordEntry) => {
     if (!rowData) return;
+
     populateModalPredefinedProps({ name: recordsOwner, record: rowData });
-    console.log({ name: recordsOwner, record: rowData });
 
     handleModalState(true);
-    updateRecord(recordsOwner, rowData.id, {
-      amount: rowData.amount,
-      direction: rowData.direction,
-      date: rowData.date,
-      currency: rowData.currency,
-      details: rowData.details,
-      id: rowData.id,
-    });
   };
   const handleClose = (value: boolean) => {
     setOpen(false);
@@ -186,13 +178,16 @@ export default function ProfilePage() {
   const populateModalPredefinedProps = useModalStore(
     (state) => state.populateModalPredefinedProps,
   );
+  const resetModalPredefinedProps = useModalStore(
+    (state) => state.resetModalPredefinedProps,
+  );
 
   //Set the name in RecordFormModal so user can add to this recordOwner without updating the name
   useEffect(() => {
     if (recordsOwner) {
       populateModalPredefinedProps({ name: recordsOwner });
     }
-  }, [recordsOwner, populateModalPredefinedProps]);
+  }, [recordsOwner, populateModalPredefinedProps, resetModalPredefinedProps]);
   const rows: RecordEntry[] | undefined = useMemo(
     () =>
       personsRecords?.toReversed().map((record) => {
