@@ -93,42 +93,34 @@ const RecordFormModal = () => {
   useEffect(() => {
     if (!isModalOpen) return;
 
-    if (isModalOpen && modalPredefinedProps) {
-      const hasRecordProps =
-        modalPredefinedProps.record &&
-        (modalPredefinedProps.name ||
-          modalPredefinedProps.record.direction != null ||
-          modalPredefinedProps.record.currency != null ||
-          modalPredefinedProps.record.amount != null ||
-          modalPredefinedProps.record.date != null ||
-          modalPredefinedProps.record.details != null ||
-          modalPredefinedProps.record.id != null);
+    const hasRecordProps =
+      modalPredefinedProps?.record &&
+      (modalPredefinedProps.name ||
+        modalPredefinedProps.record.direction != null ||
+        modalPredefinedProps.record.currency != null ||
+        modalPredefinedProps.record.amount != null ||
+        modalPredefinedProps.record.date != null ||
+        modalPredefinedProps.record.details != null ||
+        modalPredefinedProps.record.id != null);
 
-      if (hasRecordProps) {
-        reset({
-          name: modalPredefinedProps.name ?? "",
-          record: {
-            direction:
-              modalPredefinedProps.record?.direction ?? MoneyDirection.ON,
-            currency: modalPredefinedProps.record?.currency ?? selectedCurrency,
-            amount: modalPredefinedProps.record?.amount ?? 0,
-            date: modalPredefinedProps.record?.date
-              ? new Date(modalPredefinedProps.record.date)
-              : new Date(),
-            details: modalPredefinedProps.record?.details ?? "",
-            id: modalPredefinedProps.record?.id ?? "",
-          },
-        });
-      } else if (recordsOwner.length > 0) {
-        console.log("there is an owner heeey");
-
-        reset({
-          name: recordsOwner ?? "",
-        });
-      }
+    if (hasRecordProps) {
+      reset({
+        name: modalPredefinedProps.name ?? "",
+        record: {
+          direction:
+            modalPredefinedProps.record?.direction ?? MoneyDirection.ON,
+          currency: modalPredefinedProps.record?.currency ?? selectedCurrency,
+          amount: modalPredefinedProps.record?.amount ?? 0,
+          date: modalPredefinedProps.record?.date
+            ? new Date(modalPredefinedProps.record.date)
+            : new Date(),
+          details: modalPredefinedProps.record?.details ?? "",
+          id: modalPredefinedProps.record?.id ?? "",
+        },
+      });
     } else {
       reset({
-        name: "",
+        name: recordsOwner ?? "",
         record: {
           direction: MoneyDirection.ON,
           currency: selectedCurrency,
@@ -187,7 +179,9 @@ const RecordFormModal = () => {
             textTransform="uppercase"
             fontWeight="500"
           >
-            {!!modalPredefinedProps?.name ? "Update Record" : t("addAmount")}
+            {!!(recordsOwner && modalPredefinedProps?.record)
+              ? "Update Record"
+              : t("addAmount")}
           </Typography>
           <form onSubmit={handleSubmit(saveAction)} noValidate>
             <Box sx={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
@@ -196,14 +190,10 @@ const RecordFormModal = () => {
                 control={control}
                 render={({ field, fieldState }) => (
                   <Autocomplete
-                    disabled={
-                      !!modalPredefinedProps?.name &&
-                      modalPredefinedProps?.name?.length > 0
-                    }
+                    disabled={!!modalPredefinedProps?.name || !!recordsOwner}
                     value={field.value ? { name: field.value } : null}
                     onChange={(event, newValue) => {
                       let resolvedName = "";
-
                       if (typeof newValue === "string") {
                         resolvedName = newValue;
                       } else if (newValue?.inputValue) {
