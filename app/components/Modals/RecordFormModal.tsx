@@ -76,7 +76,12 @@ const RecordFormModal = () => {
   );
 
   const { name } = useParams<{ name: string }>();
-  const recordsOwner = decodeURI(name);
+  let recordsOwner;
+  if (!!name) {
+    recordsOwner = decodeURI(name);
+  } else {
+    recordsOwner = undefined;
+  }
   const { control, handleSubmit, reset } = useForm<FormValuesType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -119,8 +124,10 @@ const RecordFormModal = () => {
         },
       });
     } else {
+      console.log("else is running, name is" + recordsOwner);
+
       reset({
-        name: recordsOwner ?? "",
+        name: !!recordsOwner ? recordsOwner : "",
         record: {
           direction: MoneyDirection.ON,
           currency: selectedCurrency,
@@ -190,7 +197,9 @@ const RecordFormModal = () => {
                 control={control}
                 render={({ field, fieldState }) => (
                   <Autocomplete
-                    disabled={!!modalPredefinedProps?.name || !!recordsOwner}
+                    disabled={
+                      !!(!!recordsOwner || modalPredefinedProps?.record)
+                    }
                     value={field.value ? { name: field.value } : null}
                     onChange={(event, newValue) => {
                       let resolvedName = "";
