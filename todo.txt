@@ -1,8 +1,3 @@
 - i18 needs to be worked on things like Directions (some MUI component needs explicit rtl attributes)
-- implement the edit for person/page
 - Enhance the add new modal style
 - move filtering / sorting / calculations function from Zustand to utility folder fpr best practice
-
-
-
-Record modal is getting reset but the name also getting reset in peson page which is not what I want (Fix)
