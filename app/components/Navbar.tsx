@@ -15,11 +15,14 @@ import { IconButton, Tooltip } from "@mui/material";
 import Link from "next/link";
 import { GoHome } from "./GoHome";
 import CurrencySelector from "./CurrencySelector";
+import { exportToCSV } from "@/utils";
 
 function Navbar() {
   const records = useRecordStore((state) => state.records);
   const t = useTranslations();
-
+  const handleExportClick = () => {
+    exportToCSV(records, "test1");
+  };
   const handleModalState = useModalStore((state) => state.handleModalState);
 
   return (
@@ -62,6 +65,14 @@ function Navbar() {
               )}
               <CurrencySelector />
               {/* <LanguageSwitcher /> */}
+              <Button
+                variant="outlined"
+                color="white"
+                sx={{ py: 1, px: 4 }}
+                onClick={handleExportClick}
+              >
+                Export to CSV
+              </Button>
             </Box>
           </Box>
         </Toolbar>

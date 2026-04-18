@@ -4,4 +4,4 @@
 - Add the ability to import and export to different formats
     import: json,csv
     export: json,csv,pdf 
-- Add the ability for syncing 
+- Add the ability for syncing
