@@ -1,5 +1,4 @@
-import type { Record } from "./app/schemas/record.schema";
-import { json2csv } from "json-2-csv";
+import type { Record, RecordEntry } from "./app/schemas/record.schema";
 
 export const formatDate = (date: Date) => {
   const d = date instanceof Date ? date : new Date(date);
@@ -28,7 +27,10 @@ export const formatMoney = (money: number) => {
     money,
   );
 };
-export const exportToCSV = (data: Record[], filename = "records.csv") => {
+export const exportAllRecordsToCSV = (
+  data: Record[],
+  filename = "records.csv",
+) => {
   const headers = ["Date", "Name", "Amount", "Currency", "On / To", "Details"];
 
   const rows: string[] = [];
@@ -57,8 +59,52 @@ export const exportToCSV = (data: Record[], filename = "records.csv") => {
   });
 
   const csv = [headers.join(","), ...rows].join("\n");
-  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" }); 
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+export const exportSinglePersonToCSV = (
+  name: string,
+  records: RecordEntry[],
+) => {
+  const headers = ["Date", "Amount", "Currency", "On / To", "Details"];
+
+  const escape = (val: string | number): string => {
+    const str = String(val);
+    return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+  };
+
+  const rows: string[] = [];
+
+  // Name once at the top as a label row
+  rows.push(`Name:,${escape(name)}`);
+  rows.push("");
+  rows.push(headers.join(","));
+
+  records.forEach((record) => {
+    const date = new Date(record.date).toLocaleDateString();
+    const amount = String(record.amount);
+    const currency = record.currency.toUpperCase();
+    const direction = record.direction;
+    const details = record.details || "";
+
+    rows.push(
+      [date, amount, currency, direction, details].map(escape).join(","),
+    );
+  });
+
+  const csv = rows.join("\n");
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  // "Example person" -> "example_person"
+  const safeName = name.trim().toLowerCase().replace(/\s+/g, "_");
+  const filename = `${safeName}.csv`;
 
   const a = document.createElement("a");
   a.href = url;

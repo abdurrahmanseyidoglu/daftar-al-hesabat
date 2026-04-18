@@ -81,7 +81,7 @@ function CustomToolbar({
           fontWeight={500}
           sx={{ textAlign: "end" }}
         >
-          {`All Records for ${selectedCurrency.toUpperCase()}`}
+          {`All Records in [ ${selectedCurrency.toUpperCase()} ]`}
         </Typography>
         <TextField
           size="small"

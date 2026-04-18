@@ -15,13 +15,32 @@ import { IconButton, Tooltip } from "@mui/material";
 import Link from "next/link";
 import { GoHome } from "./GoHome";
 import CurrencySelector from "./CurrencySelector";
-import { exportToCSV } from "@/utils";
+import { exportAllRecordsToCSV, exportSinglePersonToCSV } from "@/utils";
+import { useParams } from "next/navigation";
 
 function Navbar() {
   const records = useRecordStore((state) => state.records);
   const t = useTranslations();
+
+  const { name } = useParams<{ name: string }>();
+  let recordsOwner;
+  if (!!name) {
+    recordsOwner = decodeURI(name);
+  } else {
+    recordsOwner = undefined;
+  }
+  const getRecordsArrayByName = useRecordStore(
+    (state) => state.getRecordsArrayByName,
+  );
   const handleExportClick = () => {
-    exportToCSV(records, "test1");
+    if (recordsOwner) {
+      const recordsByName = getRecordsArrayByName(recordsOwner);
+      if (recordsByName) {
+        exportSinglePersonToCSV(recordsOwner, recordsByName);
+      }
+    } else {
+      exportAllRecordsToCSV(records);
+    }
   };
   const handleModalState = useModalStore((state) => state.handleModalState);
 
