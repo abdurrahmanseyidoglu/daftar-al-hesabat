@@ -11,17 +11,28 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useRecordStore } from "../stores/recordStore";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "./LangaugeSwitcher";
-import { IconButton, Tooltip } from "@mui/material";
+import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import Link from "next/link";
 import { GoHome } from "./GoHome";
 import CurrencySelector from "./CurrencySelector";
-import { exportAllRecordsToCSV, exportSinglePersonToCSV } from "@/utils";
+import {
+  exportAllRecordsToCSV,
+  exportSinglePersonToCSV,
+  getRecordsFilteredByCurrency,
+} from "@/utils";
 import { useParams } from "next/navigation";
+import { useMemo, useState } from "react";
+import Image from "next/image";
 
 function Navbar() {
   const records = useRecordStore((state) => state.records);
   const t = useTranslations();
+  const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
 
+  const globalRecordsFilteredByCurrency = useMemo(
+    () => getRecordsFilteredByCurrency(selectedCurrency, records),
+    [selectedCurrency, records],
+  );
   const { name } = useParams<{ name: string }>();
   let recordsOwner;
   if (!!name) {
@@ -32,18 +43,35 @@ function Navbar() {
   const getRecordsArrayByName = useRecordStore(
     (state) => state.getRecordsArrayByName,
   );
-  const handleExportClick = () => {
+  const handleCSVExportClick = () => {
     if (recordsOwner) {
       const recordsByName = getRecordsArrayByName(recordsOwner);
-      if (recordsByName) {
-        exportSinglePersonToCSV(recordsOwner, recordsByName);
+      const recordsByNameFilteredByCurrency = recordsByName?.filter(
+        (r) => r.currency === selectedCurrency,
+      );
+      console.log(recordsByNameFilteredByCurrency);
+
+      if (recordsByNameFilteredByCurrency) {
+        exportSinglePersonToCSV(recordsOwner, recordsByNameFilteredByCurrency);
       }
     } else {
-      exportAllRecordsToCSV(records);
+      exportAllRecordsToCSV(globalRecordsFilteredByCurrency);
     }
   };
+  const handlePDFExportClick = () => {
+    console.log("export as pdf");
+  };
   const handleModalState = useModalStore((state) => state.handleModalState);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const open = Boolean(anchorEl);
 
+  const handleExportMenuState = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <AppBar position="sticky">
       <Container maxWidth="xl">
@@ -70,28 +98,66 @@ function Navbar() {
               }}
             >
               {records.length > 0 && (
-                <Button
-                  variant="outlined"
-                  color="white"
-                  sx={{ py: 1, px: 4 }}
-                  onClick={() => handleModalState(true)}
-                >
-                  <Typography fontSize={"1rem"}>{t("addNew")}</Typography>
-                  <AddCircleOutlineIcon
-                    sx={{ fontSize: "1.5rem", marginInlineStart: 1 }}
-                  />
-                </Button>
+                <>
+                  <Button
+                    variant="outlined"
+                    color="white"
+                    sx={{ py: 1, px: 4 }}
+                    onClick={() => handleModalState(true)}
+                  >
+                    <Typography fontSize={"1rem"}>{t("addNew")}</Typography>
+                    <AddCircleOutlineIcon
+                      sx={{ fontSize: "1.5rem", marginInlineStart: 1 }}
+                    />
+                  </Button>
+
+                  <Button
+                    id="basic-button"
+                    aria-controls={open ? "export-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={handleExportMenuState}
+                    variant="outlined"
+                    color="white"
+                    sx={{ py: 1, px: 4 }}
+                  >
+                    Export
+                  </Button>
+                  <Menu
+                    id="export-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    sx={{
+                      mt: 0.5,
+                    }}
+                    slotProps={{
+                      list: {
+                        "aria-labelledby": "basic-button",
+                      },
+                    }}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        handlePDFExportClick();
+                        handleClose();
+                      }}
+                    >
+                      Export as PDF
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        handleCSVExportClick();
+                        handleClose();
+                      }}
+                    >
+                      Export as CSV
+                    </MenuItem>
+                  </Menu>
+                </>
               )}
               <CurrencySelector />
               {/* <LanguageSwitcher /> */}
-              <Button
-                variant="outlined"
-                color="white"
-                sx={{ py: 1, px: 4 }}
-                onClick={handleExportClick}
-              >
-                Export to CSV
-              </Button>
             </Box>
           </Box>
         </Toolbar>
