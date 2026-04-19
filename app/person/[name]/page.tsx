@@ -59,6 +59,7 @@ type CustomToolbarProps = GridToolbarProps &
 function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
   const { name } = useParams<{ name: string }>();
   const decodedRecordOwner = decodeURI(name);
+  const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
 
   return (
     <Toolbar>
@@ -90,7 +91,8 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
             fontWeight={500}
             sx={{ textAlign: "end" }}
           >
-            All Records for {decodeURIComponent(decodedRecordOwner)}
+            All Records for {decodeURIComponent(decodedRecordOwner)} in
+            {` [ ${selectedCurrency.toUpperCase()} ]`}
           </Typography>
         </Box>
 
@@ -136,6 +138,9 @@ export default function ProfilePage() {
     state.getRecordsArrayByName(recordsOwner),
   );
 
+  const personsRecordsFilteredByCurrency = useMemo(() => {
+    return personsRecords?.filter((r) => r.currency === selectedCurrency);
+  }, [personsRecords, selectedCurrency]);
   const [open, setOpen] = useState(false);
   const [recordIdToDelete, setRecordIdToDelete] = useState<string | null>(null);
   const [selectedValue, setSelectedValue] = useState(false);
@@ -190,7 +195,7 @@ export default function ProfilePage() {
   }, [recordsOwner, populateModalPredefinedProps, resetModalPredefinedProps]);
   const rows: RecordEntry[] | undefined = useMemo(
     () =>
-      personsRecords?.toReversed().map((record) => {
+      personsRecordsFilteredByCurrency?.toReversed().map((record) => {
         return {
           id: record.id,
           details: record.details,
@@ -200,7 +205,7 @@ export default function ProfilePage() {
           currency: record.currency,
         };
       }),
-    [personsRecords],
+    [personsRecordsFilteredByCurrency],
   );
   const filteredRows = useMemo(() => {
     const q = searchValue.trim().toLowerCase();
