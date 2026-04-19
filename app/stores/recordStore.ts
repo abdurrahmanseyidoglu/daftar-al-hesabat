@@ -23,7 +23,11 @@ interface RecordStore {
   addRecordToExistingName: (name: string, record: RecordEntry) => void;
   addRecordToNewName: (name: string, record: RecordEntry) => void;
   removeRecord: (name: string | null, id: string | null) => boolean;
-  updateRecord: (name: string, id: string | undefined, updatedRecord: RecordEntry) => void;
+  updateRecord: (
+    name: string,
+    id: string | undefined,
+    updatedRecord: RecordEntry,
+  ) => void;
   getRecordById: (name: string, id: string) => Record | undefined;
   getRecordsArrayByName: (name: string) => RecordEntry[] | undefined;
   removeNameWithHisRecords: (name: string | null) => boolean; // true -> Deleted / false -> Not Deleted

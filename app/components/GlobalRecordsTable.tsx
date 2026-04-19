@@ -151,20 +151,21 @@ export default function GlobalRecordsTable() {
 
   const rows: RowData[] = useMemo(
     () =>
-      records.toReversed().map((record) => {
-        const total = calculateTotal(record.records);
-        return {
-          id: record.name,
-          name: record.name,
-          //Fix this
-          recordsCount: record.records.length,
-          total,
-          direction: total >= 0 ? MoneyDirection.ON : MoneyDirection.TO,
-        };
-      }),
+      records
+        .toReversed()
+        .map((record) => {
+          const total = calculateTotal(record.records);
+          return {
+            id: record.name,
+            name: record.name,
+            recordsCount: record.records.length,
+            total,
+            direction: total >= 0 ? MoneyDirection.ON : MoneyDirection.TO,
+          };
+        })
+        .filter((r) => r.recordsCount !== 0),
     [records],
   );
-
   const filteredRows = useMemo(() => {
     const q = searchValue.trim().toLowerCase();
     if (!q) return rows;

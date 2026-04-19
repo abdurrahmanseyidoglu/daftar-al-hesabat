@@ -2,3 +2,4 @@
 - Enhance the add new modal style
 - move filtering / sorting / calculations function from Zustand to utility folder fpr best practice
 - Add the ability for syncing
+
