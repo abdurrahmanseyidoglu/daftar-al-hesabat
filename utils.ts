@@ -40,7 +40,8 @@ export const exportAllRecordsToCSV = (
   };
 
   const rows: string[] = [];
-  let total = 0;
+  let totalOwed = 0;
+  let totalOwing = 0;
 
   data.forEach((person) => {
     person.records.forEach((record) => {
@@ -51,7 +52,8 @@ export const exportAllRecordsToCSV = (
       const curr = record.currency.toUpperCase();
       const details = record.details || "";
 
-      total += signedAmount;
+      if (signedAmount < 0) totalOwed += signedAmount;
+      else totalOwing += signedAmount;
 
       rows.push(
         [date, name, String(signedAmount), curr, details].map(escape).join(","),
@@ -59,16 +61,21 @@ export const exportAllRecordsToCSV = (
     });
   });
 
-  const totalLabel =
-    total < 0
-      ? `Total: You owe ${Math.abs(total)} ${currency.toUpperCase()}`
-      : total > 0
-        ? `Total: You are owed ${total} ${currency.toUpperCase()}`
-        : "0";
+  const net = totalOwed + totalOwing;
+  const netLabel =
+    net < 0
+      ? `${Math.abs(net)} ${currency.toUpperCase()} (you owe)`
+      : net > 0
+        ? `${net} ${currency.toUpperCase()} (owed to you)`
+        : `0 ${currency.toUpperCase()}`;
 
-  const csv = [headers.join(","), ...rows, "", `${escape(totalLabel)}`].join(
-    "\n",
-  );
+  const totalLines = [
+    `You owe:,${Math.abs(totalOwed)} ${currency.toUpperCase()}`,
+    `Owed to you:,${totalOwing} ${currency.toUpperCase()}`,
+    `Net balance:,${netLabel}`,
+  ];
+
+  const csv = [headers.join(","), ...rows, "", ...totalLines].join("\n");
   const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
 
@@ -92,7 +99,8 @@ export const exportSinglePersonToCSV = (
   };
 
   const rows: string[] = [];
-  let total = 0;
+  let totalOwed = 0;
+  let totalOwing = 0;
 
   rows.push(`Name:,${escape(name)}`);
   rows.push("");
@@ -105,20 +113,29 @@ export const exportSinglePersonToCSV = (
     const curr = record.currency.toUpperCase();
     const details = record.details || "";
 
-    total += signedAmount;
+    if (signedAmount < 0) totalOwed += signedAmount;
+    else totalOwing += signedAmount;
 
     rows.push(
       [date, String(signedAmount), curr, details].map(escape).join(","),
     );
   });
 
-  const totalLabel =
-    total < 0
-      ? `Total: You owe ${name} ${Math.abs(total)} ${currency.toUpperCase()}`
-      : `Total: ${name} owes you ${total} ${currency.toUpperCase()}`;
+  const net = totalOwed + totalOwing;
+  const netLabel =
+    net < 0
+      ? `${Math.abs(net)} ${currency.toUpperCase()} (you owe ${name})`
+      : net > 0
+        ? `${net} ${currency.toUpperCase()} (${name} owes you)`
+        : `0 ${currency.toUpperCase()}`;
 
-  rows.push("");
-  rows.push(escape(totalLabel));
+  const totalLines = [
+    `You owe ${name}:,${Math.abs(totalOwed)} ${currency.toUpperCase()}`,
+    `${name} owes you:,${totalOwing} ${currency.toUpperCase()}`,
+    `Net balance:,${netLabel}`,
+  ];
+
+  rows.push("", ...totalLines);
 
   const csv = rows.join("\n");
   const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
