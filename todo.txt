@@ -1,3 +1,5 @@
-- i18 needs to be worked on things like Directions (some MUI component needs explicit rtl attributes)
-- move filtering / sorting / calculations function from Zustand to utility folder fpr best practice
-- Add the ability for syncing
+- Add PDF export
+- Work on styles and responsiveness
+- RTL support + arabic
+- only 3 currencies available
+- Deploy + add a linked in post + add to cv zustand and zod and react form hook
