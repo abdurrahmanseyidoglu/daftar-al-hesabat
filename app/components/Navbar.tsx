@@ -52,10 +52,14 @@ function Navbar() {
       console.log(recordsByNameFilteredByCurrency);
 
       if (recordsByNameFilteredByCurrency) {
-        exportSinglePersonToCSV(recordsOwner, recordsByNameFilteredByCurrency);
+        exportSinglePersonToCSV(
+          recordsOwner,
+          recordsByNameFilteredByCurrency,
+          selectedCurrency,
+        );
       }
     } else {
-      exportAllRecordsToCSV(globalRecordsFilteredByCurrency);
+      exportAllRecordsToCSV(globalRecordsFilteredByCurrency, selectedCurrency);
     }
   };
   const handlePDFExportClick = () => {

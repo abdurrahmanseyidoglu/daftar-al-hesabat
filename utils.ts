@@ -29,36 +29,44 @@ export const formatMoney = (money: number) => {
 };
 export const exportAllRecordsToCSV = (
   data: Record[],
-  filename = "records.csv",
+  currency: string,
+  filename = `records_${currency.toLowerCase()}.csv`,
 ) => {
-  const headers = ["Date", "Name", "Amount", "Currency", "On / To", "Details"];
+  const headers = ["Date", "Name", "Amount", "Currency", "Details"];
+
+  const escape = (val: string | number): string => {
+    const str = String(val);
+    return /[",\n]/.test(str) ? `"${str.replace(/"/g, '""')}"` : str;
+  };
 
   const rows: string[] = [];
+  let total = 0;
 
   data.forEach((person) => {
     person.records.forEach((record) => {
-      const date = new Date(record.date).toLocaleDateString(); // e.g. 4/12/2026
+      const date = new Date(record.date).toLocaleDateString();
       const name = person.name;
-      const amount = record.amount;
-      const currency = record.currency.toUpperCase(); // "usd" → "USD"
-      const direction = record.direction; // "ON" or "TO"
+      const signedAmount =
+        record.direction === "TO" ? -record.amount : record.amount;
+      const curr = record.currency.toUpperCase();
       const details = record.details || "";
 
-      // Wrap in quotes if value contains comma, quote, or newline
-      const escape = (val: string) =>
-        /[",\n]/.test(String(val))
-          ? `"${String(val).replace(/"/g, '""')}"`
-          : val;
+      total += signedAmount;
 
       rows.push(
-        [date, name, String(amount), currency, direction, details]
-          .map(escape)
-          .join(","),
+        [date, name, String(signedAmount), curr, details].map(escape).join(","),
       );
     });
   });
 
-  const csv = [headers.join(","), ...rows].join("\n");
+  const totalLabel =
+    total < 0
+      ? `Total: You owe ${Math.abs(total)} ${currency.toUpperCase()}`
+      : `Total: You are owed ${total} ${currency.toUpperCase()}`;
+
+  const csv = [headers.join(","), ...rows, "", `${escape(totalLabel)}`].join(
+    "\n",
+  );
   const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
 
@@ -68,11 +76,13 @@ export const exportAllRecordsToCSV = (
   a.click();
   URL.revokeObjectURL(url);
 };
+
 export const exportSinglePersonToCSV = (
   name: string,
   records: RecordEntry[],
+  currency: string,
 ) => {
-  const headers = ["Date", "Amount", "Currency", "On / To", "Details"];
+  const headers = ["Date", "Amount", "Currency", "Details"];
 
   const escape = (val: string | number): string => {
     const str = String(val);
@@ -80,31 +90,40 @@ export const exportSinglePersonToCSV = (
   };
 
   const rows: string[] = [];
+  let total = 0;
 
-  // Name once at the top as a label row
   rows.push(`Name:,${escape(name)}`);
   rows.push("");
   rows.push(headers.join(","));
 
   records.forEach((record) => {
     const date = new Date(record.date).toLocaleDateString();
-    const amount = String(record.amount);
-    const currency = record.currency.toUpperCase();
-    const direction = record.direction;
+    const signedAmount =
+      record.direction === "TO" ? -record.amount : record.amount;
+    const curr = record.currency.toUpperCase();
     const details = record.details || "";
 
+    total += signedAmount;
+
     rows.push(
-      [date, amount, currency, direction, details].map(escape).join(","),
+      [date, String(signedAmount), curr, details].map(escape).join(","),
     );
   });
+
+  const totalLabel =
+    total < 0
+      ? `Total: You owe ${name} ${Math.abs(total)} ${currency.toUpperCase()}`
+      : `Total: ${name} owes you ${total} ${currency.toUpperCase()}`;
+
+  rows.push("");
+  rows.push(escape(totalLabel));
 
   const csv = rows.join("\n");
   const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
 
-  // "Example person" -> "example_person"
   const safeName = name.trim().toLowerCase().replace(/\s+/g, "_");
-  const filename = `${safeName}.csv`;
+  const filename = `${safeName}_${currency.toLowerCase()}.csv`;
 
   const a = document.createElement("a");
   a.href = url;

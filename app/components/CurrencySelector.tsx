@@ -58,6 +58,7 @@ const CurrencySelector = () => {
         >
           <MenuItem value={"usd"}>USD</MenuItem>
           <MenuItem value={"tr"}>TR</MenuItem>
+          <MenuItem value={"eur"}>Euro</MenuItem>
         </Select>
       </FormControl>
     </Box>
