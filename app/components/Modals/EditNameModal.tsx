@@ -31,6 +31,7 @@ const modalStyle = {
   borderRadius: 3,
   py: 4,
   px: 6,
+  width: "30%",
 };
 
 export default function EditNameModal(props: Props) {

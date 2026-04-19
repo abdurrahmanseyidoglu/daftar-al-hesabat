@@ -62,7 +62,9 @@ export const exportAllRecordsToCSV = (
   const totalLabel =
     total < 0
       ? `Total: You owe ${Math.abs(total)} ${currency.toUpperCase()}`
-      : `Total: You are owed ${total} ${currency.toUpperCase()}`;
+      : total > 0
+        ? `Total: You are owed ${total} ${currency.toUpperCase()}`
+        : "0";
 
   const csv = [headers.join(","), ...rows, "", `${escape(totalLabel)}`].join(
     "\n",
