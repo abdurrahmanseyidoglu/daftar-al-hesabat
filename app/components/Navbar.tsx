@@ -5,14 +5,10 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import CottageOutlinedIcon from "@mui/icons-material/CottageOutlined";
 import { useModalStore } from "../stores/modalStore";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useRecordStore } from "../stores/recordStore";
 import { useTranslations } from "next-intl";
-import { LanguageSwitcher } from "./LangaugeSwitcher";
-import { IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
-import Link from "next/link";
 import { GoHome } from "./GoHome";
 import CurrencySelector from "./CurrencySelector";
 import {
@@ -22,7 +18,7 @@ import {
 } from "@/utils";
 import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
-import Image from "next/image";
+import { Menu, MenuItem } from "@mui/material";
 
 function Navbar() {
   const records = useRecordStore((state) => state.records);

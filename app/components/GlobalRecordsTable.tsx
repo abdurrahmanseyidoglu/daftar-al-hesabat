@@ -176,14 +176,6 @@ export default function GlobalRecordsTable() {
     );
   }, [rows, searchValue]);
 
-  const handleDeleteRow = (name: string) => {
-    console.log("Rows name to delete: " + name);
-  };
-
-  const handleGoToDetails = (name: string) => {
-    // TODO: Add details page
-    console.log(name);
-  };
   const [nameModalState, setNameModalState] = useState(false);
   const [nameModalName, setNameModalName] = useState<string>("");
   const handleNameModal = (state: boolean, name: string) => {
