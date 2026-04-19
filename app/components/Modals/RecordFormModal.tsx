@@ -124,8 +124,6 @@ const RecordFormModal = () => {
         },
       });
     } else {
-      console.log("else is running, name is" + recordsOwner);
-
       reset({
         name: !!recordsOwner ? recordsOwner : "",
         record: {

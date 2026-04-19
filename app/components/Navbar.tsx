@@ -45,7 +45,6 @@ function Navbar() {
       const recordsByNameFilteredByCurrency = recordsByName?.filter(
         (r) => r.currency === selectedCurrency,
       );
-      console.log(recordsByNameFilteredByCurrency);
 
       if (recordsByNameFilteredByCurrency) {
         exportSinglePersonToCSV(

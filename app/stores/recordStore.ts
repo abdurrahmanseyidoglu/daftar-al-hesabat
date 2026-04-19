@@ -153,7 +153,6 @@ export const useRecordStore = create<RecordStore>()(
       },
       calculateTotalPerPerson: (name, currency) => {
         if (!name || !get().doesNameExistInRecords(name)) {
-          console.log("there is no such name " + name);
           return;
         }
         const records = get().getRecordsArrayByName(name);
