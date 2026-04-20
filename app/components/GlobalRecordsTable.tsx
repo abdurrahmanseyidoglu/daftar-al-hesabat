@@ -31,7 +31,7 @@ import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import EditNameModal from "./Modals/EditNameModal";
-import { formatMoney, getRecordsFilteredByCurrency } from "@/utils";
+import { calculateTotalForPersonRecords, formatMoney, getRecordsFilteredByCurrency } from "@/utils";
 
 interface RowData {
   id: string;
@@ -50,15 +50,7 @@ declare module "@mui/x-data-grid" {
   }
 }
 
-//Fix this
-const calculateTotal = (namedRecords: RecordEntry[]): number => {
-  let total = 0;
-  namedRecords.forEach((record) => {
-    if (record.direction === MoneyDirection.ON) total += record.amount;
-    if (record.direction === MoneyDirection.TO) total -= record.amount;
-  });
-  return total;
-};
+
 
 function CustomToolbar({
   searchValue,
@@ -154,7 +146,7 @@ export default function GlobalRecordsTable() {
       records
         .toReversed()
         .map((record) => {
-          const total = calculateTotal(record.records);
+          const total = calculateTotalForPersonRecords(record.records);
           return {
             id: record.name,
             name: record.name,

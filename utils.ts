@@ -1,4 +1,5 @@
 import type { Record, RecordEntry } from "./app/schemas/record.schema";
+import { MoneyDirection } from "./app/types/enums";
 
 export const formatDate = (date: Date) => {
   const d = date instanceof Date ? date : new Date(date);
@@ -27,6 +28,17 @@ export const formatMoney = (money: number) => {
     money,
   );
 };
+export const calculateTotalForPersonRecords = (
+  namedRecords: RecordEntry[],
+): number => {
+  let total = 0;
+  namedRecords.forEach((record) => {
+    if (record.direction === MoneyDirection.ON) total += record.amount;
+    if (record.direction === MoneyDirection.TO) total -= record.amount;
+  });
+  return total;
+};
+
 export const exportAllRecordsToCSV = (
   data: Record[],
   currency: string,

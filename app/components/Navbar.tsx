@@ -58,7 +58,7 @@ function Navbar() {
     }
   };
   const handlePDFExportClick = () => {
-    console.log("export as pdf");
+    ("export as pdf");
   };
   const handleModalState = useModalStore((state) => state.handleModalState);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
