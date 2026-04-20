@@ -19,7 +19,7 @@ const transactions = [
   {
     date: "2024-01-01",
     name: "MHS",
-    amount: "+$5,000",
+    amount: "5,000",
     currency: "USD",
     details: "This is a detail",
   },
@@ -39,6 +39,8 @@ export const GlobalPdfTemplate = () => {
             <Text style={[styles.cell, styles.header]}>Date</Text>
             <Text style={[styles.cell, styles.header]}>Description</Text>
             <Text style={[styles.cell, styles.header]}>Amount</Text>
+            <Text style={[styles.cell, styles.header]}>Currency</Text>
+            <Text style={[styles.cell, styles.header]}>Details</Text>
           </View>
           {/* Data rows */}
           {transactions.map((tx, i) => (
