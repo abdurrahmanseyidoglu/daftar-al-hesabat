@@ -85,7 +85,7 @@ function Navbar() {
               width: "100%",
             }}
           >
-            <GoHome />
+            {recordsOwner && <GoHome />}
 
             <Box
               sx={{
@@ -94,6 +94,7 @@ function Navbar() {
                 gap: ".5rem",
                 alignItems: "center",
                 justifyContent: "flex-end",
+                width: "100%",
               }}
             >
               {records.length > 0 && (
