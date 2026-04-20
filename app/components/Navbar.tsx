@@ -85,8 +85,7 @@ function Navbar() {
               width: "100%",
             }}
           >
-            {recordsOwner && <GoHome />}
-
+            <GoHome />
             <Box
               sx={{
                 display: "flex",
