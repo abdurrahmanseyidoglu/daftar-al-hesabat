@@ -19,11 +19,16 @@ import {
 import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Menu, MenuItem } from "@mui/material";
+import { usePathname } from "next/navigation";
 
+import { useRouter } from "next/navigation";
 function Navbar() {
+  const router = useRouter();
+
   const records = useRecordStore((state) => state.records);
   const t = useTranslations();
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
+  const pathName = usePathname();
 
   const globalRecordsFilteredByCurrency = useMemo(
     () => getRecordsFilteredByCurrency(selectedCurrency, records),
@@ -58,7 +63,11 @@ function Navbar() {
     }
   };
   const handlePDFExportClick = () => {
-    ("export as pdf");
+    if (pathName === "/") {
+      router.push("/pdf-export");
+    } else {
+      router.push("/pdf-export-personal");
+    }
   };
   const handleModalState = useModalStore((state) => state.handleModalState);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -85,7 +94,7 @@ function Navbar() {
               width: "100%",
             }}
           >
-            <GoHome />
+            {pathName !== "/" && <GoHome />}
             <Box
               sx={{
                 display: "flex",
