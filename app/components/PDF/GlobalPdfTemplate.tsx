@@ -1,7 +1,7 @@
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
-import { useRecordStore } from "../stores/recordStore";
-import { MoneyDirection } from "../types/enums";
-import { useAppStore } from "../stores/appStore";
+import { useRecordStore } from "../../stores/recordStore";
+import { MoneyDirection } from "../../types/enums";
+import { useAppStore } from "../../stores/appStore";
 import {
   calculateTotalForPersonRecords,
   formatMoney,
@@ -156,7 +156,7 @@ export const GlobalPdfTemplate = () => {
           <View style={styles.summaryRow}>
             <Text style={styles.summaryLabel}>You owe</Text>
             <Text style={styles.summaryValue}>
-              {calculationObject?.totalOnThem
+              {calculationObject?.totalToThem
                 ? formatMoney(calculationObject.totalToThem)
                 : 0}{" "}
               <Text style={{ fontFamily: "Helvetica-Bold" }}>

@@ -6,14 +6,11 @@ const PDFViewer = dynamic(
     ssr: false,
   },
 );
-import { GlobalPdfTemplate } from "../components/PDF/GlobalPdfTemplate";
-import { usePathname } from "next/navigation";
+import { PersonalPdfTemplate } from "../components/PDF/PersonalPdfTemplate";
 export default function StatementPage() {
-  const pathName = usePathname();
-
   return (
     <PDFViewer style={{ width: "100%", height: "100vh" }}>
-      <GlobalPdfTemplate />
+      <PersonalPdfTemplate />
     </PDFViewer>
   );
 }
