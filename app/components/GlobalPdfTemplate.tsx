@@ -1,6 +1,13 @@
-// components/MyDocument.jsx
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import { useRecordStore } from "../stores/recordStore";
+import { MoneyDirection } from "../types/enums";
+import { useAppStore } from "../stores/appStore";
+import {
+  calculateTotalForPersonRecords,
+  formatMoney,
+  getRecordsFilteredByCurrency,
+} from "@/utils";
+import { useMemo } from "react";
 const styles = StyleSheet.create({
   page: { padding: 40, fontSize: 12, fontFamily: "Helvetica" },
   title: { fontSize: 20, marginBottom: 20 },
@@ -11,47 +18,162 @@ const styles = StyleSheet.create({
     borderColor: "#eee",
     paddingVertical: 6,
   },
+  headerRow: { backgroundColor: "silver" },
   cell: { flex: 1 },
-  header: { fontFamily: "Helvetica-Bold", color: "#444" },
-});
-
-const transactions = [
-  {
-    date: "2024-01-01",
-    name: "MHS",
-    amount: "5,000",
-    currency: "USD",
-    details: "This is a detail",
+  cellText: { textAlign: "left" },
+  headerText: {
+    fontFamily: "Helvetica-Bold",
+    color: "#444",
+    textAlign: "left",
+    padding: 2,
   },
-];
+  summary: {
+    marginTop: 16,
+    paddingTop: 12,
+    borderTopWidth: 2,
+    borderColor: "#aaa",
+    alignSelf: "flex-start", // pushes it to the right side
+    width: "40%",
+  },
+  summaryRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 4,
+  },
+  summaryLabel: { color: "#555" },
+  summaryValue: { fontFamily: "Helvetica-Bold" },
+  summaryTotal: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 6,
+    paddingTop: 6,
+    borderTopWidth: 1,
+    borderColor: "#aaa",
+  },
+  summaryTotalLabel: { fontFamily: "Helvetica-Bold", fontSize: 13 },
+  summaryTotalValue: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 13,
+  },
+});
 
 export const GlobalPdfTemplate = () => {
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
+  const calculateTotalGlobally = useRecordStore(
+    (state) => state.calculateTotalGlobally,
+  );
+  const storeRecords = useRecordStore((state) => state.records);
+
+  const recordsFilteredByCurrency = useMemo(
+    () => getRecordsFilteredByCurrency(selectedCurrency, storeRecords),
+    [selectedCurrency, storeRecords],
+  );
+  const recordsToDisplay = recordsFilteredByCurrency
+    .toReversed()
+    .map((record) => {
+      const total = calculateTotalForPersonRecords(record.records);
+      return {
+        id: record.name,
+        name: record.name,
+        recordsCount: record.records.length,
+        total,
+        direction: total >= 0 ? MoneyDirection.ON : MoneyDirection.TO,
+      };
+    })
+    .filter((r) => r.recordsCount !== 0);
+  const initialized = useAppStore((state) => state.initialized);
+  const calculationObject = initialized
+    ? calculateTotalGlobally(selectedCurrency)
+    : undefined;
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
+      <Page size="A4" orientation="landscape" style={styles.page}>
         <Text style={styles.title}>
           Global transactions in {selectedCurrency.toLocaleUpperCase()}
         </Text>
         <View style={styles.table}>
           {/* Header row */}
-          <View style={styles.row}>
-            <Text style={[styles.cell, styles.header]}>Date</Text>
-            <Text style={[styles.cell, styles.header]}>Description</Text>
-            <Text style={[styles.cell, styles.header]}>Amount</Text>
-            <Text style={[styles.cell, styles.header]}>Currency</Text>
-            <Text style={[styles.cell, styles.header]}>Details</Text>
+          <View style={[styles.row, styles.headerRow]}>
+            {["Name", "Records", "Total", "Currency"].map((h) => (
+              <View key={h} style={styles.cell}>
+                <Text style={styles.headerText}>{h}</Text>
+              </View>
+            ))}
           </View>
+
           {/* Data rows */}
-          {transactions.map((tx, i) => (
-            <View style={styles.row} key={i}>
-              <Text style={styles.cell}>{tx.date}</Text>
-              <Text style={styles.cell}>{tx.name}</Text>
-              <Text style={styles.cell}>{tx.amount}</Text>
-              <Text style={styles.cell}>{tx.currency}</Text>
-              <Text style={styles.cell}>{tx.details}</Text>
+          {recordsToDisplay.map((record) => (
+            <View style={styles.row} key={record.name}>
+              <View style={styles.cell}>
+                <Text style={styles.cellText}>{record.name}</Text>
+              </View>
+              <View style={styles.cell}>
+                <Text style={styles.cellText}>{record.recordsCount}</Text>
+              </View>
+              <View style={styles.cell}>
+                <Text style={styles.cellText}>{formatMoney(record.total)}</Text>
+              </View>
+              <View style={styles.cell}>
+                <Text style={styles.cellText}>
+                  {selectedCurrency.toUpperCase()}
+                </Text>
+              </View>
+              {/* <View style={styles.cell}>
+                <Text style={styles.cellText}>{record.direction}</Text>
+              </View> */}
             </View>
           ))}
+        </View>
+        <View style={styles.summary}>
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>You are owed</Text>
+            <Text style={styles.summaryValue}>
+              {calculationObject?.totalOnThem
+                ? formatMoney(calculationObject.totalOnThem)
+                : 0}{" "}
+              <Text style={{ fontFamily: "Helvetica-Bold" }}>
+                {selectedCurrency.toLocaleUpperCase()}
+              </Text>
+            </Text>
+          </View>
+
+          <View style={styles.summaryRow}>
+            <Text style={styles.summaryLabel}>You owe</Text>
+            <Text style={styles.summaryValue}>
+              {calculationObject?.totalOnThem
+                ? formatMoney(calculationObject.totalToThem)
+                : 0}{" "}
+              <Text style={{ fontFamily: "Helvetica-Bold" }}>
+                {selectedCurrency.toLocaleUpperCase()}
+              </Text>
+            </Text>
+          </View>
+
+          <View style={styles.summaryTotal}>
+            <Text style={styles.summaryTotalLabel}>
+              {calculationObject?.direction === MoneyDirection.TO
+                ? "Net you owe"
+                : "Net you're owed"}
+            </Text>
+            <Text
+              style={[
+                styles.summaryTotalValue,
+                {
+                  color:
+                    calculationObject?.direction === MoneyDirection.TO
+                      ? "#c0392b"
+                      : "#27ae60",
+                },
+              ]}
+            >
+              {calculationObject?.total
+                ? `${formatMoney(calculationObject.total)} `
+                : 0}
+              <Text style={{ fontFamily: "Helvetica-Bold" }}>
+                {selectedCurrency.toLocaleUpperCase()}
+              </Text>
+            </Text>
+          </View>
         </View>
       </Page>
     </Document>

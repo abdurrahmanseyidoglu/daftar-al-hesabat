@@ -24,7 +24,6 @@ import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { useRecordStore } from "../stores/recordStore";
 import { MoneyDirection } from "../types/enums";
-import { RecordEntry } from "../schemas/record.schema";
 import { useTranslations } from "next-intl";
 import ConfirmDialog from "./ConfirmDialog";
 import { enqueueSnackbar } from "notistack";
