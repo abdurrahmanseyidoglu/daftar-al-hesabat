@@ -10,11 +10,11 @@ export function registerPdfFonts() {
     family: "Tajawal",
     fonts: [
       {
-        src: "/public/fonts/Tajawal-Regular.ttf",
+        src: "/fonts/Tajawal-Regular.ttf",
         fontWeight: "normal",
       },
       {
-        src: "/public/fonts/Tajawal-Bold.ttf",
+        src: "/fonts/Tajawal-Bold.ttf",
         fontWeight: "bold",
       },
     ],
