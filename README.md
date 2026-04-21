@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Daftar Al-Hesabat | دفتر الحسابات 
 
-## Getting Started
+A personal ledger for tracking money between you and the people in your life.
 
-First, run the development server:
+
+
+## The problem
+
+Lending or borrowing money from friends and family is normal. Remembering the exact amounts, what they were for and who owes what months later is not. Most people either forget or end up in an awkward conversation because the numbers don't match.
+
+Daftar Al-Hesabat gives you one place to write it all down.
+
+
+## How it works
+
+Each person you deal with gets their own page. Every time money moves between you, you log it as a transaction with an amount, a currency and a short note. The page keeps a live total so you always know the current balance with that person at a glance.
+
+The home page gives you the full picture: everyone you have transactions with, how many transactions you've had with each of them, and what the balance looks like. A total at the bottom of the page rolls everything up so you know at any moment whether you're net positive or net negative overall.
+
+
+
+## Features
+
+- Per-person transaction history with a running balance
+- Global overview with per-person summaries and an overall total
+- Supports **USD**, **EUR** and **TL**
+- Export any page to `.csv` or `.pdf`
+- Arabic language support *(in progress)*
+
+
+
+## Planned
+
+- Google Drive sync for data backup, which will include account support
+- More currencies
+
+
+
+## Running locally
+
+Clone the repo and install dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/abdurrahmanseyidoglu/daftar-al-hesabat.git
+cd daftar-al-hesabat
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Start the development server:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+## Contributing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The project is still in early development. If you run into something broken or have a suggestion, feel free to open an issue.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
