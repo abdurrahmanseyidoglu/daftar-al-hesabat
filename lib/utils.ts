@@ -1,5 +1,5 @@
-import type { Record, RecordEntry } from "./app/schemas/record.schema";
-import { MoneyDirection } from "./app/types/enums";
+import type { Record, RecordEntry } from "../app/schemas/record.schema";
+import { MoneyDirection } from "../app/types/enums";
 
 export const formatDate = (date: Date) => {
   const d = date instanceof Date ? date : new Date(date);

@@ -30,7 +30,7 @@ import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import EditNameModal from "./Modals/EditNameModal";
-import { calculateTotalForPersonRecords, formatMoney, getRecordsFilteredByCurrency } from "@/utils";
+import { calculateTotalForPersonRecords, formatMoney, getRecordsFilteredByCurrency } from "@/lib/utils";
 
 interface RowData {
   id: string;

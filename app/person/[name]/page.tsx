@@ -35,7 +35,7 @@ import ConfirmDialog from "@/app/components/ConfirmDialog";
 import { useParams } from "next/navigation";
 import RecordFormModal from "@/app/components/Modals/RecordFormModal";
 import { useModalStore } from "@/app/stores/modalStore";
-import { formatDate } from "@/utils";
+import { formatDate } from "@/lib/utils";
 import { useSnackbar } from "notistack";
 import Footer from "@/app/components/Footer";
 import Link from "next/link";

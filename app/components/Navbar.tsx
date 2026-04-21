@@ -15,7 +15,7 @@ import {
   exportAllRecordsToCSV,
   exportSinglePersonToCSV,
   getRecordsFilteredByCurrency,
-} from "@/utils";
+} from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Menu, MenuItem } from "@mui/material";

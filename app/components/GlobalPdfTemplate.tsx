@@ -6,10 +6,19 @@ import {
   calculateTotalForPersonRecords,
   formatMoney,
   getRecordsFilteredByCurrency,
-} from "@/utils";
+} from "@/lib/utils";
 import { useMemo } from "react";
+import { registerPdfFonts } from "@/lib/pdfFonts";
+import { isArabic } from "@/lib/textUtils";
+
+registerPdfFonts();
 const styles = StyleSheet.create({
-  page: { padding: 40, fontSize: 12, fontFamily: "Helvetica" },
+  page: { padding: 40, fontSize: 12, fontFamily: "Tajawal" },
+  arabicText: {
+    fontFamily: "Tajawal",
+    textAlign: "right",
+    direction: "rtl",
+  },
   title: { fontSize: 20, marginBottom: 20 },
   table: { width: "100%" },
   row: {
@@ -18,6 +27,7 @@ const styles = StyleSheet.create({
     borderColor: "#eee",
     paddingVertical: 6,
   },
+
   headerRow: { backgroundColor: "silver" },
   cell: { flex: 1 },
   cellText: { textAlign: "left" },
@@ -32,7 +42,7 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     borderTopWidth: 2,
     borderColor: "#aaa",
-    alignSelf: "flex-start", // pushes it to the right side
+    alignSelf: "flex-start",
     width: "40%",
   },
   summaryRow: {
@@ -105,7 +115,13 @@ export const GlobalPdfTemplate = () => {
           {recordsToDisplay.map((record) => (
             <View style={styles.row} key={record.name}>
               <View style={styles.cell}>
-                <Text style={styles.cellText}>{record.name}</Text>
+                <Text
+                  style={
+                    isArabic(record.name) ? styles.arabicText : styles.cellText
+                  }
+                >
+                  {record.name}
+                </Text>
               </View>
               <View style={styles.cell}>
                 <Text style={styles.cellText}>{record.recordsCount}</Text>

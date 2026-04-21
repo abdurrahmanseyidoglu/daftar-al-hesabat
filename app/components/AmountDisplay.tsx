@@ -1,6 +1,6 @@
 "use client";
 
-import { formatMoney } from "@/utils";
+import { formatMoney } from "@/lib/utils";
 
 interface Props {
   amount: number;
