@@ -3,7 +3,6 @@ import { useRecordStore } from "../../stores/recordStore";
 import { MoneyDirection } from "../../types/enums";
 import { useAppStore } from "../../stores/appStore";
 import { formatMoney } from "@/lib/utils";
-import { useMemo } from "react";
 import { registerPdfFonts } from "@/lib/pdfFonts";
 import { isArabic } from "@/lib/textUtils";
 
@@ -64,14 +63,13 @@ const styles = StyleSheet.create({
 });
 
 export const PersonalPdfTemplate = () => {
-  const recordsOwner = useRecordStore((state) => state.selectedOwner) ?? "";
-  const setRecordsOwner = useRecordStore((state) => state.setSelectedOwner);
-  let decodedRecordsOwner: string = "";
-  if (!!recordsOwner) {
-    decodedRecordsOwner = decodeURI(recordsOwner);
-  } else {
-    decodedRecordsOwner = "";
-  }
+  const selectedRecordArray = useRecordStore(
+    (state) => state.selectedRecordArray,
+  );
+  const recordsOwner = selectedRecordArray?.name ?? "";
+  const records = selectedRecordArray?.records;
+  const decodedRecordsOwner = decodeURI(recordsOwner);
+
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
   const calculateTotalPerPerson = useRecordStore(
     (state) => state.calculateTotalPerPerson,
@@ -80,27 +78,19 @@ export const PersonalPdfTemplate = () => {
   const initialized = useAppStore((state) => state.initialized);
 
   const calculationObject = initialized
-    ? calculateTotalPerPerson(recordsOwner, selectedCurrency)
+    ? calculateTotalPerPerson(decodedRecordsOwner, selectedCurrency)
     : undefined;
 
-  const personsRecords = useRecordStore((state) =>
-    state.getRecordsArrayByName(recordsOwner),
-  );
-  const personsRecordsFilteredByCurrency = useMemo(() => {
-    return personsRecords?.filter((r) => r.currency === selectedCurrency);
-  }, [personsRecords, selectedCurrency]);
-  const recordsToDisplay = personsRecordsFilteredByCurrency
-    ?.toReversed()
-    .map((record) => {
-      return {
-        id: record.id,
-        details: record.details,
-        direction: record.direction,
-        date: record.date,
-        amount: record.amount,
-        currency: record.currency,
-      };
-    });
+  const recordsToDisplay = records?.toReversed().map((record) => {
+    return {
+      id: record.id,
+      details: record.details,
+      direction: record.direction,
+      date: record.date,
+      amount: record.amount,
+      currency: record.currency,
+    };
+  });
 
   return (
     <Document>

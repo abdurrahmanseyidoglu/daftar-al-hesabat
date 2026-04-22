@@ -18,6 +18,8 @@ interface GlobalTotal {
 interface RecordStore {
   records: Record[];
   selectedCurrency: string;
+  selectedRecordArray: Record | undefined;
+
   updateSelectedCurrency: (currency: string) => void;
   doesNameExistInRecords: (name: string | null) => boolean;
   addRecordToExistingName: (name: string, record: RecordEntry) => void;
@@ -40,6 +42,7 @@ interface RecordStore {
     name: string,
     updatesName: string,
   ) => Record | undefined;
+  setSelectedRecordArray: (record: Record) => void;
 }
 export const useRecordStore = create<RecordStore>()(
   persist(
@@ -151,7 +154,7 @@ export const useRecordStore = create<RecordStore>()(
         }));
         return true;
       },
-      calculateTotalPerPerson: (name, currency) => {
+      calculateTotalPerPerson: (name, currency) => {        
         if (!name || !get().doesNameExistInRecords(name)) {
           return;
         }
@@ -160,6 +163,7 @@ export const useRecordStore = create<RecordStore>()(
         let total = 0;
         let totalOnHim = 0;
         let totalToHim = 0;
+
         records?.forEach((record) => {
           if (
             record.direction === MoneyDirection.ON &&
@@ -229,7 +233,11 @@ export const useRecordStore = create<RecordStore>()(
           }),
         }));
       },
+      setSelectedRecordArray: (record) => {
+        set({ selectedRecordArray: record });
+      },
     })),
+
     {
       name: "record-storage",
     },

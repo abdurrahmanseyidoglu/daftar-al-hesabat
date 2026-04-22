@@ -29,7 +29,9 @@ function Navbar() {
   const t = useTranslations();
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
   const pathName = usePathname();
-
+  const setSelectedRecordArray = useRecordStore(
+    (state) => state.setSelectedRecordArray,
+  );
   const globalRecordsFilteredByCurrency = useMemo(
     () => getRecordsFilteredByCurrency(selectedCurrency, records),
     [selectedCurrency, records],
@@ -63,10 +65,18 @@ function Navbar() {
     }
   };
   const handlePDFExportClick = () => {
-    if (pathName === "/") {
-      router.push("/pdf-export");
-    } else {
+    if (recordsOwner) {
+      const recordsByName = getRecordsArrayByName(recordsOwner);
+      const recordsByNameFilteredByCurrency = recordsByName?.filter(
+        (r) => r.currency === selectedCurrency,
+      );
+      setSelectedRecordArray({
+        name: name,
+        records: recordsByNameFilteredByCurrency ?? [],
+      });
       router.push("/pdf-export-personal");
+    } else {
+      router.push("/pdf-export");
     }
   };
   const handleModalState = useModalStore((state) => state.handleModalState);
