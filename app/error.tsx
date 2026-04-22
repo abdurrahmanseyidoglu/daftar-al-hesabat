@@ -15,10 +15,9 @@ import ReplayIcon from "@mui/icons-material/Replay";
 
 interface ErrorPageProps {
   error: Error & { digest?: string };
-  reset: () => void;
 }
 
-export default function InternalServerError({ error, reset }: ErrorPageProps) {
+export default function InternalServerError({ error }: ErrorPageProps) {
   const isDev = process.env.NODE_ENV === "development";
 
   useEffect(() => {
@@ -126,19 +125,9 @@ export default function InternalServerError({ error, reset }: ErrorPageProps) {
 
         <Box sx={{ display: "flex", gap: 2, mt: 1 }}>
           <Button
-            onClick={reset}
-            variant="contained"
-            size="large"
-            startIcon={<ReplayIcon />}
-            sx={{ borderRadius: 2, px: 3 }}
-          >
-            Try Again
-          </Button>
-
-          <Button
             component={Link}
             href="/"
-            variant="outlined"
+            variant="contained"
             size="large"
             sx={{ borderRadius: 2, px: 3 }}
           >
