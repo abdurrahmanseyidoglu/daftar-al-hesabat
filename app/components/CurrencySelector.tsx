@@ -8,7 +8,15 @@ import {
 } from "@mui/material";
 import { useRecordStore } from "../stores/recordStore";
 
-const CurrencySelector = () => {
+interface UsedCurrency {
+  value: string;
+  label: string;
+}
+interface CurrencySelectorProps {
+  usedCurrencies: UsedCurrency[];
+}
+
+const CurrencySelector = ({ usedCurrencies }: CurrencySelectorProps) => {
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
   const updateCurrency = useRecordStore(
     (state) => state.updateSelectedCurrency,
@@ -16,6 +24,7 @@ const CurrencySelector = () => {
   const handleChange = (event: SelectChangeEvent) => {
     updateCurrency(event.target.value as string);
   };
+
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
@@ -56,9 +65,11 @@ const CurrencySelector = () => {
             },
           }}
         >
-          <MenuItem value={"usd"}>USD</MenuItem>
-          <MenuItem value={"tr"}>TR</MenuItem>
-          <MenuItem value={"eur"}>Euro</MenuItem>
+          {usedCurrencies.map((cur) => (
+            <MenuItem value={cur.value} key={cur.value}>
+              {cur.label}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
     </Box>

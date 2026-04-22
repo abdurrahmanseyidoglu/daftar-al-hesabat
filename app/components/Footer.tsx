@@ -5,6 +5,7 @@ import { Box, Typography } from "@mui/material";
 import AmountDisplay from "./AmountDisplay";
 import { useRecordStore } from "../stores/recordStore";
 import CurrencySelector from "./CurrencySelector";
+import { allCurrencies } from "@/lib/currencies";
 
 interface Props {
   totalOn: number | undefined;
@@ -12,8 +13,24 @@ interface Props {
   total: number | undefined;
   direction: MoneyDirection | 0 | undefined;
 }
+
 const Footer = (props: Props) => {
+  const records = useRecordStore((state) => state.records);
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
+  const getUsedCurrencies = () => {
+    const usedCurrenciesSet = new Set<string>();
+
+    records.forEach((owner) => {
+      owner.records.forEach((record) => {
+        usedCurrenciesSet.add(record.currency);
+      });
+    });
+    console.log(allCurrencies.filter((c) => usedCurrenciesSet.has(c.value)));
+
+    return allCurrencies.filter((c) => usedCurrenciesSet.has(c.value));
+  };
+  const usedCurrencies = getUsedCurrencies();
+
   return (
     <Box sx={{ marginTop: "4rem" }}>
       <Box
@@ -61,7 +78,7 @@ const Footer = (props: Props) => {
             />
           </Typography>
         </Box>
-        <CurrencySelector />
+        <CurrencySelector usedCurrencies={usedCurrencies} />
       </Box>
     </Box>
   );

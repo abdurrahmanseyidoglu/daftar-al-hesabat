@@ -1,13 +1,11 @@
 import {
   Box,
   Button,
-  FormControl,
+  Divider,
   FormControlLabel,
-  MenuItem,
   Modal,
   Radio,
   RadioGroup,
-  Select,
   TextField,
   Tooltip,
   Typography,
@@ -32,11 +30,12 @@ import { useModalStore } from "../../stores/modalStore";
 import { useTranslations } from "next-intl";
 import { useSnackbar } from "notistack";
 import { useParams } from "next/navigation";
+import { allCurrencies } from "@/lib/currencies";
 type FormValuesType = { name: string } & { record: RecordEntry };
 
 const modalStyle = {
   position: "absolute",
-  top: "50%",
+  top: "30%",
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: "30%",
@@ -365,23 +364,50 @@ const RecordFormModal = () => {
                   </LocalizationProvider>
                 )}
               />
-
               <Controller
                 name="record.currency"
                 control={control}
                 render={({ field, fieldState }) => (
-                  <FormControl
-                    fullWidth
-                    size="small"
-                    error={!!fieldState.error}
-                  >
-                    <InputLabel>Select Currency</InputLabel>
-                    <Select {...field} label="Select Currency">
-                      <MenuItem value="usd">USD Dollar</MenuItem>
-                      <MenuItem value="tr">Turkish Lira</MenuItem>
-                      <MenuItem value="eu">Euro</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <Autocomplete
+                    options={allCurrencies}
+                    groupBy={(option) => option.group}
+                    getOptionLabel={(option) => option.label}
+                    value={
+                      allCurrencies.find((c) => c.value === field.value) ?? null
+                    }
+                    onChange={(_, selected) =>
+                      field.onChange(selected?.value ?? "")
+                    }
+                    renderGroup={(params) => (
+                      <Box key={params.key}>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            px: 2,
+                            py: 0.5,
+                            color: "text.secondary",
+                            fontWeight: 600,
+                            display: "block",
+                          }}
+                        >
+                          {params.group}
+                        </Typography>
+                        {params.children}
+                        {params.group === "Common" && (
+                          <Divider sx={{ my: 0.5 }} />
+                        )}
+                      </Box>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Select Currency"
+                        size="small"
+                        error={!!fieldState.error}
+                        helperText={fieldState.error?.message}
+                      />
+                    )}
+                  />
                 )}
               />
 

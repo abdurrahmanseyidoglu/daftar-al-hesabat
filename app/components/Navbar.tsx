@@ -22,6 +22,7 @@ import { Menu, MenuItem } from "@mui/material";
 import { usePathname } from "next/navigation";
 
 import { useRouter } from "next/navigation";
+import { allCurrencies } from "@/lib/currencies";
 function Navbar() {
   const router = useRouter();
 
@@ -90,6 +91,21 @@ function Navbar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const getUsedCurrencies = () => {
+    const usedCurrenciesSet = new Set<string>();
+
+    records.forEach((owner) => {
+      owner.records.forEach((record) => {
+        usedCurrenciesSet.add(record.currency);
+      });
+    });
+    console.log(allCurrencies.filter((c) => usedCurrenciesSet.has(c.value)));
+
+    return allCurrencies.filter((c) => usedCurrenciesSet.has(c.value));
+  };
+  const usedCurrencies = getUsedCurrencies();
+
   return (
     <AppBar position="sticky">
       <Container maxWidth="xl">
@@ -174,7 +190,7 @@ function Navbar() {
                   </Menu>
                 </>
               )}
-              <CurrencySelector />
+              <CurrencySelector usedCurrencies={usedCurrencies} />
               {/* <LanguageSwitcher /> */}
             </Box>
           </Box>
