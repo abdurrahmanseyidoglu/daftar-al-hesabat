@@ -3,3 +3,5 @@
 - Deploy + add a linked in post + add to cv zustand and zod and react form hook
 - Handle page meta data (title, favico)
 - Test what We have till now
+1- don't display currency selector on initial load (or assume a default currency at least)
+2- hide footer in there is no records at all
