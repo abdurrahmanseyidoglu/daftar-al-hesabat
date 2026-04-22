@@ -25,7 +25,6 @@ const Footer = (props: Props) => {
         usedCurrenciesSet.add(record.currency);
       });
     });
-    console.log(allCurrencies.filter((c) => usedCurrenciesSet.has(c.value)));
 
     return allCurrencies.filter((c) => usedCurrenciesSet.has(c.value));
   };
