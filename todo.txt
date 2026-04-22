@@ -5,3 +5,6 @@
 - Test what We have till now
 1- don't display currency selector on initial load (or assume a default currency at least)
 2- hide footer in there is no records at all
+3- make repo public
+4- update cv (zustand,react, next, mui,zod)
+5- refactor, refactor refactor :D
