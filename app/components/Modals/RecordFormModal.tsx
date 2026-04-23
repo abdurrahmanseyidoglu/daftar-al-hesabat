@@ -35,10 +35,10 @@ type FormValuesType = { name: string } & { record: RecordEntry };
 
 const modalStyle = {
   position: "absolute",
-  top: "30%",
+  top: "40%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "30%",
+  width: "500",
   height: "fit",
   bgcolor: "background.paper",
   border: "1px solid text.primary",
