@@ -7,13 +7,10 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { useRecordStore } from "../stores/recordStore";
+import Currency from "../types/currency";
 
-interface UsedCurrency {
-  value: string;
-  label: string;
-}
 interface CurrencySelectorProps {
-  usedCurrencies: UsedCurrency[];
+  usedCurrencies: Currency[];
 }
 
 const CurrencySelector = ({ usedCurrencies }: CurrencySelectorProps) => {
@@ -22,7 +19,7 @@ const CurrencySelector = ({ usedCurrencies }: CurrencySelectorProps) => {
     (state) => state.updateSelectedCurrency,
   );
   const handleChange = (event: SelectChangeEvent) => {
-    updateCurrency(event.target.value as string);
+    updateCurrency(event.target.value);
   };
 
   return (

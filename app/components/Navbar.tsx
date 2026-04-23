@@ -20,7 +20,6 @@ import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Menu, MenuItem } from "@mui/material";
 import { usePathname } from "next/navigation";
-
 import { useRouter } from "next/navigation";
 import { allCurrencies } from "@/lib/currencies";
 function Navbar() {
@@ -187,9 +186,9 @@ function Navbar() {
                       Export as CSV
                     </MenuItem>
                   </Menu>
+                  <CurrencySelector usedCurrencies={usedCurrencies} />
                 </>
               )}
-              <CurrencySelector usedCurrencies={usedCurrencies} />
               {/* <LanguageSwitcher /> */}
             </Box>
           </Box>

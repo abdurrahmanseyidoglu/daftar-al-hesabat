@@ -58,7 +58,9 @@ const RecordFormModal = () => {
     (state) => state.modalPredefinedProps,
   );
   const handleModalState = useModalStore((state) => state.handleModalState);
-
+  const updateSelectedCurrency = useRecordStore(
+    (state) => state.updateSelectedCurrency,
+  );
   const addRecordToNewName = useRecordStore(
     (state) => state.addRecordToNewName,
   );
@@ -145,6 +147,7 @@ const RecordFormModal = () => {
 
   const saveAction = (data: FormValuesType) => {
     setSavingForm(true);
+    updateSelectedCurrency(data.record.currency);
     const existing = doesNameExistInRecords(data.name.trim());
     if (!existing) {
       addRecordToNewName(data.name.trim(), { ...data.record });
