@@ -5,4 +5,4 @@
 - Test what We have till now
 - make repo public
 - update cv (zustand,react, next, mui,zod)
-- refactor, refactor refactor :D
+- refactor, refactor refactor
