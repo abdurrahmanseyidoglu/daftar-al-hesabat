@@ -59,12 +59,14 @@ export default function HomePage() {
         {records.length > 0 && <GlobalRecordsTable />}
         <RecordFormModal />
       </Box>
-      <Footer
-        totalOn={calculationObject?.totalOnThem}
-        totalTo={calculationObject?.totalToThem}
-        total={calculationObject?.total}
-        direction={calculationObject?.direction}
-      />
+      {records.length > 0 && (
+        <Footer
+          totalOn={calculationObject?.totalOnThem}
+          totalTo={calculationObject?.totalToThem}
+          total={calculationObject?.total}
+          direction={calculationObject?.direction}
+        />
+      )}
     </>
   );
 }
