@@ -23,17 +23,15 @@ The home page gives you the full picture: everyone you have transactions with, h
 
 - Per-person transaction history with a running balance
 - Global overview with per-person summaries and an overall total
-- Supports **USD**, **EUR** and **TL**
+- Supports all currencies
 - Export any page to `.csv` or `.pdf`
-- Arabic language support *(in progress)*
 
 
 
 ## Planned
 
 - Google Drive sync for data backup, which will include account support
-- More currencies
-
+- Arabic language support
 
 
 ## Running locally

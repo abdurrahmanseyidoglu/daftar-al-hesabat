@@ -10,7 +10,6 @@ import SnackbarWrapper from "./components/SnackBarWrapper";
 import { ViewTransition } from "react";
 import { InitialAppLoader } from "./components/AppLoader/InitialAppLoader";
 import { AppLoaderDismiss } from "./components/AppLoader/AppLoaderDismiss";
-import { Geist } from "next/font/google";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
