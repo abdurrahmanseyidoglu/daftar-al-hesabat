@@ -30,7 +30,12 @@ import { enqueueSnackbar } from "notistack";
 import Link from "next/link";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import EditNameModal from "./Modals/EditNameModal";
-import { calculateTotalForPersonRecords, formatMoney, getRecordsFilteredByCurrency } from "@/lib/utils";
+import {
+  calculateTotalForPersonRecords,
+  formatMoney,
+  getRecordsFilteredByCurrency,
+} from "@/lib/utils";
+import { Divider } from "@mui/material";
 
 interface RowData {
   id: string;
@@ -49,8 +54,6 @@ declare module "@mui/x-data-grid" {
   }
 }
 
-
-
 function CustomToolbar({
   searchValue,
   onSearchChange,
@@ -58,40 +61,36 @@ function CustomToolbar({
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
 
   return (
-    <Toolbar>
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
+    <Box>
+      <Typography
+        fontSize={{ xs: "1.5rem", md: "2rem" }}
+        fontWeight={500}
+        sx={{ textAlign: "start" }}
+        mb={3}
       >
-        <Typography
-          fontSize={"2rem"}
-          fontWeight={500}
-          sx={{ textAlign: "end" }}
-        >
-          {`All Records in [ ${selectedCurrency.toUpperCase()} ]`}
-        </Typography>
-        <TextField
-          size="small"
-          placeholder="Search..."
-          value={searchValue}
-          onChange={(e) => onSearchChange(e.target.value)}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
-                </InputAdornment>
-              ),
-            },
-          }}
-          sx={{ width: 220 }}
-        />
-      </Box>
-    </Toolbar>
+        {`All Records in < ${selectedCurrency.toUpperCase()} >`}
+      </Typography>
+      <Toolbar>
+        <Box>
+          <TextField
+            size="small"
+            placeholder="Search..."
+            value={searchValue}
+            onChange={(e) => onSearchChange(e.target.value)}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+              },
+            }}
+            sx={{ width: 300 }}
+          />
+        </Box>
+      </Toolbar>
+    </Box>
   );
 }
 
@@ -300,7 +299,7 @@ export default function GlobalRecordsTable() {
         <DataGrid
           showToolbar
           initialState={{
-            density: "comfortable",
+            density: "standard",
           }}
           autosizeOptions={{
             includeHeaders: true,
@@ -333,7 +332,6 @@ export default function GlobalRecordsTable() {
             },
             "& .MuiDataGrid-cell": {
               fontSize: "1.2rem",
-              border: "1px solid #e0e0e0",
             },
           }}
         />

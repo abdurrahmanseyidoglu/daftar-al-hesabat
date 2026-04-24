@@ -8,7 +8,6 @@ import {
   TextField,
 } from "@mui/material";
 import Modal from "@mui/material/Modal";
-import { enqueueSnackbar } from "notistack";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 type Inputs = {
@@ -31,7 +30,7 @@ const modalStyle = {
   borderRadius: 3,
   py: 4,
   px: 6,
-  width: "30%",
+  width: { xs: "90%", md: "60%", lg: "40%" },
 };
 
 export default function EditNameModal(props: Props) {
