@@ -62,58 +62,52 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
 
   return (
-    <Toolbar>
+    <Box>
       <Box
         sx={{
-          width: "100%",
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "flex-start",
+          gap: { sm: ".3rem", md: "1rem" },
         }}
       >
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-start",
-            gap: "1rem",
-          }}
+        <Link href={"/"}>
+          <Tooltip title={"Back Home"}>
+            <IconButton aria-label="home" sx={{ padding: 2 }}>
+              <ArrowBackIcon sx={{ color: "#000000" }} />
+            </IconButton>
+          </Tooltip>
+        </Link>
+        <Typography
+          fontSize={{ xs: "1.5rem", md: "2rem" }}
+          fontWeight={500}
+          sx={{ textAlign: "end", padding: "1rem" }}
         >
-          <Link href={"/"}>
-            <Tooltip title={"Back Home"}>
-              <IconButton aria-label="home" sx={{ padding: 2 }}>
-                <ArrowBackIcon sx={{ color: "#000000" }} />
-              </IconButton>
-            </Tooltip>
-          </Link>
-          <Typography
-            fontSize={"2rem"}
-            fontWeight={500}
-            sx={{ textAlign: "end" }}
-          >
-            All Records for {decodeURIComponent(decodedRecordOwner)} in
-            {` [ ${selectedCurrency.toUpperCase()} ]`}
-          </Typography>
-        </Box>
-
-        <TextField
-          size="small"
-          placeholder="Search..."
-          value={searchValue}
-          onChange={(e) => onSearchChange(e.target.value)}
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
-                </InputAdornment>
-              ),
-            },
-          }}
-          sx={{ width: 220 }}
-        />
+          All Records for {decodedRecordOwner} in
+          {` [ ${selectedCurrency.toUpperCase()} ]`}
+        </Typography>
       </Box>
-    </Toolbar>
+      <Toolbar>
+        <Box>
+          <TextField
+            size="small"
+            placeholder="Search..."
+            value={searchValue}
+            onChange={(e) => onSearchChange(e.target.value)}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+              },
+            }}
+            sx={{ width: 220 }}
+          />
+        </Box>
+      </Toolbar>
+    </Box>
   );
 }
 export default function ProfilePage() {
@@ -132,7 +126,6 @@ export default function ProfilePage() {
     : undefined;
 
   const removeRecord = useRecordStore((state) => state.removeRecord);
-  const updateRecord = useRecordStore((state) => state.updateRecord);
   const t = useTranslations();
   const personsRecords = useRecordStore((state) =>
     state.getRecordsArrayByName(recordsOwner),
@@ -337,9 +330,9 @@ export default function ProfilePage() {
       <Paper
         sx={{
           maxWidth: "100%",
-          p: 4,
-          mt: 3,
-          mx: 2,
+          p: { xs: 0, md: 3 },
+          mt: { xs: 1, md: 3 },
+          mx: { xs: 0, md: 2 },
           border: "none",
           boxShadow: "none",
         }}
@@ -360,7 +353,7 @@ export default function ProfilePage() {
           }}
           showToolbar
           initialState={{
-            density: "comfortable",
+            density: "standard",
           }}
           rows={filteredRows}
           columns={columns}
@@ -391,7 +384,6 @@ export default function ProfilePage() {
             },
             "& .MuiDataGrid-cell": {
               fontSize: "1.2rem",
-              border: "1px solid #e0e0e0",
             },
           }}
         />

@@ -193,7 +193,7 @@ function Navbar() {
             {/* Desktop actions are hidden on md and below */}
             <Box
               sx={{
-                display: { xs: "none", md: "none", lg: "flex" },
+                display: { xs: "none", md: "flex" },
                 height: "2.5rem",
                 gap: ".5rem",
                 alignItems: "center",
@@ -208,7 +208,7 @@ function Navbar() {
             {records.length > 0 && (
               <Box
                 sx={{
-                  display: { xs: "flex", lg: "none" },
+                  display: { xs: "flex", md: "none" },
                   justifyContent: "flex-end",
                   width: "100%",
                 }}

@@ -177,7 +177,7 @@ export default function GlobalRecordsTable() {
       field: "name",
       headerName: `${t("name")}`,
       flex: 2,
-      minWidth: 140,
+      minWidth: 200,
       renderCell: (params: GridRenderCellParams<RowData>) => (
         <Link className="underline " href={`person/${params.row.name}`}>
           {params.row.name}
