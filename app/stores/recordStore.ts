@@ -48,7 +48,7 @@ export const useRecordStore = create<RecordStore>()(
   persist(
     devtools((set, get) => ({
       records: [],
-      selectedCurrency: "usd",
+      selectedCurrency: "",
       updateSelectedCurrency: (currency: string) => {
         set({ selectedCurrency: currency });
       },
@@ -154,7 +154,7 @@ export const useRecordStore = create<RecordStore>()(
         }));
         return true;
       },
-      calculateTotalPerPerson: (name, currency) => {        
+      calculateTotalPerPerson: (name, currency) => {
         if (!name || !get().doesNameExistInRecords(name)) {
           return;
         }
