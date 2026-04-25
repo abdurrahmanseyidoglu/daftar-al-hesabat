@@ -43,7 +43,8 @@ const Footer = (props: Props) => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: "3rem",
+          gap: { xs: "1rem", lg: "3rem" },
+          flexDirection: { xs: "column", md: "row" },
         }}
       >
         <Box

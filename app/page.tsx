@@ -47,12 +47,19 @@ export default function HomePage() {
         {records.length === 0 && (
           <Button
             variant="outlined"
-            sx={{ p: 6 }}
+            sx={{ padding: { xs: "1.5rem", md: "3rem", lg: "6rem" } }}
             onClick={() => handleModalState(true)}
           >
-            <Typography fontSize={"3rem"}>{t("addAmount")}</Typography>
+            <Typography
+              sx={{ fontSize: { xs: "1.5rem", md: "2rem", lg: "3rem" } }}
+            >
+              {t("addAmount")}
+            </Typography>
             <AddCircleOutlineIcon
-              sx={{ fontSize: "4rem", marginInlineStart: 3 }}
+              sx={{
+                fontSize: { xs: "2rem", md: "3rem", lg: "4rem" },
+                marginInlineStart: 3,
+              }}
             />
           </Button>
         )}
