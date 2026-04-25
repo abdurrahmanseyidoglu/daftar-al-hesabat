@@ -71,11 +71,12 @@ function CustomToolbar({
         {`All Records in < ${selectedCurrency.toUpperCase()} >`}
       </Typography>
       <Toolbar>
-        <Box>
+        <Box width={"100%"}>
           <TextField
             size="small"
             placeholder="Search..."
             value={searchValue}
+            sx={{ width: { xs: "100%", sm: "300px" } }}
             onChange={(e) => onSearchChange(e.target.value)}
             slotProps={{
               input: {
@@ -86,7 +87,6 @@ function CustomToolbar({
                 ),
               },
             }}
-            sx={{ width: 300 }}
           />
         </Box>
       </Toolbar>

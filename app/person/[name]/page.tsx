@@ -67,7 +67,7 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
         sx={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "flex-start",
+          justifyContent: "flexStart",
           gap: { sm: ".3rem", md: "1rem" },
         }}
       >
@@ -81,18 +81,19 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
         <Typography
           fontSize={{ xs: "1.5rem", md: "2rem" }}
           fontWeight={500}
-          sx={{ textAlign: "end", padding: "1rem" }}
+          sx={{ textAlign: "start", padding: "1rem" }}
         >
           All Records for {decodedRecordOwner} in
           {` [ ${selectedCurrency.toUpperCase()} ]`}
         </Typography>
       </Box>
       <Toolbar>
-        <Box>
+        <Box width={"100%"}>
           <TextField
             size="small"
             placeholder="Search..."
             value={searchValue}
+            sx={{ width: { xs: "100%", sm: "300px" } }}
             onChange={(e) => onSearchChange(e.target.value)}
             slotProps={{
               input: {
@@ -103,7 +104,6 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
                 ),
               },
             }}
-            sx={{ width: 220 }}
           />
         </Box>
       </Toolbar>
