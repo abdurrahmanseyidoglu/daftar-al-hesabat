@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { useRecordStore } from "../stores/recordStore";
 import Currency from "../types/currency";
+import { allCurrencies } from "@/lib/currencies";
 
 interface CurrencySelectorProps {
   usedCurrencies: Currency[];
@@ -18,6 +19,26 @@ const CurrencySelector = ({ usedCurrencies }: CurrencySelectorProps) => {
   const updateCurrency = useRecordStore(
     (state) => state.updateSelectedCurrency,
   );
+
+  const selectedCurrencyOption = allCurrencies.find(
+    (currency) => currency.value === selectedCurrency,
+  );
+
+  const isSelectedCurrencyInUse = usedCurrencies.some(
+    (currency) => currency.value === selectedCurrency,
+  );
+
+  const availableCurrencies = isSelectedCurrencyInUse
+    ? usedCurrencies
+    : selectedCurrencyOption
+      ? [selectedCurrencyOption, ...usedCurrencies]
+      : usedCurrencies;
+  const selectValue = availableCurrencies.some(
+    (currency) => currency.value === selectedCurrency,
+  )
+    ? selectedCurrency
+    : "";
+
   const handleChange = (event: SelectChangeEvent) => {
     updateCurrency(event.target.value);
   };
@@ -31,7 +52,7 @@ const CurrencySelector = ({ usedCurrencies }: CurrencySelectorProps) => {
         <Select
           labelId="currency-selector"
           id="currency-select"
-          value={selectedCurrency}
+          value={selectValue}
           label="Currency"
           onChange={handleChange}
           sx={{
@@ -62,7 +83,7 @@ const CurrencySelector = ({ usedCurrencies }: CurrencySelectorProps) => {
             },
           }}
         >
-          {usedCurrencies.map((cur) => (
+          {availableCurrencies.map((cur) => (
             <MenuItem value={cur.value} key={cur.value}>
               {cur.label}
             </MenuItem>
