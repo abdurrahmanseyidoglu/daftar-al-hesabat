@@ -19,35 +19,36 @@ export function LanguageSwitcher() {
   };
 
   return (
-    <Select
-      disabled={isPending}
-      sx={{
-        color: "#ffffff",
-        height: "42px",
-        "& .MuiSelect-icon": { color: "#ffffff" },
-        "& .MuiOutlinedInput-notchedOutline": {
-          border: "1px solid #8cbbe9",
-          transition: "all ease-in-out .2s",
-        },
-        "&:hover .MuiOutlinedInput-notchedOutline": {
-          borderColor: "#ffffff",
-          border: "1px solid #ffffff",
-        },
-        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-          borderColor: "#ffffff",
-          border: "1px solid #ffffff",
-        },
-      }}
-      value={locale}
-      onChange={(e) => switchLocale(e.target.value as "en" | "ar")}
-      MenuProps={{
-        sx: {
-          "&& .Mui-selected": { color: "#1976d2" },
-        },
-      }}
-    >
-      <MenuItem value="en">English</MenuItem>
-      <MenuItem value="ar">العربية</MenuItem>
-    </Select>
+    <>
+      <Select
+        sx={{
+          color: "#ffffff",
+          height: "42px",
+          "& .MuiSelect-icon": { color: "#ffffff" },
+          "& .MuiOutlinedInput-notchedOutline": {
+            border: "1px solid #8cbbe9",
+            transition: "all ease-in-out .2s",
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#ffffff",
+            border: "1px solid #ffffff",
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#ffffff",
+            border: "1px solid #ffffff",
+          },
+        }}
+        value={locale}
+        onChange={(e) => switchLocale(e.target.value as "en" | "ar")}
+        MenuProps={{
+          sx: {
+            "&& .Mui-selected": { color: "#1976d2" },
+          },
+        }}
+      >
+        <MenuItem value="en">English</MenuItem>
+        <MenuItem value="ar">العربية</MenuItem>
+      </Select>
+    </>
   );
 }
