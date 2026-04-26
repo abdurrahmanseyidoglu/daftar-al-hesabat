@@ -2,10 +2,10 @@ import { create } from "zustand";
 
 interface AppState {
   initialized: boolean;
-  setInitialized: () => void;
+  setInitialized: (state: boolean) => void;
 }
 
 export const useAppStore = create<AppState>((set) => ({
   initialized: false,
-  setInitialized: () => set({ initialized: true }),
+  setInitialized: (state = true) => set({ initialized: state }),
 }));

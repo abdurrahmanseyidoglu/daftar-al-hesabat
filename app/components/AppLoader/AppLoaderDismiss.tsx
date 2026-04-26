@@ -7,7 +7,7 @@ export function AppLoaderDismiss() {
   const setInitialized = useAppStore((s) => s.setInitialized);
 
   useEffect(() => {
-    const t = setTimeout(setInitialized, 1000);
+    const t = setTimeout(setInitialized, 500);
     return () => clearTimeout(t);
   }, []);
 

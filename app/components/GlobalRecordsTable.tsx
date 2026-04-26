@@ -68,7 +68,7 @@ function CustomToolbar({
         sx={{ textAlign: "start" }}
         mb={3}
       >
-        {`All Records in <${selectedCurrency.toUpperCase()}>`}
+        {`All Records in ${selectedCurrency.toUpperCase()}`}
       </Typography>
       <Toolbar>
         <Box width={"100%"}>

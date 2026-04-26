@@ -40,6 +40,7 @@ import { useSnackbar } from "notistack";
 import Footer from "@/app/components/Footer";
 import Link from "next/link";
 import { useAppStore } from "@/app/stores/appStore";
+import { useLocale } from "next-intl";
 
 declare module "@mui/x-data-grid" {
   interface ToolbarPropsOverrides {
@@ -60,6 +61,8 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
   const { name } = useParams<{ name: string }>();
   const decodedRecordOwner = decodeURI(name);
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
+  const locale = useLocale();
+  const isRTL = locale === "ar";
 
   return (
     <Box>
@@ -74,7 +77,10 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
         <Link href={"/"}>
           <Tooltip title={"Back Home"}>
             <IconButton aria-label="home" sx={{ padding: 2 }}>
-              <ArrowBackIcon sx={{ color: "#000000" }} />
+              <ArrowBackIcon
+                sx={{ color: "#000000" }}
+                className={isRTL ? "rotate-180" : ''}
+              />
             </IconButton>
           </Tooltip>
         </Link>
@@ -84,7 +90,7 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
           sx={{ textAlign: "start", padding: "1rem" }}
         >
           All Records for {decodedRecordOwner} in
-          {` <${selectedCurrency.toUpperCase()}>`}
+          {` ${selectedCurrency.toUpperCase()} `}
         </Typography>
       </Box>
       <Toolbar>

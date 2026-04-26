@@ -57,12 +57,12 @@ const Footer = (props: Props) => {
           }}
         >
           <Typography color="white" fontSize={16}>
-            You are owed
+            You are owed:
             <AmountDisplay
               amount={props.totalOn ?? 0}
               currency={selectedCurrency}
             />
-            You owe
+            You owe:
             <AmountDisplay
               amount={props.totalTo ?? 0}
               currency={selectedCurrency}
@@ -70,8 +70,8 @@ const Footer = (props: Props) => {
           </Typography>
           <Typography color="white" fontSize={20} suppressHydrationWarning>
             {props.direction === MoneyDirection.TO
-              ? "Total: You owe"
-              : "Total: You are owed "}
+              ? "Total: You owe: "
+              : "Total: You are owed: "}
             <AmountDisplay
               amount={props.total ?? 0}
               currency={selectedCurrency}
