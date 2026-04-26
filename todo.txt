@@ -1,6 +1,6 @@
-- RTL support + arabic
 - Deploy + add a linked in post + add to cv zustand and zod and react form hook
 - Handle page meta data (title, favico)
 - update cv (zustand,react, next, mui,zod)
 - refactor, refactor refactor
 - add a logo for the project
+- replace hardcoded content with localized one (care about direction)
