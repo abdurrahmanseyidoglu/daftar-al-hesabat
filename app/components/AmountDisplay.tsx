@@ -9,14 +9,14 @@ interface Props {
 const AmountDisplay = (props: Props) => {
   return (
     <>
-      <span>{` < `}</span>
+      <span>{` <`}</span>
       <span className="font-semibold" suppressHydrationWarning>
         {formatMoney(Math.abs(props.amount))}
       </span>
       <span className="font-semibold uppercase" suppressHydrationWarning>
         {` ${props.currency}`}
       </span>
-      <span>{` > `}</span>
+      <span>{`> `}</span>
     </>
   );
 };

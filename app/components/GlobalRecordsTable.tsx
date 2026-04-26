@@ -68,7 +68,7 @@ function CustomToolbar({
         sx={{ textAlign: "start" }}
         mb={3}
       >
-        {`All Records in < ${selectedCurrency.toUpperCase()} >`}
+        {`All Records in <${selectedCurrency.toUpperCase()}>`}
       </Typography>
       <Toolbar>
         <Box width={"100%"}>
@@ -281,9 +281,9 @@ export default function GlobalRecordsTable() {
       <Paper
         sx={{
           maxWidth: "100%",
-          p: 4,
-          mt: 3,
-          mx: 2,
+          p: { xs: 1, md: 3 },
+          mt: { xs: 1, md: 3 },
+          mx: { xs: 1, md: 2 },
           border: "none",
           boxShadow: "none",
         }}

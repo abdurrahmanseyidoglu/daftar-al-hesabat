@@ -84,7 +84,7 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
           sx={{ textAlign: "start", padding: "1rem" }}
         >
           All Records for {decodedRecordOwner} in
-          {` [ ${selectedCurrency.toUpperCase()} ]`}
+          {` <${selectedCurrency.toUpperCase()}>`}
         </Typography>
       </Box>
       <Toolbar>
@@ -330,9 +330,9 @@ export default function ProfilePage() {
       <Paper
         sx={{
           maxWidth: "100%",
-          p: { xs: 0, md: 3 },
+          p: { xs: 1, md: 3 },
           mt: { xs: 1, md: 3 },
-          mx: { xs: 0, md: 2 },
+          mx: { xs: 1, md: 2 },
           border: "none",
           boxShadow: "none",
         }}
