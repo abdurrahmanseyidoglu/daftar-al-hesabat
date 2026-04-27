@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 type Inputs = {
   updatedName: string;
@@ -53,6 +54,7 @@ export default function EditNameModal(props: Props) {
   };
 
   const handleClose = () => props.closeModal(false, "");
+  const t = useTranslations();
 
   return (
     <div>
@@ -71,17 +73,18 @@ export default function EditNameModal(props: Props) {
                   required: "Name cannot be empty",
                 })}
                 error={!!errors.updatedName}
-                helperText={errors.updatedName && "Name Can not be empty"}
+                helperText={errors.updatedName && `${t("noEmptyName")}`}
               />
 
               <Button type="submit" variant="contained" fullWidth>
-                Save
+                {t("save")}
               </Button>
               <Alert severity="warning">
-                <AlertTitle>Heads up!</AlertTitle>
-                Renaming <strong>{props.name}</strong> will update all records
-                associated with this name. This action cannot be undone. Make
-                sure you want to proceed before saving.
+                <AlertTitle>{t("headsUp")}</AlertTitle>
+                {t.rich("headsUpMessage", {
+                  name: props.name,
+                  strong: (chunks) => <strong>{chunks}</strong>,
+                })}
               </Alert>
             </Stack>
           </form>

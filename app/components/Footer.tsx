@@ -6,7 +6,7 @@ import AmountDisplay from "./AmountDisplay";
 import { useRecordStore } from "../stores/recordStore";
 import CurrencySelector from "./CurrencySelector";
 import { allCurrencies } from "@/lib/currencies";
-
+import { useTranslations } from "next-intl";
 interface Props {
   totalOn: number | undefined;
   totalTo: number | undefined;
@@ -15,6 +15,7 @@ interface Props {
 }
 
 const Footer = (props: Props) => {
+  const t = useTranslations();
   const records = useRecordStore((state) => state.records);
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
   const getUsedCurrencies = () => {
@@ -57,12 +58,12 @@ const Footer = (props: Props) => {
           }}
         >
           <Typography color="white" fontSize={16}>
-            You are owed:
+            {t("youOwed")}
             <AmountDisplay
               amount={props.totalOn ?? 0}
               currency={selectedCurrency}
             />
-            You owe:
+            {t("youOwe")}
             <AmountDisplay
               amount={props.totalTo ?? 0}
               currency={selectedCurrency}
@@ -70,8 +71,8 @@ const Footer = (props: Props) => {
           </Typography>
           <Typography color="white" fontSize={20} suppressHydrationWarning>
             {props.direction === MoneyDirection.TO
-              ? "Total: You owe: "
-              : "Total: You are owed: "}
+              ? `${t("totalYouOwed")}`
+              : `${t("totalYouOwe")}`}
             <AmountDisplay
               amount={props.total ?? 0}
               currency={selectedCurrency}

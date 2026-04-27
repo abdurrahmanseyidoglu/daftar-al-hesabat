@@ -4,7 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
 import { Box, DialogContent } from "@mui/material";
 import { Palette } from "@mui/material/styles";
-
+import { useTranslations } from "next-intl";
 type MuiColor = keyof Palette;
 
 export interface Props {
@@ -18,6 +18,7 @@ export interface Props {
 }
 
 export default function ConfirmDialog(props: Props) {
+  const t = useTranslations();
   const {
     onClose,
     selectedValue,
@@ -63,14 +64,14 @@ export default function ConfirmDialog(props: Props) {
             onClick={() => handleConformation(true)}
             color="primary"
           >
-            YES
+            {t("yes")}
           </Button>
           <Button
             variant="outlined"
             onClick={() => handleConformation(false)}
             color="error"
           >
-            NO
+            {t("no")}
           </Button>
         </Box>
       </DialogContent>

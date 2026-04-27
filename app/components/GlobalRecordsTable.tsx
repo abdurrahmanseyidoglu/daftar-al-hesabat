@@ -257,7 +257,7 @@ export default function GlobalRecordsTable() {
               <EditOutlinedIcon fontSize="small" sx={{ color: "green" }} />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Delete">
+          <Tooltip title={t("delete")}>
             <IconButton
               size="small"
               color="error"
@@ -290,8 +290,8 @@ export default function GlobalRecordsTable() {
           selectedValue={selectedValue}
           open={open}
           onClose={handleClose}
-          title={`Are you sure you want to delete ${selectedNameToDelete}?`}
-          description={`Deleting ${selectedNameToDelete} will delete all its records!`}
+          title={`${t("nameDeleteConfirmation", { nameToDelete: selectedNameToDelete ?? "" })}`}
+          description={`${t("nameDeleteHeadsUp", { nameToDelete: selectedNameToDelete ?? "" })}`}
           descriptionColor="error"
         />
         <DataGrid

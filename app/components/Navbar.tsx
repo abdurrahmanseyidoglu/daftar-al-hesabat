@@ -24,7 +24,7 @@ import { useRouter } from "next/navigation";
 import { allCurrencies } from "@/lib/currencies";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
-import { LanguageSwitcher } from "./LangaugeSwitcher";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 function Navbar() {
   const router = useRouter();
@@ -141,7 +141,7 @@ function Navbar() {
         color="white"
         sx={{ py: 1, px: 4 }}
       >
-        Export
+        {t("export")}
       </Button>
       <Menu
         id="export-menu"
@@ -158,7 +158,7 @@ function Navbar() {
             setDrawerOpen(false);
           }}
         >
-          Export as PDF
+        {t("PDFExport")}
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -167,7 +167,7 @@ function Navbar() {
             setDrawerOpen(false);
           }}
         >
-          Export as CSV
+        {t("CSVExport")}
         </MenuItem>
       </Menu>
 
@@ -318,7 +318,7 @@ function Navbar() {
                     setDrawerOpen(false);
                   }}
                 >
-                  Export as PDF
+                  {t("PDFExport")}
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
@@ -327,7 +327,7 @@ function Navbar() {
                     setDrawerOpen(false);
                   }}
                 >
-                  Export as CSV
+                  {t("CSVExport")}
                 </MenuItem>
               </Menu>
 

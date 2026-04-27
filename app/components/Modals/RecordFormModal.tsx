@@ -187,7 +187,7 @@ const RecordFormModal = () => {
             fontWeight="500"
           >
             {!!(recordsOwner && modalPredefinedProps?.record)
-              ? "Update Record"
+              ? `${t("updateRecord")}`
               : t("addAmount")}
           </Typography>
           <form onSubmit={handleSubmit(saveAction)} noValidate>
@@ -230,7 +230,7 @@ const RecordFormModal = () => {
                       if (inputValue !== "" && !isExisting) {
                         filtered.push({
                           inputValue,
-                          name: `Add "${inputValue}" ?`,
+                          name: `${t("add?", { inputValue: inputValue })}`,
                         });
                       }
                       return filtered;
@@ -238,7 +238,6 @@ const RecordFormModal = () => {
                     selectOnFocus
                     clearOnBlur
                     handleHomeEndKeys
-                    id="free-solo-with-text"
                     options={namesOptions}
                     getOptionLabel={(option) => {
                       if (typeof option === "string") return option;
@@ -306,7 +305,7 @@ const RecordFormModal = () => {
                 control={control}
                 render={({ field }) => (
                   <RadioGroup {...field} row>
-                    <Tooltip title="He should pay you">
+                    <Tooltip title={t("hePayYou")}>
                       <FormControlLabel
                         value={MoneyDirection.ON}
                         control={<Radio />}
@@ -324,7 +323,7 @@ const RecordFormModal = () => {
                         }
                       />
                     </Tooltip>
-                    <Tooltip title="You should pay him">
+                    <Tooltip title={t("youPayHim")}>
                       <FormControlLabel
                         value={MoneyDirection.TO}
                         control={<Radio />}
@@ -420,7 +419,7 @@ const RecordFormModal = () => {
                 fullWidth
                 loading={savingForm}
               >
-                Save
+                {t("save")}
               </Button>
             </Box>
           </form>
