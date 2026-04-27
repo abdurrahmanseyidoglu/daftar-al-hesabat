@@ -57,7 +57,7 @@ function CustomToolbar({
   onSearchChange,
 }: GridToolbarProps & ToolbarPropsOverrides) {
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
-
+  const t = useTranslations();
   return (
     <Box>
       <Typography
@@ -66,7 +66,9 @@ function CustomToolbar({
         sx={{ textAlign: "start" }}
         mb={3}
       >
-        {`All Records in ${selectedCurrency.toUpperCase()}`}
+        {t("allRecordsInCurrency", {
+          currency: selectedCurrency.toUpperCase(),
+        })}
       </Typography>
       <Toolbar>
         <Box width={"100%"}>
@@ -320,6 +322,9 @@ export default function GlobalRecordsTable() {
               searchValue,
               onSearchChange: setSearchValue,
               showQuickFilter: true,
+            },
+            pagination: {
+              labelRowsPerPage: t("rowsPerPage"),
             },
           }}
           sx={{

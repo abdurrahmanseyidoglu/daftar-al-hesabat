@@ -38,7 +38,7 @@ const modalStyle = {
   top: "40%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "500",
+  width: { xs: "90%", md: "60%", lg: "40%" },
   height: "fit",
   bgcolor: "background.paper",
   border: "1px solid text.primary",
@@ -254,7 +254,7 @@ const RecordFormModal = () => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label="Name"
+                        label={t("name")}
                         size="small"
                         fullWidth
                         onBlur={field.onBlur}
@@ -275,7 +275,7 @@ const RecordFormModal = () => {
                     onValueChange={(value) => field.onChange(value)}
                     onBlur={field.onBlur}
                     name={field.name}
-                    label="Amount"
+                    label={t("amount")}
                     min={0}
                     size="small"
                     error={!!fieldState.error}
@@ -290,7 +290,7 @@ const RecordFormModal = () => {
                 render={({ field, fieldState }) => (
                   <TextField
                     {...field}
-                    label="Details"
+                    label={t("details")}
                     size="small"
                     fullWidth
                     multiline
@@ -317,7 +317,7 @@ const RecordFormModal = () => {
                               gap: "0.25rem",
                             }}
                           >
-                            <span>On Him</span>
+                            <span>{t("onHim")}</span>
                             <ArrowUpwardIcon sx={{ color: "success.main" }} />
                           </Box>
                         }
@@ -335,7 +335,7 @@ const RecordFormModal = () => {
                               gap: "0.25rem",
                             }}
                           >
-                            <span>To Him</span>
+                            <span>{t("toHim")}</span>
                             <ArrowDownwardIcon sx={{ color: "error.main" }} />
                           </Box>
                         }
@@ -354,7 +354,7 @@ const RecordFormModal = () => {
                   >
                     <DatePicker
                       {...field}
-                      label="Date"
+                      label={t("date")}
                       slotProps={{
                         textField: {
                           size: "small",
@@ -403,7 +403,7 @@ const RecordFormModal = () => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label="Select Currency"
+                        label={t("selectCurrency")}
                         size="small"
                         error={!!fieldState.error}
                         helperText={fieldState.error?.message}

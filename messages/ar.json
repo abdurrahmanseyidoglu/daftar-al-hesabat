@@ -5,8 +5,10 @@
   "selected": "محدد",
   "recordsCount": "عدد السجلات",
   "total": "الإجمالي",
-  "to": "إلى",
-  "on": "على",
+  "to": "له",
+  "on": "عليه",
+  "onHim": "عليه",
+  "toHim": "له",
   "actions": "العمليات",
   "rowsPerPage": "حقل في الصفحة",
   "name": "الاسم",
@@ -44,5 +46,7 @@
   "homePage": "الصفحة الرئيسية",
   "export": "تصدير",
   "PDFExport": "تصدير كـ PDF",
-  "CSVExport": "تصدير كـ CSV"
+  "CSVExport": "تصدير كـ CSV",
+  "selectCurrency": "اختر العملة",
+  "allRecordsInCurrency": "جميع العمليات بــ {currency}"
 }

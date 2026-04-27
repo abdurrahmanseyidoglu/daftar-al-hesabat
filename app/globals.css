@@ -1,36 +1,14 @@
 @import "tailwindcss";
-@font-face {
-  font-family: "Tajawal";
-  src: url("/fonts/Tajawal-Bold.ttf") format("truetype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+:root {
+  --font-primary: var(--font-roboto);
 }
 
-@font-face {
-  font-family: "Tajawal";
-  src: url("/fonts/Tajawal-Bold.ttf") format("truetype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
+[lang="ar"] {
+  --font-primary: var(--font-tajawal) !important;
 }
 
-/* Apply Tajawal specifically for Arabic characters using unicode-range */
-@font-face {
-  font-family: "AppFont";
-  src: url("/fonts/Tajawal-Regular.ttf") format("truetype");
-  unicode-range: U+0600-06FF; /* Arabic unicode block */
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: "AppFont";
-  src: url("/fonts/Tajawal-Bold.ttf") format("truetype");
-  unicode-range: U+0600-06FF;
-  font-weight: 700;
-}
 body {
-  font-family: "Tajawal", Arial, Helvetica, sans-serif;
+  font-family: var(--font-primary), sans-serif;
 }
 .loader {
   width: 60px;

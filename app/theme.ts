@@ -21,13 +21,13 @@ export function createAppTheme(locale: "en" | "ar") {
   return createTheme({
     direction: isRTL ? "rtl" : "ltr",
     typography: {
-      fontFamily: "var(--font-roboto)",
+      fontFamily: "var(--font-primary)",
     },
     components: {
       MuiTooltip: {
         styleOverrides: {
           tooltip: {
-            fontSize: "14px",
+            fontSize: "16px",
           },
         },
       },

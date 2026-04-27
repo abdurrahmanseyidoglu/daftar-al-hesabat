@@ -1,9 +1,5 @@
 import { NextIntlClientProvider } from "next-intl";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
-import { Roboto } from "next/font/google";
-import { ThemeProvider } from "@mui/material/styles";
-import { createAppTheme } from "./theme";
-import "./globals.css";
 import Navbar from "./components/Navbar";
 import { Box } from "@mui/material";
 import SnackbarWrapper from "./components/SnackBarWrapper";
@@ -13,11 +9,20 @@ import { AppLoaderDismiss } from "./components/AppLoader/AppLoaderDismiss";
 import { cookies } from "next/headers";
 import { EmotionRtlProvider } from "./components/EmotionRtlProvider";
 import ThemeRegistry from "./components/ThemeRegistry";
+import { Roboto, Tajawal } from "next/font/google";
+import "./globals.css";
+
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
   subsets: ["latin"],
   display: "swap",
   variable: "--font-roboto",
+});
+const tajawal = Tajawal({
+  weight: ["300", "400", "500", "700"],
+  subsets: ["arabic"],
+  display: "swap",
+  variable: "--font-tajawal",
 });
 
 type Props = {
@@ -29,7 +34,11 @@ export default async function RootLayout({ children }: Props) {
   const isRTL = locale === "ar";
 
   return (
-    <html lang={locale} dir={isRTL ? "rtl" : "ltr"} className={roboto.variable}>
+    <html
+      lang={locale}
+      dir={isRTL ? "rtl" : "ltr"}
+      className={`${roboto.variable} ${tajawal.variable}`}
+    >
       <body className={roboto.variable}>
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <EmotionRtlProvider isRTL={isRTL}>

@@ -364,8 +364,7 @@ export default function ProfilePage() {
           rows={filteredRows}
           columns={columns}
           localeText={{
-            footerRowSelected: (count) => ``,
-            paginationRowsPerPage: `${t("rowsPerPage")}`,
+            paginationRowsPerPage: t("rowsPerPage"),
           }}
           disableRowSelectionOnClick={true}
           rowSelectionModel={selectionModel}
