@@ -10,7 +10,7 @@ import {
 import { useMemo } from "react";
 import { registerPdfFonts } from "@/lib/pdfFonts";
 import { isArabic } from "@/lib/textUtils";
-
+import { useTranslations } from "next-intl";
 registerPdfFonts();
 const styles = StyleSheet.create({
   page: { padding: 40, fontSize: 12, fontFamily: "Tajawal" },
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
 });
 
 export const GlobalPdfTemplate = () => {
+  const t = useTranslations();
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
   const calculateTotalGlobally = useRecordStore(
     (state) => state.calculateTotalGlobally,
@@ -99,12 +100,19 @@ export const GlobalPdfTemplate = () => {
     <Document>
       <Page size="A4" orientation="landscape" style={styles.page}>
         <Text style={styles.title}>
-          Global transactions in {selectedCurrency.toLocaleUpperCase()}
+          {t("globalTransactionsInCurrency", {
+            currency: selectedCurrency.toLocaleUpperCase(),
+          })}
         </Text>
         <View style={styles.table}>
           {/* Header row */}
           <View style={[styles.row, styles.headerRow]}>
-            {["Name", "Records", "Total", "Currency"].map((h) => (
+            {[
+              `${t("name")}`,
+              `${t("records")}`,
+              `${t("total")}`,
+              `${t("currency")}`,
+            ].map((h) => (
               <View key={h} style={styles.cell}>
                 <Text style={styles.headerText}>{h}</Text>
               </View>
@@ -142,7 +150,7 @@ export const GlobalPdfTemplate = () => {
         </View>
         <View style={styles.summary}>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>You are owed</Text>
+            <Text style={styles.summaryLabel}>{t("youOwed")}</Text>
             <Text style={styles.summaryValue}>
               {calculationObject?.totalOnThem
                 ? formatMoney(calculationObject.totalOnThem)
@@ -154,7 +162,7 @@ export const GlobalPdfTemplate = () => {
           </View>
 
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>You owe</Text>
+            <Text style={styles.summaryLabel}>{t("youOwe")}</Text>
             <Text style={styles.summaryValue}>
               {calculationObject?.totalToThem
                 ? formatMoney(calculationObject.totalToThem)
@@ -168,8 +176,8 @@ export const GlobalPdfTemplate = () => {
           <View style={styles.summaryTotal}>
             <Text style={styles.summaryTotalLabel}>
               {calculationObject?.direction === MoneyDirection.TO
-                ? "Net you owe"
-                : "Net you're owed"}
+                ? `${t("netYouOwe")}`
+                : `${t("netYouOwed")}`}
             </Text>
             <Text
               style={[

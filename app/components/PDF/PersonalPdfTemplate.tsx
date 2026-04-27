@@ -5,7 +5,7 @@ import { useAppStore } from "../../stores/appStore";
 import { formatMoney } from "@/lib/utils";
 import { registerPdfFonts } from "@/lib/pdfFonts";
 import { isArabic } from "@/lib/textUtils";
-
+import { useTranslations } from "next-intl";
 registerPdfFonts();
 const styles = StyleSheet.create({
   page: { padding: 40, fontSize: 12, fontFamily: "Tajawal" },
@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
 });
 
 export const PersonalPdfTemplate = () => {
+  const t = useTranslations();
   const selectedRecordArray = useRecordStore(
     (state) => state.selectedRecordArray,
   );
@@ -102,7 +103,10 @@ export const PersonalPdfTemplate = () => {
         <View style={styles.table}>
           {/* Header row */}
           <View style={[styles.row, styles.headerRow]}>
-            {["Date", "Amount", "Currency", "Details"].map((h) => (
+            {[ `${t("date")}`,
+              `${t("amount")}`,
+              `${t("currency")}`,
+              `${t("details")}`,].map((h) => (
               <View key={h} style={styles.cell}>
                 <Text style={styles.headerText}>{h}</Text>
               </View>
