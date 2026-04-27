@@ -79,7 +79,7 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
             <IconButton aria-label="home" sx={{ padding: 2 }}>
               <ArrowBackIcon
                 sx={{ color: "#000000" }}
-                className={isRTL ? "rotate-180" : ''}
+                className={isRTL ? "rotate-180" : ""}
               />
             </IconButton>
           </Tooltip>
@@ -207,13 +207,13 @@ export default function ProfilePage() {
     [personsRecordsFilteredByCurrency],
   );
   const filteredRows = useMemo(() => {
-    const q = searchValue.trim().toLowerCase();
+    const searchQuery = searchValue.trim().toLowerCase();
     if (!rows) return;
-    if (!q) return rows;
+    if (!searchQuery) return rows;
     return rows.filter((row) =>
       [row.amount, row.details, row.direction, row.currency, row.date]
-        .map((v) => String(v).toLowerCase())
-        .some((v) => v.includes(q)),
+        .map((cellValue) => String(cellValue).toLowerCase())
+        .some((cellValue) => cellValue.includes(searchQuery)),
     );
   }, [rows, searchValue]);
   const columns: GridColDef<RecordEntry>[] = [

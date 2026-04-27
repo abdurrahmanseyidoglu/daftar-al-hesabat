@@ -35,8 +35,6 @@ import {
   formatMoney,
   getRecordsFilteredByCurrency,
 } from "@/lib/utils";
-import { Divider } from "@mui/material";
-
 interface RowData {
   id: string;
   name: string;
@@ -121,14 +119,14 @@ export default function GlobalRecordsTable() {
     if (value) {
       const successRemove = removeNameWithHisRecords(selectedNameToDelete);
       if (successRemove) {
-        enqueueSnackbar(`deleted`, { variant: "success" });
+        enqueueSnackbar(t("deleted"), { variant: "success" });
       } else {
-        enqueueSnackbar(`Something went wrong`, { variant: "error" });
+        enqueueSnackbar(t("wentWrong"), { variant: "error" });
       }
       setSelectedNameToDelete(null);
     } else {
       setTimeout(() => {
-        setSelectedNameToDelete(null); // Wait foe the modal closing animation to finish
+        setSelectedNameToDelete(null); // Wait for the modal closing animation to finish
       }, 200);
     }
   };
@@ -157,12 +155,12 @@ export default function GlobalRecordsTable() {
     [records],
   );
   const filteredRows = useMemo(() => {
-    const q = searchValue.trim().toLowerCase();
-    if (!q) return rows;
+    const searchQuery = searchValue.trim().toLowerCase();
+    if (!searchQuery) return rows;
     return rows.filter((row) =>
       [row.name, row.recordsCount, row.total, row.direction]
-        .map((v) => String(v).toLowerCase())
-        .some((v) => v.includes(q)),
+        .map((cellValue) => String(cellValue).toLowerCase())
+        .some((cellValue) => cellValue.includes(searchQuery)),
     );
   }, [rows, searchValue]);
 
