@@ -48,5 +48,6 @@
   "PDFExport": "تصدير كـ PDF",
   "CSVExport": "تصدير كـ CSV",
   "selectCurrency": "اختر العملة",
-  "allRecordsInCurrency": "جميع العمليات بــ {currency}"
+  "allRecordsInCurrency": "جميع العمليات بــ {currency}",
+  "addedToName": "تمت الاضافة"
 }

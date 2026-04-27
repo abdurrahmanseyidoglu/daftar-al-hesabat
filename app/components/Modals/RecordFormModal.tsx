@@ -158,7 +158,7 @@ const RecordFormModal = () => {
     }
     setSavingForm(false);
     handleModalState(false);
-    enqueueSnackbar(`Added to ${data.name} records`, {
+    enqueueSnackbar(t("addedToName",{name:data.name}), {
       variant: "success",
     });
   };
