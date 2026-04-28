@@ -10,6 +10,8 @@ import { cookies } from "next/headers";
 import { EmotionRtlProvider } from "./components/EmotionRtlProvider";
 import ThemeRegistry from "./components/ThemeRegistry";
 import { Roboto, Tajawal } from "next/font/google";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -28,6 +30,42 @@ const tajawal = Tajawal({
 type Props = {
   children: React.ReactNode;
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = (await cookies()).get("locale")?.value ?? "en";
+  const t = await getTranslations({ locale });
+
+  const title = t("seoTitle");
+  const description = t("seoDescription");
+
+  return {
+    title,
+    description,
+    applicationName: title,
+    icons: {
+      icon: "/logo/logoFav.ico",
+      shortcut: "/logo/logoFav.ico",
+      apple: "/logo/logoFav.ico",
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      images: [
+        {
+          url: "/logo/logo.png",
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/logo/logo.png"],
+    },
+  };
+}
 
 export default async function RootLayout({ children }: Props) {
   const locale = (await cookies()).get("locale")?.value ?? "en";

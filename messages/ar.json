@@ -1,5 +1,7 @@
 {
   "addAmount": "إضافة مبلغ جديد",
+  "seoTitle": "دفتر الحسابات",
+  "seoDescription": "تابع الأموال بينك وبين الأصدقاء أو العائلة مع رصيد محدث وواضح لكل شخص.",
   "addNew": "إضافة جديد",
   "globalRecords": "إجمالي السجلات",
   "selected": "محدد",
@@ -10,7 +12,7 @@
   "onHim": "عليه",
   "toHim": "له",
   "actions": "العمليات",
-  "rowsPerPage": "حقل في الصفحة",
+  "rowsPerPage": "عدد السجلات في الصفحة الواحدة",
   "name": "الاسم",
   "save": "حفظ",
   "headsUp": "تنبيه!",
@@ -42,6 +44,7 @@
   "delete": "حذف",
   "wentWrong": "حدث خطأ ما",
   "nameDeleteConfirmation": "هل أنت متأكد من حذف {nameToDelete}؟",
+  "recordDeleteConfirmation": "هل أنت متأكد أنك تريد حذف هذا السجل؟",
   "nameDeleteHeadsUp": "حذف {nameToDelete} سيؤدي إلى حذف جميع سجلاته!",
   "homePage": "الصفحة الرئيسية",
   "export": "تصدير",
@@ -49,5 +52,7 @@
   "CSVExport": "تصدير كـ CSV",
   "selectCurrency": "اختر العملة",
   "allRecordsInCurrency": "جميع العمليات بــ {currency}",
-  "addedToName": "تمت الاضافة"
+  "addedToName": "تمت الاضافة",
+  "editName": "تعديل الاسم",
+  "goToDetails": "الذهاب إلى التفاصيل"
 }

@@ -1,5 +1,7 @@
 {
   "addAmount": "Add a new amount",
+  "seoTitle": "Daftar Al-Hesabat | Personal Ledger",
+  "seoDescription": "Track money between you and friends or family with a clear running balance for every person.",
   "addNew": "Add new",
   "globalRecords": "Global records",
   "selected": "selected",
@@ -42,6 +44,7 @@
   "delete": "Delete",
   "wentWrong": "Something went wrong",
   "nameDeleteConfirmation": "Are you sure you want to delete {nameToDelete}?",
+  "recordDeleteConfirmation": "Are you sure you want to delete this record?",
   "nameDeleteHeadsUp": "Deleting {nameToDelete} will delete all its records!",
   "homePage": "Home page",
   "export": "Export",
@@ -50,8 +53,8 @@
   "selectCurrency": "Select Currency",
   "allRecordsInCurrency": "All Records in {currency}",
   "addedToName": "Added to {name} records",
-  "": "",
-  "": "",
+  "editName": "Edit Name",
+  "goToDetails": "Go To Details",
   "": "",
   "": "",
   "": ""
