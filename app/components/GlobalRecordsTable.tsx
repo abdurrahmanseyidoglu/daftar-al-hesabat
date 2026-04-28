@@ -231,11 +231,11 @@ export default function GlobalRecordsTable() {
       minWidth: 90,
       renderCell: (params: GridRenderCellParams<RowData, MoneyDirection>) =>
         params.value === MoneyDirection.ON ? (
-          <Tooltip title="He should pay you">
+          <Tooltip title={t("hePayYou")}>
             <ArrowUpwardIcon sx={{ color: "success.main" }} />
           </Tooltip>
         ) : (
-          <Tooltip title="You should pay him">
+          <Tooltip title={t("youPayHim")}>
             <ArrowDownwardIcon sx={{ color: "error.main" }} />
           </Tooltip>
         ),
@@ -256,7 +256,7 @@ export default function GlobalRecordsTable() {
               </IconButton>
             </Link>
           </Tooltip>
-          <Tooltip title="Edit name">
+          <Tooltip title={t("editName")}>
             <IconButton
               size="small"
               onClick={() => handleNameModal(true, params.row.name)}

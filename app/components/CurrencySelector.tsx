@@ -9,7 +9,7 @@ import {
 import { useRecordStore } from "../stores/recordStore";
 import Currency from "../types/currency";
 import { allCurrencies } from "@/lib/currencies";
-
+import { useTranslations } from "next-intl";
 interface CurrencySelectorProps {
   usedCurrencies: Currency[];
 }
@@ -19,7 +19,7 @@ const CurrencySelector = ({ usedCurrencies }: CurrencySelectorProps) => {
   const updateCurrency = useRecordStore(
     (state) => state.updateSelectedCurrency,
   );
-
+  const t = useTranslations();
   const selectedCurrencyOption = allCurrencies.find(
     (currency) => currency.value === selectedCurrency,
   );
@@ -47,13 +47,13 @@ const CurrencySelector = ({ usedCurrencies }: CurrencySelectorProps) => {
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
         <InputLabel sx={{ color: "#ffffff !important" }} id="currency-selector">
-          Currency
+          {t("currency")}
         </InputLabel>
         <Select
           labelId="currency-selector"
           id="currency-select"
           value={selectValue}
-          label="Currency"
+          label={t("currency")}
           onChange={handleChange}
           sx={{
             color: "#ffffff",
