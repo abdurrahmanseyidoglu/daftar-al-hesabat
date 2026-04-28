@@ -1,9 +1,5 @@
 - Deploy + add a linked in post + add to cv zustand and zod and react form hook
-- Handle page meta data (title, favico)
 - update cv (zustand,react, next, mui,zod)
-- refactor, refactor refactor
-- add a logo for the project
-- replace hardcoded content with localized one (care about direction)
 - fix Failed to call `useTranslations` because the context from `NextIntlClientProvider` was not found. in pdf export.
 - add translations for pdf export after fixing this issue
 - fix PDF export in arabic (if it didn't work try pdfmake or Puppeteer)
