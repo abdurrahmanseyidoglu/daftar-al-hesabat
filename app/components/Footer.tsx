@@ -71,8 +71,8 @@ const Footer = (props: Props) => {
           </Typography>
           <Typography color="white" fontSize={20} suppressHydrationWarning>
             {props.direction === MoneyDirection.TO
-              ? `${t("totalYouOwed")}`
-              : `${t("totalYouOwe")}`}
+              ? `${t("totalYouOwe")}`
+              : `${t("totalYouOwed")}`}
             <AmountDisplay
               amount={props.total ?? 0}
               currency={selectedCurrency}
