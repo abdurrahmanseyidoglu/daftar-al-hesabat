@@ -12,6 +12,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   DataGrid,
   GridColDef,
+  GridPaginationModel,
   GridRenderCellParams,
   GridRowId,
   GridRowSelectionModel,
@@ -163,9 +164,9 @@ export default function ProfilePage() {
     if (value) {
       const successRemove = removeRecord(recordsOwner, recordIdToDelete);
       if (successRemove) {
-        enqueueSnackbar(`deleted`, { variant: "success" });
+        enqueueSnackbar(t("deleted"), { variant: "success" });
       } else {
-        enqueueSnackbar(`Something went wrong`, { variant: "error" });
+        enqueueSnackbar(t("wentWrong"), { variant: "error" });
       }
       setRecordIdToDelete(null);
     } else {
@@ -178,6 +179,10 @@ export default function ProfilePage() {
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
     type: "include",
     ids: new Set<GridRowId>(),
+  });
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: 0,
+    pageSize: 10,
   });
   const populateModalPredefinedProps = useModalStore(
     (state) => state.populateModalPredefinedProps,
@@ -219,7 +224,7 @@ export default function ProfilePage() {
   const columns: GridColDef<RecordEntry>[] = [
     {
       field: "date",
-      headerName: `Date`,
+      headerName: t("date"),
       flex: 2,
       minWidth: 210,
       maxWidth: 210,
@@ -230,7 +235,7 @@ export default function ProfilePage() {
     },
     {
       field: "amount",
-      headerName: `Amount`,
+      headerName: t("amount"),
       type: "number",
       flex: 1,
       minWidth: 250,
@@ -240,7 +245,7 @@ export default function ProfilePage() {
     },
     {
       field: "currency",
-      headerName: `Currency`,
+      headerName: t("currency"),
       type: "string",
       flex: 1,
       minWidth: 150,
@@ -254,7 +259,7 @@ export default function ProfilePage() {
 
     {
       field: "direction",
-      headerName: `TO / ON`,
+      headerName: `${t("to")} / ${t("on")}`,
       flex: 1,
       minWidth: 150,
       maxWidth: 150,
@@ -262,18 +267,18 @@ export default function ProfilePage() {
         params: GridRenderCellParams<RecordEntry, MoneyDirection>,
       ) =>
         params.value === MoneyDirection.ON ? (
-          <Tooltip title="He should pay you">
+          <Tooltip title={t("hePayYou")}>
             <ArrowUpwardIcon sx={{ color: "success.main" }} />
           </Tooltip>
         ) : (
-          <Tooltip title="You should pay him">
+          <Tooltip title={t("youPayHim")}>
             <ArrowDownwardIcon sx={{ color: "error.main" }} />
           </Tooltip>
         ),
     },
     {
       field: "details",
-      headerName: "Details",
+      headerName: t("details"),
       minWidth: 200,
       flex: 1,
       align: "left",
@@ -347,7 +352,7 @@ export default function ProfilePage() {
           selectedValue={selectedValue}
           open={open}
           onClose={handleClose}
-          title={`Are you sure you want to delete this record?`}
+          title={t("recordDeleteConfirmation")}
           descriptionColor="error"
         />
         <DataGrid
@@ -370,7 +375,8 @@ export default function ProfilePage() {
           rowSelectionModel={selectionModel}
           onRowSelectionModelChange={(model) => setSelectionModel(model)}
           pageSizeOptions={[10, 50, 100]}
-          paginationModel={{ page: 0, pageSize: 10 }}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
           slots={{
             toolbar: CustomToolbar,
           }}

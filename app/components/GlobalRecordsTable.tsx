@@ -10,6 +10,7 @@ import Stack from "@mui/material/Stack";
 import {
   DataGrid,
   GridColDef,
+  GridPaginationModel,
   GridRenderCellParams,
   GridRowId,
   GridRowSelectionModel,
@@ -137,6 +138,10 @@ export default function GlobalRecordsTable() {
   const [selectionModel, setSelectionModel] = useState<GridRowSelectionModel>({
     type: "include",
     ids: new Set<GridRowId>(),
+  });
+  const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+    page: 0,
+    pageSize: 10,
   });
 
   const rows: RowData[] = useMemo(
@@ -313,7 +318,8 @@ export default function GlobalRecordsTable() {
           rowSelectionModel={selectionModel}
           onRowSelectionModelChange={(model) => setSelectionModel(model)}
           pageSizeOptions={[10, 50, 100]}
-          paginationModel={{ page: 0, pageSize: 10 }}
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
           slots={{
             toolbar: CustomToolbar,
           }}
@@ -323,9 +329,9 @@ export default function GlobalRecordsTable() {
               onSearchChange: setSearchValue,
               showQuickFilter: true,
             },
-            pagination: {
-              labelRowsPerPage: t("rowsPerPage"),
-            },
+          }}
+          localeText={{
+            paginationRowsPerPage: t("rowsPerPage"),
           }}
           sx={{
             border: "none",
