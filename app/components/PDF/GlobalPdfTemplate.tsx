@@ -10,15 +10,11 @@ import {
 import { useMemo } from "react";
 import { registerPdfFonts } from "@/lib/pdfFonts";
 import { isArabic } from "@/lib/textUtils";
-import { useTranslations } from "next-intl";
+
 registerPdfFonts();
+
 const styles = StyleSheet.create({
   page: { padding: 40, fontSize: 12, fontFamily: "Tajawal" },
-  arabicText: {
-    fontFamily: "Tajawal",
-    textAlign: "right",
-    direction: "rtl",
-  },
   title: { fontSize: 20, marginBottom: 20 },
   table: { width: "100%" },
   row: {
@@ -27,22 +23,23 @@ const styles = StyleSheet.create({
     borderColor: "#eee",
     paddingVertical: 6,
   },
-
   headerRow: { backgroundColor: "silver" },
   cell: { flex: 1 },
-  cellText: { textAlign: "left" },
   headerText: {
-    fontFamily: "Helvetica-Bold",
+    fontFamily: "Tajawal",
     color: "#444",
-    textAlign: "left",
     padding: 2,
+  },
+  arabicText: {
+    fontFamily: "Tajawal",
+    textAlign: "right",
+    direction: "rtl",
   },
   summary: {
     marginTop: 16,
     paddingTop: 12,
     borderTopWidth: 2,
     borderColor: "#aaa",
-    alignSelf: "flex-start",
     width: "40%",
   },
   summaryRow: {
@@ -51,7 +48,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   summaryLabel: { color: "#555" },
-  summaryValue: { fontFamily: "Helvetica-Bold" },
+  summaryValue: { fontFamily: "Tajawal" },
   summaryTotal: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -60,142 +57,149 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: "#aaa",
   },
-  summaryTotalLabel: { fontFamily: "Helvetica-Bold", fontSize: 13 },
-  summaryTotalValue: {
-    fontFamily: "Helvetica-Bold",
-    fontSize: 13,
-  },
+  summaryTotalLabel: { fontFamily: "Tajawal", fontSize: 13 },
+  summaryTotalValue: { fontFamily: "Tajawal", fontSize: 13 },
 });
 
-export const GlobalPdfTemplate = () => {
-  const t = useTranslations();
+interface PDFTranslations {
+  title: string;
+  name: string;
+  records: string;
+  total: string;
+  currency: string;
+  youOwed: string;
+  youOwe: string;
+  netYouOwe: string;
+  netYouOwed: string;
+}
+
+type Props = {
+  translations: PDFTranslations;
+  direction: "rtl" | "ltr";
+};
+
+export const GlobalPdfTemplate = ({ translations, direction }: Props) => {
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
   const calculateTotalGlobally = useRecordStore(
     (state) => state.calculateTotalGlobally,
   );
   const storeRecords = useRecordStore((state) => state.records);
+  const initialized = useAppStore((state) => state.initialized);
 
   const recordsFilteredByCurrency = useMemo(
     () => getRecordsFilteredByCurrency(selectedCurrency, storeRecords),
     [selectedCurrency, storeRecords],
   );
-  const recordsToDisplay = recordsFilteredByCurrency
-    .toReversed()
-    .map((record) => {
-      const total = calculateTotalForPersonRecords(record.records);
-      return {
-        id: record.name,
-        name: record.name,
-        recordsCount: record.records.length,
-        total,
-        direction: total >= 0 ? MoneyDirection.ON : MoneyDirection.TO,
-      };
-    })
-    .filter((r) => r.recordsCount !== 0);
-  const initialized = useAppStore((state) => state.initialized);
+
+  const recordsToDisplay = useMemo(
+    () =>
+      recordsFilteredByCurrency
+        .toReversed()
+        .map((record) => {
+          const total = calculateTotalForPersonRecords(record.records);
+          return {
+            name: record.name,
+            recordsCount: record.records.length,
+            total,
+            moneyDirection: total >= 0 ? MoneyDirection.ON : MoneyDirection.TO,
+          };
+        })
+        .filter((r) => r.recordsCount !== 0),
+    [recordsFilteredByCurrency],
+  );
+
   const calculationObject = initialized
     ? calculateTotalGlobally(selectedCurrency)
     : undefined;
+
+  // Direction-derived helpers
+  const isRTL = direction === "rtl";
+  const textAlign = isRTL ? "right" : "left";
+  const summarySide = isRTL ? "flex-end" : "flex-start";
+
+  const currencyLabel = selectedCurrency.toUpperCase();
+
+  const netLabel =
+    calculationObject?.direction === MoneyDirection.TO
+      ? translations.netYouOwe
+      : translations.netYouOwed;
+
+  const totalOnThemDisplay = formatMoney(calculationObject?.totalOnThem ?? 0);
+  const totalToThemDisplay = formatMoney(calculationObject?.totalToThem ?? 0);
+  const netTotalDisplay = formatMoney(calculationObject?.total ?? 0);
+
+  const netTotalColor =
+    calculationObject?.direction === MoneyDirection.TO ? "#c0392b" : "#27ae60";
+
+  const headerLabels = [
+    translations.name,
+    translations.records,
+    translations.total,
+    translations.currency,
+  ];
+
   return (
     <Document>
       <Page size="A4" orientation="landscape" style={styles.page}>
-        <Text style={styles.title}>
-          {t("globalTransactionsInCurrency", {
-            currency: selectedCurrency.toLocaleUpperCase(),
-          })}
+        {/* Title */}
+        <Text style={[styles.title, { direction, textAlign }]}>
+          {translations.title} {currencyLabel}
         </Text>
-        <View style={styles.table}>
-          {/* Header row */}
+
+        {/* Table */}
+        <View style={[styles.table, { direction }]}>
           <View style={[styles.row, styles.headerRow]}>
-            {[
-              `${t("name")}`,
-              `${t("records")}`,
-              `${t("total")}`,
-              `${t("currency")}`,
-            ].map((h) => (
-              <View key={h} style={styles.cell}>
-                <Text style={styles.headerText}>{h}</Text>
+            {headerLabels.map((label) => (
+              <View key={label} style={styles.cell}>
+                <Text style={[styles.headerText, { textAlign }]}>{label}</Text>
               </View>
             ))}
           </View>
 
-          {/* Data rows */}
           {recordsToDisplay.map((record) => (
             <View style={styles.row} key={record.name}>
               <View style={styles.cell}>
                 <Text
                   style={
-                    isArabic(record.name) ? styles.arabicText : styles.cellText
+                    isArabic(record.name) ? styles.arabicText : { textAlign }
                   }
                 >
                   {record.name}
                 </Text>
               </View>
               <View style={styles.cell}>
-                <Text style={styles.cellText}>{record.recordsCount}</Text>
+                <Text style={{ textAlign }}>{record.recordsCount}</Text>
               </View>
               <View style={styles.cell}>
-                <Text style={styles.cellText}>{formatMoney(record.total)}</Text>
+                <Text style={{ textAlign }}>{formatMoney(record.total)}</Text>
               </View>
               <View style={styles.cell}>
-                <Text style={styles.cellText}>
-                  {selectedCurrency.toUpperCase()}
-                </Text>
+                <Text style={{ textAlign }}>{currencyLabel}</Text>
               </View>
-              {/* <View style={styles.cell}>
-                <Text style={styles.cellText}>{record.direction}</Text>
-              </View> */}
             </View>
           ))}
         </View>
-        <View style={styles.summary}>
+
+        {/* Summary */}
+        <View style={[styles.summary, { alignSelf: summarySide, direction }]}>
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>{t("youOwed")}</Text>
+            <Text style={styles.summaryLabel}>{translations.youOwed}</Text>
             <Text style={styles.summaryValue}>
-              {calculationObject?.totalOnThem
-                ? formatMoney(calculationObject.totalOnThem)
-                : 0}{" "}
-              <Text style={{ fontFamily: "Helvetica-Bold" }}>
-                {selectedCurrency.toLocaleUpperCase()}
-              </Text>
+              {totalOnThemDisplay} {currencyLabel}
             </Text>
           </View>
 
           <View style={styles.summaryRow}>
-            <Text style={styles.summaryLabel}>{t("youOwe")}</Text>
+            <Text style={styles.summaryLabel}>{translations.youOwe}</Text>
             <Text style={styles.summaryValue}>
-              {calculationObject?.totalToThem
-                ? formatMoney(calculationObject.totalToThem)
-                : 0}{" "}
-              <Text style={{ fontFamily: "Helvetica-Bold" }}>
-                {selectedCurrency.toLocaleUpperCase()}
-              </Text>
+              {totalToThemDisplay} {currencyLabel}
             </Text>
           </View>
 
           <View style={styles.summaryTotal}>
-            <Text style={styles.summaryTotalLabel}>
-              {calculationObject?.direction === MoneyDirection.TO
-                ? `${t("netYouOwe")}`
-                : `${t("netYouOwed")}`}
-            </Text>
-            <Text
-              style={[
-                styles.summaryTotalValue,
-                {
-                  color:
-                    calculationObject?.direction === MoneyDirection.TO
-                      ? "#c0392b"
-                      : "#27ae60",
-                },
-              ]}
-            >
-              {calculationObject?.total
-                ? `${formatMoney(calculationObject.total)} `
-                : 0}
-              <Text style={{ fontFamily: "Helvetica-Bold" }}>
-                {selectedCurrency.toLocaleUpperCase()}
-              </Text>
+            <Text style={styles.summaryTotalLabel}>{netLabel}</Text>
+            <Text style={[styles.summaryTotalValue, { color: netTotalColor }]}>
+              {netTotalDisplay} {currencyLabel}
             </Text>
           </View>
         </View>

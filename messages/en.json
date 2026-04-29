@@ -26,7 +26,7 @@
   "nameRequired": "Name is required",
   "hePayYou": "He should pay you",
   "youPayHim": "You should pay him",
-  "globalTransactionsInCurrency": "Global Transactions In {currency}",
+  "globalTransactions": "Global Transactions In",
   "records": "Records",
   "currency": "Currency",
   "youOwed": "You are owed",

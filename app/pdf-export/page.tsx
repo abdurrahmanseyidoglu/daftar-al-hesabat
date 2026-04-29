@@ -5,13 +5,30 @@ import { useEffect, useState } from "react";
 import { pdf } from "@react-pdf/renderer";
 import { GlobalPdfTemplate } from "../components/PDF/GlobalPdfTemplate";
 import { isMobileOrTablet } from "../../lib/deviceUtils";
-
+import { useTranslations } from "next-intl";
 const PDFViewer = dynamic(
   () => import("@react-pdf/renderer").then((mod) => mod.PDFViewer),
   { ssr: false },
 );
 
 export default function StatementPage() {
+  const [direction, setDirection] = useState<"rtl" | "ltr">("ltr");
+
+  useEffect(() => {
+    setDirection(document.dir === "rtl" ? "rtl" : "ltr");
+  }, []);
+  const t = useTranslations();
+  const translations = {
+    title: t("globalTransactions"),
+    name: t("name"),
+    records: t("records"),
+    total: t("total"),
+    currency: t("currency"),
+    youOwed: t("youOwed"),
+    youOwe: t("youOwe"),
+    netYouOwe: t("netYouOwe"),
+    netYouOwed: t("netYouOwed"),
+  };
   const [isMobile, setIsMobile] = useState(false);
   const [blobUrl, setBlobUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -27,7 +44,12 @@ export default function StatementPage() {
     const generateAndOpen = async () => {
       setLoading(true);
       try {
-        const blob = await pdf(<GlobalPdfTemplate />).toBlob();
+        const blob = await pdf(
+          <GlobalPdfTemplate
+            direction={direction}
+            translations={translations}
+          />,
+        ).toBlob();
         const url = URL.createObjectURL(blob);
         setBlobUrl(url);
 
@@ -71,7 +93,7 @@ export default function StatementPage() {
 
   return (
     <PDFViewer style={{ width: "100%", height: "100vh" }}>
-      <GlobalPdfTemplate />
+      <GlobalPdfTemplate direction={direction} translations={translations} />
     </PDFViewer>
   );
 }
