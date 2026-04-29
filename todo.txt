@@ -1,5 +1,2 @@
 - Deploy + add a linked in post + add to cv zustand and zod and react form hook
 - update cv (zustand,react, next, mui,zod)
-- fix Failed to call `useTranslations` because the context from `NextIntlClientProvider` was not found. in pdf export.
-- add translations for pdf export after fixing this issue
-- fix PDF export in arabic (if it didn't work try pdfmake or Puppeteer)

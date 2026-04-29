@@ -9,7 +9,6 @@ import {
 } from "@/lib/utils";
 import { useMemo } from "react";
 import { registerPdfFonts } from "@/lib/pdfFonts";
-import { isArabic } from "@/lib/textUtils";
 
 registerPdfFonts();
 
@@ -30,11 +29,7 @@ const styles = StyleSheet.create({
     color: "#444",
     padding: 2,
   },
-  arabicText: {
-    fontFamily: "Tajawal",
-    textAlign: "right",
-    direction: "rtl",
-  },
+
   summary: {
     marginTop: 16,
     paddingTop: 12,
@@ -112,7 +107,6 @@ export const GlobalPdfTemplate = ({ translations, direction }: Props) => {
     ? calculateTotalGlobally(selectedCurrency)
     : undefined;
 
-  // Direction-derived helpers
   const isRTL = direction === "rtl";
   const textAlign = isRTL ? "right" : "left";
   const summarySide = isRTL ? "flex-end" : "flex-start";
@@ -143,7 +137,7 @@ export const GlobalPdfTemplate = ({ translations, direction }: Props) => {
       <Page size="A4" orientation="landscape" style={styles.page}>
         {/* Title */}
         <Text style={[styles.title, { direction, textAlign }]}>
-          {translations.title} {currencyLabel}
+          {translations.title} — {currencyLabel}
         </Text>
 
         {/* Table */}
@@ -159,13 +153,7 @@ export const GlobalPdfTemplate = ({ translations, direction }: Props) => {
           {recordsToDisplay.map((record) => (
             <View style={styles.row} key={record.name}>
               <View style={styles.cell}>
-                <Text
-                  style={
-                    isArabic(record.name) ? styles.arabicText : { textAlign }
-                  }
-                >
-                  {record.name}
-                </Text>
+                <Text style={{ textAlign }}>{record.name}</Text>
               </View>
               <View style={styles.cell}>
                 <Text style={{ textAlign }}>{record.recordsCount}</Text>

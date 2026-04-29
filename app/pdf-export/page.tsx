@@ -15,7 +15,17 @@ export default function StatementPage() {
   const [direction, setDirection] = useState<"rtl" | "ltr">("ltr");
 
   useEffect(() => {
-    setDirection(document.dir === "rtl" ? "rtl" : "ltr");
+    const updateDirection = () => {
+      setDirection(document.dir === "rtl" ? "rtl" : "ltr");
+    };
+    updateDirection();
+    const observer = new MutationObserver(updateDirection);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["dir"],
+    });
+
+    return () => observer.disconnect();
   }, []);
   const t = useTranslations();
   const translations = {

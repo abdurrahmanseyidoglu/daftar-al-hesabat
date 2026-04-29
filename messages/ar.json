@@ -55,5 +55,6 @@
   "addedToName": "تمت الاضافة",
   "editName": "تعديل الاسم",
   "goToDetails": "الذهاب إلى التفاصيل",
-  "paginationDisplayedRows": "{from}-{to} من أصل {count}"
+  "paginationDisplayedRows": "{from}-{to} من أصل {count}",
+  "recordsFor": "جميع السجلات لـ"
 }

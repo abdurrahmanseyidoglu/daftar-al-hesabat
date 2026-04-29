@@ -56,7 +56,7 @@
   "editName": "Edit Name",
   "goToDetails": "Go To Details",
   "paginationDisplayedRows": "{from}-{to} of {count}",
-
+  "recordsFor":"All records for",
   "": "",
   "": "",
   "": ""
