@@ -55,6 +55,8 @@
   "addedToName": "Added to {name} records",
   "editName": "Edit Name",
   "goToDetails": "Go To Details",
+  "paginationDisplayedRows": "{from}-{to} of {count}",
+
   "": "",
   "": "",
   "": ""

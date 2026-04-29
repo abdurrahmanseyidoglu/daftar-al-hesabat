@@ -370,6 +370,8 @@ export default function ProfilePage() {
           columns={columns}
           localeText={{
             paginationRowsPerPage: t("rowsPerPage"),
+            paginationDisplayedRows: ({ from, to, count }) =>
+              t("paginationDisplayedRows", { from, to, count }),
           }}
           disableRowSelectionOnClick={true}
           rowSelectionModel={selectionModel}

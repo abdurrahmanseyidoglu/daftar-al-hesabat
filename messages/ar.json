@@ -54,5 +54,6 @@
   "allRecordsInCurrency": "جميع العمليات بــ {currency}",
   "addedToName": "تمت الاضافة",
   "editName": "تعديل الاسم",
-  "goToDetails": "الذهاب إلى التفاصيل"
+  "goToDetails": "الذهاب إلى التفاصيل",
+  "paginationDisplayedRows": "{from}-{to} من أصل {count}"
 }

@@ -332,6 +332,8 @@ export default function GlobalRecordsTable() {
           }}
           localeText={{
             paginationRowsPerPage: t("rowsPerPage"),
+            paginationDisplayedRows: ({ from, to, count }) =>
+              t("paginationDisplayedRows", { from, to, count }),
           }}
           sx={{
             border: "none",
