@@ -217,6 +217,7 @@ export default function GlobalRecordsTable() {
             alignItems: "start",
             justifyContent: "center",
             height: "100%",
+            fontSize: "1.1rem",
             color: (params.value ?? 0) >= 0 ? "success.main" : "error.main",
           }}
         >
@@ -339,7 +340,7 @@ export default function GlobalRecordsTable() {
             border: "none",
             "& .MuiDataGrid-columnHeaders": {
               fontSize: "1.1rem",
-              fontWeight: 700,
+              // fontWeight: 700,
             },
             "& .MuiDataGrid-cell": {
               fontSize: "1.2rem",

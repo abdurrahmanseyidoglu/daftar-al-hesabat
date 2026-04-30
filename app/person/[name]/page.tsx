@@ -36,7 +36,7 @@ import ConfirmDialog from "@/app/components/ConfirmDialog";
 import { useParams } from "next/navigation";
 import RecordFormModal from "@/app/components/Modals/RecordFormModal";
 import { useModalStore } from "@/app/stores/modalStore";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatMoney } from "@/lib/utils";
 import { useSnackbar } from "notistack";
 import Footer from "@/app/components/Footer";
 import Link from "next/link";
@@ -242,6 +242,28 @@ export default function ProfilePage() {
       maxWidth: 250,
       align: "left",
       headerAlign: "left",
+
+      renderCell: (params: GridRenderCellParams<RecordEntry, number>) => (
+        <Typography
+          sx={{
+            fontWeight: 600,
+            textAlign: "left",
+            marginBlock: "auto",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "start",
+            justifyContent: "center",
+            height: "100%",
+            fontSize: "1.2rem",
+            color:
+              params.row.direction === MoneyDirection.ON
+                ? "success.main"
+                : "error.main",
+          }}
+        >
+          {formatMoney(params.value ?? 0)}
+        </Typography>
+      ),
     },
     {
       field: "currency",
@@ -393,7 +415,7 @@ export default function ProfilePage() {
             border: "none",
             "& .MuiDataGrid-columnHeaders": {
               fontSize: "1.1rem",
-              fontWeight: 700,
+              // fontWeight: 700,
             },
             "& .MuiDataGrid-cell": {
               fontSize: "1.2rem",
