@@ -261,7 +261,9 @@ export default function ProfilePage() {
                 : "error.main",
           }}
         >
-          {formatMoney(params.value ?? 0)}
+          {params.row.direction === MoneyDirection.ON
+            ? formatMoney(params.value ?? 0)
+            : `-${formatMoney(params.value ?? 0)}`}
         </Typography>
       ),
     },
