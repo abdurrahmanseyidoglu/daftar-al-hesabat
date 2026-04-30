@@ -25,13 +25,7 @@ The home page gives you the full picture: everyone you have transactions with, h
 - Global overview with per-person summaries and an overall total
 - Supports all currencies
 - Export any page to `.csv` or `.pdf`
-
-
-
-## Planned
-
-- Google Drive sync for data backup, which will include account support
-- Arabic language support
+- Multilanguage support
 
 
 ## Running locally
