@@ -417,7 +417,7 @@ export default function ProfilePage() {
             border: "none",
             "& .MuiDataGrid-columnHeaders": {
               fontSize: "1.1rem",
-              // fontWeight: 700,
+             
             },
             "& .MuiDataGrid-cell": {
               fontSize: "1.2rem",

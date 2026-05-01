@@ -8,7 +8,7 @@ import { Select, MenuItem } from "@mui/material";
 export function LanguageSwitcher() {
   const { locale } = useLocaleStore();
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [_, startTransition] = useTransition();
 
   const switchLocale = (newLocale: "en" | "ar") => {
     document.cookie = `locale=${newLocale}; path=/; max-age=${60 * 60 * 24 * 365}`;

@@ -1,2 +1,1 @@
 - Deploy + add a linked in post + add to cv zustand and zod and react form hook
-- update cv (zustand,react, next, mui,zod)
