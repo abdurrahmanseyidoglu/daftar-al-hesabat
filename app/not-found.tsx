@@ -2,8 +2,9 @@
 import Link from "next/link";
 import { Box, Button, Container, Typography } from "@mui/material";
 import SearchOffIcon from "@mui/icons-material/SearchOff";
-
+import { useTranslations } from "next-intl";
 export default function NotFound() {
+  const t = useTranslations();
   return (
     <Container maxWidth="sm">
       <Box
@@ -27,12 +28,11 @@ export default function NotFound() {
         </Typography>
 
         <Typography variant="h4" fontWeight={600}>
-          Page Not Found
+        {t("pageNotFound")}
         </Typography>
 
         <Typography variant="body1" color="text.secondary" maxWidth={360}>
-          Oops! The resource you&apos;re looking for doesn&apos;t exist or has
-          been moved.
+          {t("404ErrorMessage")}
         </Typography>
 
         <Button
@@ -42,7 +42,7 @@ export default function NotFound() {
           size="large"
           sx={{ mt: 1, borderRadius: 2, px: 4 }}
         >
-          Return Home
+          {t("returnHome")}
         </Button>
       </Box>
     </Container>

@@ -56,5 +56,8 @@
   "editName": "تعديل الاسم",
   "goToDetails": "الذهاب إلى التفاصيل",
   "paginationDisplayedRows": "{from}-{to} من أصل {count}",
-  "recordsFor": "جميع السجلات لـ"
+  "recordsFor": "جميع السجلات لـ",
+  "pageNotFound": "الصفحة غير موجودة",
+  "404ErrorMessage": "عذراً! الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+  "returnHome": "العودة إلى الصفحة الرئيسية"
 }

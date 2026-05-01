@@ -56,8 +56,8 @@
   "editName": "Edit Name",
   "goToDetails": "Go To Details",
   "paginationDisplayedRows": "{from}-{to} of {count}",
-  "recordsFor":"All records for",
-  "": "",
-  "": "",
-  "": ""
+  "recordsFor": "All records for",
+  "pageNotFound": "Page Not Found",
+  "404ErrorMessage": "Oops! The resource you're looking for does not exist or has been moved.",
+  "returnHome": "Return Home"
 }
