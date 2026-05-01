@@ -59,5 +59,7 @@
   "recordsFor": "All records for",
   "pageNotFound": "Page Not Found",
   "404ErrorMessage": "Oops! The resource you're looking for does not exist or has been moved.",
-  "returnHome": "Return Home"
+  "returnHome": "Return Home",
+  "internalError": "Internal Server Error",
+  "500Message": " Something went wrong on our end. Please try again, or come back later."
 }

@@ -11,13 +11,13 @@ import {
   Collapse,
 } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import ReplayIcon from "@mui/icons-material/Replay";
-
+import { useTranslations } from "next-intl";
 interface ErrorPageProps {
   error: Error & { digest?: string };
 }
 
 export default function InternalServerError({ error }: ErrorPageProps) {
+  const t = useTranslations();
   const isDev = process.env.NODE_ENV === "development";
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function InternalServerError({ error }: ErrorPageProps) {
   }, [error, isDev]);
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="lg">
       <Box
         sx={{
           display: "flex",
@@ -53,11 +53,11 @@ export default function InternalServerError({ error }: ErrorPageProps) {
         </Typography>
 
         <Typography variant="h4" fontWeight={600}>
-          Internal Server Error
+          {t("internalError")}
         </Typography>
 
         <Typography variant="body1" color="text.secondary" maxWidth={360}>
-          Something went wrong on our end. Please try again, or come back later.
+          {t("500Message")}{" "}
         </Typography>
 
         {/* Dev-only error details panel */}
@@ -69,24 +69,14 @@ export default function InternalServerError({ error }: ErrorPageProps) {
               textAlign: "left",
               bgcolor: "grey.50",
               borderColor: "error.light",
-              maxWidth: 480,
+
               width: "100%",
               borderRadius: 2,
               overflow: "auto",
             }}
           >
             <Typography
-              variant="caption"
-              color="error"
-              display="block"
-              fontWeight={700}
-              mb={0.5}
-            >
-              DEV ONLY — error details
-            </Typography>
-
-            <Typography
-              variant="body2"
+              variant="h2"
               component="pre"
               sx={{ whiteSpace: "pre-wrap", wordBreak: "break-word", m: 0 }}
             >
@@ -106,14 +96,13 @@ export default function InternalServerError({ error }: ErrorPageProps) {
 
             {error.stack && (
               <Typography
-                variant="body2"
                 component="pre"
                 color="text.secondary"
                 sx={{
                   whiteSpace: "pre-wrap",
                   wordBreak: "break-word",
                   mt: 1,
-                  fontSize: "0.7rem",
+                  fontSize: "1.7rem",
                   m: 0,
                 }}
               >
@@ -129,9 +118,9 @@ export default function InternalServerError({ error }: ErrorPageProps) {
             href="/"
             variant="contained"
             size="large"
-            sx={{ borderRadius: 2, px: 3 }}
+            sx={{ borderRadius: 2, px: 3, mb: 3 }}
           >
-            Return Home
+            {t("returnHome")}
           </Button>
         </Box>
       </Box>
