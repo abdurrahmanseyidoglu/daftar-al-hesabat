@@ -49,7 +49,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Contributing
 
-The project is still in early development. If you run into something broken or have a suggestion, feel free to open an issue.
+If you run into something broken or have a suggestion, feel free to open an issue.
 
 ## License
 
