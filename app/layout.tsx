@@ -39,6 +39,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = t("seoDescription");
 
   return {
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+    ),
     title,
     description,
     applicationName: title,
