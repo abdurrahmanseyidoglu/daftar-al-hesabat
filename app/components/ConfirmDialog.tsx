@@ -1,10 +1,12 @@
 import Button from "@mui/material/Button";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
-import Typography from "@mui/material/Typography";
+import Alert from "@mui/material/Alert";
 import { Box, DialogContent } from "@mui/material";
 import { Palette } from "@mui/material/styles";
+import { AlertColor } from "@mui/material/Alert";
 import { useTranslations } from "next-intl";
+
 type MuiColor = keyof Palette;
 
 export interface Props {
@@ -14,7 +16,7 @@ export interface Props {
   title?: string;
   titleColor?: MuiColor;
   description?: string;
-  descriptionColor?: MuiColor;
+  descriptionSeverity?: AlertColor;
 }
 
 export default function ConfirmDialog(props: Props) {
@@ -25,7 +27,7 @@ export default function ConfirmDialog(props: Props) {
     open,
     title,
     description,
-    descriptionColor,
+    descriptionSeverity = "error",
     titleColor,
   } = props;
 
@@ -41,14 +43,9 @@ export default function ConfirmDialog(props: Props) {
     <Dialog onClose={handleClose} open={open}>
       <DialogTitle color={titleColor}>{title ?? "Are you sure?"}</DialogTitle>
       <DialogContent>
-        <Typography
-          sx={{
-            fontSize: "1rem",
-          }}
-          color={descriptionColor}
-        >
-          {description}
-        </Typography>
+        {description && (
+          <Alert severity={descriptionSeverity}>{description}</Alert>
+        )}
         <Box
           sx={{
             mt: 2,

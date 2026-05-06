@@ -377,7 +377,7 @@ export default function ProfilePage() {
           open={open}
           onClose={handleClose}
           title={t("recordDeleteConfirmation")}
-          descriptionColor="error"
+          descriptionSeverity="error"
         />
         <DataGrid
           autosizeOptions={{
@@ -417,7 +417,6 @@ export default function ProfilePage() {
             border: "none",
             "& .MuiDataGrid-columnHeaders": {
               fontSize: "1.1rem",
-             
             },
             "& .MuiDataGrid-cell": {
               fontSize: "1.2rem",

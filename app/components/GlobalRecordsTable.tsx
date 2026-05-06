@@ -300,7 +300,7 @@ export default function GlobalRecordsTable() {
           onClose={handleClose}
           title={`${t("nameDeleteConfirmation", { nameToDelete: selectedNameToDelete ?? "" })}`}
           description={`${t("nameDeleteHeadsUp", { nameToDelete: selectedNameToDelete ?? "" })}`}
-          descriptionColor="error"
+          descriptionSeverity="error"
         />
         <DataGrid
           showToolbar
