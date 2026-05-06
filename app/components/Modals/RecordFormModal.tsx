@@ -16,7 +16,6 @@ import { useEffect, useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import InputLabel from "@mui/material/InputLabel";
 import { enGB } from "date-fns/locale";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,7 +34,7 @@ type FormValuesType = { name: string } & { record: RecordEntry };
 
 const modalStyle = {
   position: "absolute",
-  top: "40%",
+  top: { xs: "40%", md: "40%", lg: "50%" },
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: { xs: "90%", md: "60%", lg: "40%" },
@@ -44,8 +43,8 @@ const modalStyle = {
   border: "1px solid text.primary",
   boxShadow: 24,
   borderRadius: 3,
-  py: 4,
-  px: 8,
+  py: { xs: 2, md: 2, lg: 4 },
+  px: { xs: 2, md: 4, lg: 8 },
 };
 
 const filter = createFilterOptions<NameOptionType>();
@@ -158,7 +157,7 @@ const RecordFormModal = () => {
     }
     setSavingForm(false);
     handleModalState(false);
-    enqueueSnackbar(t("addedToName",{name:data.name}), {
+    enqueueSnackbar(t("addedToName", { name: data.name }), {
       variant: "success",
     });
   };
@@ -179,7 +178,7 @@ const RecordFormModal = () => {
         <Box sx={modalStyle}>
           <Typography
             id="modal-modal-title"
-            variant="h4"
+            sx={{ fontSize: { xs: "1.5rem", md: "2rem", lg: "2.3rem" } }}
             component="h4"
             mb={2}
             color="primary"
