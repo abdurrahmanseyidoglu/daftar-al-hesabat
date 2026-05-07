@@ -7,6 +7,8 @@ import { useRecordStore } from "../stores/recordStore";
 import CurrencySelector from "./CurrencySelector";
 import { allCurrencies } from "@/lib/currencies";
 import { useTranslations } from "next-intl";
+import { useRef, useEffect, useState } from "react";
+
 interface Props {
   totalOn: number | undefined;
   totalTo: number | undefined;
@@ -18,22 +20,39 @@ const Footer = (props: Props) => {
   const t = useTranslations();
   const records = useRecordStore((state) => state.records);
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
+  const footerRef = useRef<HTMLDivElement>(null);
+  const [footerHeight, setFooterHeight] = useState(0);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      if (footerRef.current) {
+        setFooterHeight(footerRef.current.offsetHeight);
+      }
+    };
+
+    updateHeight();
+
+    const observer = new ResizeObserver(updateHeight);
+    if (footerRef.current) observer.observe(footerRef.current);
+
+    return () => observer.disconnect();
+  }, []);
+
   const getUsedCurrencies = () => {
     const usedCurrenciesSet = new Set<string>();
-
     records.forEach((owner) => {
       owner.records.forEach((record) => {
         usedCurrenciesSet.add(record.currency);
       });
     });
-
     return allCurrencies.filter((c) => usedCurrenciesSet.has(c.value));
   };
   const usedCurrencies = getUsedCurrencies();
 
   return (
-    <Box sx={{ marginTop: "4rem" }}>
+    <Box sx={{ height: `${footerHeight}px` }}>
       <Box
+        ref={footerRef}
         sx={{
           position: "fixed",
           bottom: "0",

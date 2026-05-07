@@ -38,6 +38,7 @@ export default function HomePage() {
         sx={{
           flex: 1,
           display: "flex",
+          overflowY: "scroll",
           ...(records.length === 0 && {
             alignItems: "center",
             justifyContent: "center",

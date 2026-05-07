@@ -361,7 +361,7 @@ export default function ProfilePage() {
     },
   ];
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%", overflowY: "scroll" }}>
       <Paper
         sx={{
           maxWidth: "100%",
