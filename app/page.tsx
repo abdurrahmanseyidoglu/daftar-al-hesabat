@@ -2,7 +2,7 @@
 
 import { Box, Button, Typography } from "@mui/material";
 import { useTranslations } from "next-intl";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import ControlPointRoundedIcon from "@mui/icons-material/ControlPointRounded";
 import RecordFormModal from "./components/Modals/RecordFormModal";
 import { useRecordStore } from "./stores/recordStore";
 import GlobalRecordsTable from "./components/GlobalRecordsTable";
@@ -56,7 +56,7 @@ export default function HomePage() {
             >
               {t("addAmount")}
             </Typography>
-            <AddCircleOutlineIcon
+            <ControlPointRoundedIcon
               sx={{
                 fontSize: { xs: "2rem", md: "3rem", lg: "4rem" },
                 marginInlineStart: 3,

@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import { useModalStore } from "../stores/modalStore";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import ControlPointRoundedIcon from "@mui/icons-material/ControlPointRounded";
 import { useRecordStore } from "../stores/recordStore";
 import { useTranslations } from "next-intl";
 import { GoHome } from "./GoHome";
@@ -126,7 +126,7 @@ function Navbar() {
         }}
       >
         <Typography fontSize={"1rem"}>{t("addNew")}</Typography>
-        <AddCircleOutlineIcon
+        <ControlPointRoundedIcon
           sx={{ fontSize: "1.5rem", marginInlineStart: 1 }}
         />
       </Button>
@@ -158,7 +158,7 @@ function Navbar() {
             setDrawerOpen(false);
           }}
         >
-        {t("PDFExport")}
+          {t("PDFExport")}
         </MenuItem>
         <MenuItem
           onClick={() => {
@@ -167,7 +167,7 @@ function Navbar() {
             setDrawerOpen(false);
           }}
         >
-        {t("CSVExport")}
+          {t("CSVExport")}
         </MenuItem>
       </Menu>
 
@@ -285,7 +285,7 @@ function Navbar() {
                 }}
               >
                 <Typography fontSize={"1rem"}>{t("addNew")}</Typography>
-                <AddCircleOutlineIcon sx={{ fontSize: "1.5rem" }} />
+                <ControlPointRoundedIcon sx={{ fontSize: "1.5rem" }} />
               </Button>
 
               <Button

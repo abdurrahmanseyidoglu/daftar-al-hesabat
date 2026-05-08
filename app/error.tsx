@@ -10,7 +10,7 @@ import {
   Paper,
   Collapse,
 } from "@mui/material";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import { useTranslations } from "next-intl";
 interface ErrorPageProps {
   error: Error & { digest?: string };
@@ -43,7 +43,7 @@ export default function InternalServerError({ error }: ErrorPageProps) {
           gap: 3,
         }}
       >
-        <ErrorOutlineIcon sx={{ fontSize: 80, color: "error.main" }} />
+        <ErrorOutlineRoundedIcon sx={{ fontSize: 80, color: "error.main" }} />
 
         <Typography
           variant="h1"
@@ -52,7 +52,7 @@ export default function InternalServerError({ error }: ErrorPageProps) {
           500
         </Typography>
 
-        <Typography variant="h4" fontWeight={600}>
+        <Typography component="h4" sx={{ fontWeight: 600 }}>
           {t("internalError")}
         </Typography>
 
@@ -87,8 +87,8 @@ export default function InternalServerError({ error }: ErrorPageProps) {
               <Typography
                 variant="caption"
                 color="text.secondary"
-                display="block"
-                mt={1}
+                component="div"
+                sx={{ display: "block", mt: 1 }}
               >
                 digest: {error.digest}
               </Typography>
