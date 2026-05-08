@@ -61,7 +61,7 @@ importers:
         version: 4.11.1(@swc/helpers@0.5.21)(next@16.2.6(@babel/core@7.29.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react@19.2.6)(typescript@6.0.3)
       notistack:
         specifier: ^3.0.2
-        version: 3.0.2(csstype@3.2.3)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+        version: 3.0.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react:
         specifier: 19.2.6
         version: 19.2.6
@@ -75,7 +75,7 @@ importers:
         specifier: ^4.4.0
         version: 4.4.0
       zod:
-        specifier: ^4.4.3
+        specifier: ^4.3.6
         version: 4.4.3
       zustand:
         specifier: ^5.0.13
@@ -5122,14 +5122,13 @@ snapshots:
     dependencies:
       svg-arc-to-cubic-bezier: 3.2.0
 
-  notistack@3.0.2(csstype@3.2.3)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+  notistack@3.0.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
       clsx: 1.2.1
+      csstype: 3.2.3
       goober: 2.1.18(csstype@3.2.3)
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
-    transitivePeerDependencies:
-      - csstype
 
   object-assign@4.1.1: {}
 

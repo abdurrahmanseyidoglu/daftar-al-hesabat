@@ -62,17 +62,19 @@ function CustomToolbar({
   return (
     <Box>
       <Typography
-        fontSize={{ xs: "1.5rem", md: "2rem" }}
-        fontWeight={500}
-        sx={{ textAlign: "start" }}
-        mb={3}
+        sx={{
+          fontSize: { xs: "1.5rem", md: "2rem" },
+          textAlign: "start",
+          mb: 3,
+          fontWeight: 500,
+        }}
       >
         {t("allRecordsInCurrency", {
           currency: selectedCurrency.toUpperCase(),
         })}
       </Typography>
       <Toolbar>
-        <Box width={"100%"}>
+        <Box sx={{ width: "100%" }}>
           <TextField
             size="small"
             placeholder="Search..."
@@ -249,7 +251,11 @@ export default function GlobalRecordsTable() {
       disableColumnMenu: true,
       width: 120,
       renderCell: (params: GridRenderCellParams<RowData>) => (
-        <Stack direction="row" spacing={0.5} alignItems="center" height="100%">
+        <Stack
+          direction="row"
+          spacing={0.5}
+          sx={{ alignItems: "center", height: "100%" }}
+        >
           <Tooltip title="Go to details">
             <Link href={`/person/${params.row.name}`}>
               <IconButton size="small">

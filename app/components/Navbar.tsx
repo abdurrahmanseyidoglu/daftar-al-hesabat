@@ -125,7 +125,7 @@ function Navbar() {
           setDrawerOpen(false);
         }}
       >
-        <Typography fontSize={"1rem"}>{t("addNew")}</Typography>
+        <Typography sx={{ fontSize: "1rem" }}>{t("addNew")}</Typography>
         <ControlPointRoundedIcon
           sx={{ fontSize: "1.5rem", marginInlineStart: 1 }}
         />
@@ -284,7 +284,7 @@ function Navbar() {
                   setDrawerOpen(false);
                 }}
               >
-                <Typography fontSize={"1rem"}>{t("addNew")}</Typography>
+                <Typography sx={{ fontSize: "1rem" }}>{t("addNew")}</Typography>
                 <ControlPointRoundedIcon sx={{ fontSize: "1.5rem" }} />
               </Button>
 

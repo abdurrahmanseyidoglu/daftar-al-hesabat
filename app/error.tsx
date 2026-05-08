@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
 import { useTranslations } from "next-intl";
+
 interface ErrorPageProps {
   error: Error & { digest?: string };
 }
@@ -52,11 +53,15 @@ export default function InternalServerError({ error }: ErrorPageProps) {
           500
         </Typography>
 
-        <Typography component="h4" sx={{ fontWeight: 600 }}>
+        <Typography variant="h4" sx={{ fontWeight: 600 }}>
           {t("internalError")}
         </Typography>
 
-        <Typography variant="body1" color="text.secondary" maxWidth={360}>
+        <Typography
+          variant="body1"
+          sx={{ color: "text.secondary", maxWidth: 360 }}
+          color="text.secondary"
+        >
           {t("500Message")}{" "}
         </Typography>
 

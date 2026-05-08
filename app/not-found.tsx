@@ -27,11 +27,14 @@ export default function NotFound() {
           404
         </Typography>
 
-        <Typography variant="h4" fontWeight={600}>
-        {t("pageNotFound")}
+        <Typography variant="h4" sx={{ fontWeight: 600 }}>
+          {t("pageNotFound")}
         </Typography>
 
-        <Typography variant="body1" color="text.secondary" maxWidth={360}>
+        <Typography
+          variant="body1"
+          sx={{ color: "text.secondary", maxWidth: 360 }}
+        >
           {t("404ErrorMessage")}
         </Typography>
 

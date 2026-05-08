@@ -86,16 +86,19 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
           </Tooltip>
         </Link>
         <Typography
-          fontSize={{ xs: "1.5rem", md: "2rem" }}
-          fontWeight={500}
-          sx={{ textAlign: "start", padding: "1rem" }}
+          sx={{
+            textAlign: "start",
+            padding: "1rem",
+            fontSize: { xs: "1.5rem", md: "2rem" },
+            fontWeight: 500,
+          }}
         >
           All Records for {decodedRecordOwner} in
           {` ${selectedCurrency.toUpperCase()} `}
         </Typography>
       </Box>
       <Toolbar>
-        <Box width={"100%"}>
+        <Box sx={{ width: "100%" }}>
           <TextField
             size="small"
             placeholder="Search..."
@@ -328,9 +331,11 @@ export default function ProfilePage() {
         <Stack
           direction="row"
           spacing={0.5}
-          alignItems="center"
-          justifyContent="center"
-          height="100%"
+          sx={{
+            alignItems: "center",
+            justifyContent: "center",
+            height: "100%",
+          }}
         >
           <Tooltip title="Delete">
             <IconButton

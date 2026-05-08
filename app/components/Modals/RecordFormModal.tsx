@@ -178,12 +178,18 @@ const RecordFormModal = () => {
         <Box sx={modalStyle}>
           <Typography
             id="modal-modal-title"
-            sx={{ fontSize: { xs: "1.5rem", md: "2rem", lg: "2.3rem" } }}
+            sx={{
+              fontSize: {
+                xs: "1.5rem",
+                md: "2rem",
+                lg: "2.3rem",
+              },
+              mb: 2,
+              color: "primary.main",
+              textTransform: "uppercase",
+              fontWeight: 500,
+            }}
             component="h4"
-            mb={2}
-            color="primary"
-            textTransform="uppercase"
-            fontWeight="500"
           >
             {!!(recordsOwner && modalPredefinedProps?.record)
               ? `${t("updateRecord")}`

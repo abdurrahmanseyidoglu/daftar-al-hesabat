@@ -76,7 +76,7 @@ const Footer = (props: Props) => {
             gap: ".5",
           }}
         >
-          <Typography color="white" fontSize={16}>
+          <Typography sx={{ color: "#ffffff", fontSize: 16 }}>
             {t("youOwed")}
             <AmountDisplay
               amount={props.totalOn ?? 0}
@@ -88,7 +88,10 @@ const Footer = (props: Props) => {
               currency={selectedCurrency}
             />
           </Typography>
-          <Typography color="white" fontSize={20} suppressHydrationWarning>
+          <Typography
+            sx={{ color: "#ffffff", fontSize: 20 }}
+            suppressHydrationWarning
+          >
             {props.direction === MoneyDirection.TO
               ? `${t("totalYouOwe")}`
               : `${t("totalYouOwed")}`}
