@@ -11,7 +11,9 @@ import Footer from "./components/Footer";
 import { useAppStore } from "./stores/appStore";
 import { useEffect } from "react";
 
+import { authClient } from "@/lib/auth-client";
 export default function HomePage() {
+  const { data: session } = authClient.useSession();
   const handleModalState = useModalStore((state) => state.handleModalState);
 
   const calculateTotalGlobally = useRecordStore(
@@ -32,8 +34,21 @@ export default function HomePage() {
 
   const t = useTranslations();
   const records = useRecordStore((state) => state.records);
+  const handleGoogleLogin = async () => {
+    const data = await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
+  };
+
   return (
     <>
+      <div>
+        <Button variant="contained" onClick={handleGoogleLogin}>
+          Login with google
+        </Button>
+      </div>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
       <Box
         sx={{
           flex: 1,
@@ -50,6 +65,7 @@ export default function HomePage() {
             variant="outlined"
             sx={{ padding: { xs: "1.5rem", md: "3rem", lg: "6rem" } }}
             onClick={() => handleModalState(true)}
+            type="button"
           >
             <Typography
               sx={{ fontSize: { xs: "1.5rem", md: "2rem", lg: "3rem" } }}
