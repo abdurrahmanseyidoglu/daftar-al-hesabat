@@ -1,4 +1,8 @@
 {
+  "syncTooltip": "This app saves your data automatically. Sign in with Google to unlock cross-device sync and cloud backup.",
+  "login": "Login",
+  "logout":"Logout",
+  "language":"Language",
   "addAmount": "Add a new amount",
   "seoTitle": "Daftar Al-Hesabat | Personal Ledger",
   "seoDescription": "Track money between you and friends or family with a clear running balance for every person.",

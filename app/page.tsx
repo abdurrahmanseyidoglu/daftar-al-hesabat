@@ -34,20 +34,9 @@ export default function HomePage() {
 
   const t = useTranslations();
   const records = useRecordStore((state) => state.records);
-  const handleGoogleLogin = async () => {
-    const data = await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/",
-    });
-  };
 
   return (
     <>
-      <div>
-        <Button variant="contained" onClick={handleGoogleLogin}>
-          Login with google
-        </Button>
-      </div>
       <pre>{JSON.stringify(session, null, 2)}</pre>
       <Box
         sx={{

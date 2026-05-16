@@ -1,5 +1,7 @@
+import { Session } from "better-auth";
 import type { Record, RecordEntry } from "../app/schemas/record.schema";
 import { MoneyDirection } from "../app/types/enums";
+import { AuthSessionType } from "@/app/types/session";
 
 export const formatDate = (date: Date) => {
   const d = date instanceof Date ? date : new Date(date);
@@ -161,4 +163,11 @@ export const exportSinglePersonToCSV = (
   a.download = filename;
   a.click();
   URL.revokeObjectURL(url);
+};
+
+export const isLoggedIn = (sessionData: AuthSessionType | null): boolean => {
+  if (!sessionData) return false;
+  const { session } = sessionData ?? {};
+  if (!session?.token || !session?.userId) return false;
+  else return true;
 };

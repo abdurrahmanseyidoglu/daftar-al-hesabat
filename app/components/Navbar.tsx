@@ -15,19 +15,31 @@ import {
   exportAllRecordsToCSV,
   exportSinglePersonToCSV,
   getRecordsFilteredByCurrency,
+  isLoggedIn,
 } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
-import { Divider, Drawer, IconButton, Menu, MenuItem } from "@mui/material";
+import {
+  Accordion,
+  Avatar,
+  Divider,
+  Drawer,
+  IconButton,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { allCurrencies } from "@/lib/currencies";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-
+import { authClient } from "@/lib/auth-client";
+import SignInWithGoogle from "./SignInWithGoogle";
+import Account from "./Account";
 function Navbar() {
   const router = useRouter();
+  const { data: session } = authClient.useSession();
 
   const records = useRecordStore((state) => state.records);
   const t = useTranslations();
@@ -173,6 +185,11 @@ function Navbar() {
 
       <CurrencySelector usedCurrencies={usedCurrencies} />
       <LanguageSwitcher />
+      {!isLoggedIn(session) ? <SignInWithGoogle /> : <Account />}
+
+      {/* <Button variant="outlined" color="white" sx={{ py: 1, px: 4 }}>
+        <p>Sync</p>
+      </Button> */}
     </>
   );
 
