@@ -26,8 +26,6 @@ export default function Account() {
     setAnchorEl(null);
   };
   const getAccessToken = async () => {
-    console.log("This has runned yey :D");
-
     const result = await authClient.getAccessToken({
       providerId: "google",
     });
@@ -66,7 +64,6 @@ export default function Account() {
             alt={session?.user?.name ?? "User"}
             sx={{ width: 23, height: 23 }}
           />
-          <pre>{accessToken}</pre>
           <Typography
             variant="body2"
             noWrap
