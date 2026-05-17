@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -11,6 +11,8 @@ import { authClient } from "@/lib/auth-client";
 import { useTranslations } from "next-intl";
 
 export default function Account() {
+  const [accessToken, setAccessToken] = useState("");
+
   const t = useTranslations();
   const { data: session } = authClient.useSession();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -23,6 +25,24 @@ export default function Account() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const getAccessToken = async () => {
+    console.log("This has runned yey :D");
+
+    const { accessToken } = await authClient.getAccessToken({
+      providerId: "google",
+      
+    });
+
+    setAccessToken(accessToken);
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      await getAccessToken();
+    }, 10000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>
@@ -42,6 +62,7 @@ export default function Account() {
             alt={session?.user?.name ?? "User"}
             sx={{ width: 23, height: 23 }}
           />
+          <pre>{accessToken}</pre>
           <Typography
             variant="body2"
             noWrap

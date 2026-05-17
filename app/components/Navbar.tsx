@@ -40,7 +40,6 @@ import Account from "./Account";
 function Navbar() {
   const router = useRouter();
   const { data: session } = authClient.useSession();
-
   const records = useRecordStore((state) => state.records);
   const t = useTranslations();
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);

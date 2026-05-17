@@ -1,7 +1,9 @@
+"use client";
 import { authClient } from "@/lib/auth-client";
 import { Button, Tooltip } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 const SignInWithGoogle = () => {
   const t = useTranslations();
   const handleGoogleLogin = async () => {

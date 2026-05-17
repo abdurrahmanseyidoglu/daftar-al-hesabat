@@ -11,9 +11,9 @@ import Footer from "./components/Footer";
 import { useAppStore } from "./stores/appStore";
 import { useEffect } from "react";
 
-import { authClient } from "@/lib/auth-client";
+// import { authClient } from "@/lib/auth-client";
 export default function HomePage() {
-  const { data: session } = authClient.useSession();
+  // const { data: session } = authClient.useSession();
   const handleModalState = useModalStore((state) => state.handleModalState);
 
   const calculateTotalGlobally = useRecordStore(
@@ -37,7 +37,7 @@ export default function HomePage() {
 
   return (
     <>
-      <pre>{JSON.stringify(session, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(session, null, 2)}</pre> */}
       <Box
         sx={{
           flex: 1,
