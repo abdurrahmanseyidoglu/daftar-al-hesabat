@@ -28,12 +28,16 @@ export default function Account() {
   const getAccessToken = async () => {
     console.log("This has runned yey :D");
 
-    const { accessToken } = await authClient.getAccessToken({
+    const result = await authClient.getAccessToken({
       providerId: "google",
-      
     });
 
-    setAccessToken(accessToken);
+    if (result.error) {
+      console.error("Failed to get access token:", result.error);
+      return;
+    }
+
+    setAccessToken(result.data.accessToken);
   };
 
   useEffect(() => {
