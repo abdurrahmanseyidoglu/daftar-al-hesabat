@@ -9,10 +9,11 @@ import Typography from "@mui/material/Typography";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { authClient } from "@/lib/auth-client";
 import { useTranslations } from "next-intl";
+import { useTokenStore } from "../stores/tokenStore";
 
 export default function Account() {
-  const [accessToken, setAccessToken] = useState("");
-
+  const setAccessToken = useTokenStore((state) => state.setAccessToken);
+  const accessToken = useTokenStore((state) => state.accessToken);
   const t = useTranslations();
   const { data: session } = authClient.useSession();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -34,14 +35,21 @@ export default function Account() {
       console.error("Failed to get access token:", result.error);
       return;
     }
-
     setAccessToken(result.data.accessToken);
   };
-
+  const requestDriveAccess = async () => {
+    await authClient.linkSocial({
+      provider: "google",
+      scopes: [
+        "https://www.googleapis.com/auth/drive.appdata",
+        "https://www.googleapis.com/auth/drive.appfolder",
+      ],
+    });
+  };
   useEffect(() => {
     const timer = setTimeout(async () => {
       await getAccessToken();
-    }, 10000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, []);

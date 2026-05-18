@@ -37,7 +37,6 @@ export default function HomePage() {
 
   return (
     <>
-      {/* <pre>{JSON.stringify(session, null, 2)}</pre> */}
       <Box
         sx={{
           flex: 1,

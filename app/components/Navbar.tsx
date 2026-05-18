@@ -184,7 +184,16 @@ function Navbar() {
 
       <CurrencySelector usedCurrencies={usedCurrencies} />
       <LanguageSwitcher />
-      {!isLoggedIn(session) ? <SignInWithGoogle /> : <Account />}
+      {!isLoggedIn(session) ? (
+        <SignInWithGoogle />
+      ) : (
+        <div>
+          <Account />
+          <Button variant="contained" color="success">
+            Sync*
+          </Button>
+        </div>
+      )}
 
       {/* <Button variant="outlined" color="white" sx={{ py: 1, px: 4 }}>
         <p>Sync</p>
