@@ -1,7 +1,1 @@
-1- Make sure to not change the id when pushing the file to drive
-2- Think of a way to handle the syncing to google drive (first login with google then ask for google drive access? or do it in a single step? can it even be done in a single step?)
-3- After that find a way to replace the localstorage data with the data coming from the file
-4- add warnings when the user wants to replace the local data before actually replacing it (create a backup just in case the user decided to undo)
-5- add a button that represent the syncing state (changes to the localstorage? sync should blink)
-6- even better: create a database and save everything there? using golang? idk seems interesting and way better in terms of long run.
-7- add missing things from the desktop navbar to the mobile navbar
+Make a proper back-end for this so user have 2 options, fully local via localStorage or a proper back-end with a database
