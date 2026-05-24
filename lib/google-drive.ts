@@ -2,7 +2,7 @@ import { Record } from "@/app/schemas/record.schema";
 const fileName = "dafter-al-hesabat.json";
 export const getFileIfExists = async (accessToken: string) => {
   const res = await fetch(
-    `https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name=${fileName}&fields=files(id,name)`,
+    `https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${fileName}'&fields=files(id,name)`,
     { headers: { Authorization: `Bearer ${accessToken}` } },
   );
   const data = await res.json();
@@ -11,17 +11,38 @@ export const getFileIfExists = async (accessToken: string) => {
 
 export const readFile = async (accessToken: string, fileId: string) => {
   const res = await fetch(
-    `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
+    `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media&spaces=appDataFolder`,
     { headers: { Authorization: `Bearer ${accessToken}` } },
   );
   return await res.json();
 };
-
+export const updateFile = async (
+  accessToken: string,
+  fileId: string,
+  data: Record[],
+) => {
+  const res = await fetch(
+    `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media&spaces=appDataFolder`,
+    {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ...data,
+        lastSynced: new Date().toISOString(),
+      }),
+    },
+  );
+  return await res.json();
+};
 export const createFile = async (accessToken: string, records: Record[]) => {
   const metadata = {
     name: fileName,
     parents: ["appDataFolder"],
   };
+
   const body = new FormData();
   body.append(
     "metadata",
@@ -34,7 +55,7 @@ export const createFile = async (accessToken: string, records: Record[]) => {
   );
 
   const res = await fetch(
-    `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart`,
+    `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&spaces=appDataFolder`,
     {
       method: "POST",
       headers: { Authorization: `Bearer ${accessToken}` },
@@ -42,4 +63,13 @@ export const createFile = async (accessToken: string, records: Record[]) => {
     },
   );
   return await res.json();
+};
+export const deleteFile = async (accessToken: string, fileId: string) => {
+  await fetch(
+    `https://www.googleapis.com/drive/v3/files/${fileId}&spaces=appDataFolder`,
+    {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${accessToken}` },
+    },
+  );
 };
