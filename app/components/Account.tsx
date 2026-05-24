@@ -10,6 +10,8 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { authClient } from "@/lib/auth-client";
 import { useTranslations } from "next-intl";
 import { useTokenStore } from "../stores/tokenStore";
+import { getFileIfExists } from "@/lib/google-drive";
+import ConfirmDialog from "./ConfirmDialog";
 
 export default function Account() {
   const setAccessToken = useTokenStore((state) => state.setAccessToken);
@@ -18,7 +20,6 @@ export default function Account() {
   const { data: session } = authClient.useSession();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -37,23 +38,27 @@ export default function Account() {
     }
     setAccessToken(result.data.accessToken);
   };
-  const requestDriveAccess = async () => {
-    await authClient.linkSocial({
-      provider: "google",
-      scopes: [
-        "https://www.googleapis.com/auth/drive.appdata",
-        "https://www.googleapis.com/auth/drive.appfolder",
-      ],
-    });
-  };
+
   useEffect(() => {
-    const timer = setTimeout(async () => {
-      await getAccessToken();
-    }, 3000);
-
-    return () => clearTimeout(timer);
+    if (!!accessToken || accessToken.length <= 0) {
+      const timer = setTimeout(async () => {
+        await getAccessToken();
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
   }, []);
-
+  // Check if user already has a file in google drive
+  const doesFileExist = async () => {
+    let id = "";
+    const fileState = await getFileIfExists(accessToken);
+    if (!!fileState) {
+      id = fileState.id;
+    }
+    else {
+      // Ask him if he wants to save changes on google drive.
+      const 
+    }
+  };
   return (
     <>
       <Button

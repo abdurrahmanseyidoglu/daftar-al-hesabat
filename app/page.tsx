@@ -9,13 +9,17 @@ import GlobalRecordsTable from "./components/GlobalRecordsTable";
 import { useModalStore } from "./stores/modalStore";
 import Footer from "./components/Footer";
 import { useAppStore } from "./stores/appStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import ConfirmDialog from "./components/ConfirmDialog";
+import { createFile, getFileIfExists, readFile } from "@/lib/google-drive";
+import { useTokenStore } from "./stores/tokenStore";
+import { authClient } from "@/lib/auth-client";
+import { isLoggedIn } from "@/lib/utils";
 
-// import { authClient } from "@/lib/auth-client";
 export default function HomePage() {
-  // const { data: session } = authClient.useSession();
+  const { data: session } = authClient.useSession();
   const handleModalState = useModalStore((state) => state.handleModalState);
-
+  const accessToken = useTokenStore((state) => state.accessToken);
   const calculateTotalGlobally = useRecordStore(
     (state) => state.calculateTotalGlobally,
   );
@@ -34,6 +38,30 @@ export default function HomePage() {
 
   const t = useTranslations();
   const records = useRecordStore((state) => state.records);
+
+  useEffect(() => {
+    const hasFile = async () => {
+      try {
+        const result = await getFileIfExists(accessToken);
+        if (result === null) {
+          const createResp = await createFile(accessToken, records);
+          console.log(createResp);
+        } else {
+          const fileContent = await readFile(accessToken, result.id);
+          //See if there is records in the localStorage
+          // if there is ask the user which version he wants to keep 
+          // if there is not accept the cloud data
+          console.log(fileContent);
+        }
+      } catch (err) {
+        console.error("Error:", err);
+      }
+    };
+
+    if (isLoggedIn(session)) {
+      hasFile();
+    }
+  }, [session, accessToken]);
 
   return (
     <>
