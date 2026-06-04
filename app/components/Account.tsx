@@ -10,12 +10,15 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { authClient } from "@/lib/auth-client";
 import { useTranslations } from "next-intl";
 import { useTokenStore } from "../stores/tokenStore";
-import { getFileIfExists } from "@/lib/google-drive";
+import { getFileIfExists, readFile } from "@/lib/google-drive";
 import ConfirmDialog from "./ConfirmDialog";
+import { useRecordStore } from "../stores/recordStore";
+import { RecordsSourceOfTruth } from "../types/recordsSourceOfTruth";
 
 export default function Account() {
   const setAccessToken = useTokenStore((state) => state.setAccessToken);
   const accessToken = useTokenStore((state) => state.accessToken);
+  const recordsInStore = useRecordStore((state) => state.records);
   const t = useTranslations();
   const { data: session } = authClient.useSession();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -23,6 +26,9 @@ export default function Account() {
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+  const [recordMissMatchDialog, setRecordMissMatchDialog] = useState(false);
+  const [recordsSourceOfTruth, setRecordsSourceOfTruth] =
+    useState<RecordsSourceOfTruth>("local");
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -47,18 +53,23 @@ export default function Account() {
       return () => clearTimeout(timer);
     }
   }, []);
-  // Check if user already has a file in google drive
-  const doesFileExist = async () => {
-    let id = "";
-    const fileState = await getFileIfExists(accessToken);
-    if (!!fileState) {
-      id = fileState.id;
+  // Check if user already has a file in google
+  useEffect(() => {
+    if (session?.user) {
+      const checkFileExistence = async () => {
+        const getFileIfExist = await getFileIfExists(accessToken);
+        if (getFileIfExist) {
+          const id = getFileIfExist.id;
+          const resp = await readFile(accessToken || "", id);
+          if (JSON.stringify(resp.records) !== JSON.stringify(recordsInStore)) {
+            setRecordMissMatchDialog(true);
+          }
+        }
+      };
+      checkFileExistence();
     }
-    else {
-      // Ask him if he wants to save changes on google drive.
-      const 
-    }
-  };
+  }, [session]);
+ 
   return (
     <>
       <Button
@@ -113,6 +124,7 @@ export default function Account() {
           {t("logout")}
         </MenuItem>
       </Menu>
+    
     </>
   );
 }
