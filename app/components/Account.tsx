@@ -11,9 +11,10 @@ import { authClient } from "@/lib/auth-client";
 import { useTranslations } from "next-intl";
 import { useTokenStore } from "../stores/tokenStore";
 import { getFileIfExists, readFile } from "@/lib/google-drive";
-import ConfirmDialog from "./ConfirmDialog";
 import { useRecordStore } from "../stores/recordStore";
 import { RecordsSourceOfTruth } from "../types/recordsSourceOfTruth";
+import RecordsDiffsDialog from "./RecordsDiffsDialog";
+import { Record } from "../schemas/record.schema";
 
 export default function Account() {
   const setAccessToken = useTokenStore((state) => state.setAccessToken);
@@ -29,9 +30,12 @@ export default function Account() {
   const [recordMissMatchDialog, setRecordMissMatchDialog] = useState(false);
   const [recordsSourceOfTruth, setRecordsSourceOfTruth] =
     useState<RecordsSourceOfTruth>("local");
-
-  const handleClose = () => {
+  const [remoteRecords, setRemoteRecords] = useState<Record[] | null>(null);
+  const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+  const handleRecordsDiffClose = () => {
+    setRecordMissMatchDialog(false);
   };
   const getAccessToken = async () => {
     const result = await authClient.getAccessToken({
@@ -61,7 +65,8 @@ export default function Account() {
         if (getFileIfExist) {
           const id = getFileIfExist.id;
           const resp = await readFile(accessToken || "", id);
-          if (JSON.stringify(resp.records) !== JSON.stringify(recordsInStore)) {
+          setRemoteRecords(resp.records);
+          if (true) {
             setRecordMissMatchDialog(true);
           }
         }
@@ -69,7 +74,7 @@ export default function Account() {
       checkFileExistence();
     }
   }, [session]);
- 
+
   return (
     <>
       <Button
@@ -102,7 +107,7 @@ export default function Account() {
         id="drawer-user-menu"
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
+        onClose={handleMenuClose}
         sx={{ mt: 0.5 }}
         slotProps={{
           list: { "aria-labelledby": "drawer-user-button" },
@@ -116,7 +121,7 @@ export default function Account() {
         <MenuItem
           onClick={async () => {
             await authClient.signOut();
-            handleClose();
+            handleMenuClose();
           }}
           sx={{ color: "error.main", gap: 1 }}
         >
@@ -124,7 +129,12 @@ export default function Account() {
           {t("logout")}
         </MenuItem>
       </Menu>
-    
+      <RecordsDiffsDialog
+        open={recordMissMatchDialog}
+        handleRecordsDiffClose={handleRecordsDiffClose}
+        remoteRecords={remoteRecords}
+        localRecords={recordsInStore}
+      />
     </>
   );
 }
