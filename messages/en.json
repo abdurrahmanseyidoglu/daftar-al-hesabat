@@ -66,6 +66,10 @@
   "returnHome": "Return Home",
   "internalError": "Internal Server Error",
   "500Message": " Something went wrong on our end. Please try again, or come back later.",
+  "cloudRecords": "Cloud  Records",
+  "localRecords": "Local Records",
+  "recordsDiffWarning": "There is a difference between the local and cloud version please select the version you want to keep",
+
   "Privacy": {
     "title": "Privacy Policy",
     "overviewHeading": "Overview",

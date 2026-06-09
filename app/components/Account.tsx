@@ -30,7 +30,7 @@ export default function Account() {
   const [recordMissMatchDialog, setRecordMissMatchDialog] = useState(false);
   const [recordsSourceOfTruth, setRecordsSourceOfTruth] =
     useState<RecordsSourceOfTruth>("local");
-  const [remoteRecords, setRemoteRecords] = useState<Record[] | null>(null);
+  const [cloudRecords, setCloudRecords] = useState<Record[] | null>(null);
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
@@ -65,7 +65,7 @@ export default function Account() {
         if (getFileIfExist) {
           const id = getFileIfExist.id;
           const resp = await readFile(accessToken || "", id);
-          setRemoteRecords(resp.records);
+          setCloudRecords(resp.records);
           if (true) {
             setRecordMissMatchDialog(true);
           }
@@ -132,7 +132,7 @@ export default function Account() {
       <RecordsDiffsDialog
         open={recordMissMatchDialog}
         handleRecordsDiffClose={handleRecordsDiffClose}
-        remoteRecords={remoteRecords}
+        cloudRecords={cloudRecords}
         localRecords={recordsInStore}
       />
     </>

@@ -1,1 +1,1 @@
-export type RecordsSourceOfTruth = "local" | "remote";
+export type RecordsSourceOfTruth = "local" | "cloud";
