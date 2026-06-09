@@ -30,6 +30,9 @@ import { useTranslations } from "next-intl";
 import { useSnackbar } from "notistack";
 import { useParams } from "next/navigation";
 import { allCurrencies } from "@/lib/currencies";
+import { createFile } from "@/lib/google-drive";
+import { useTokenStore } from "@/app/stores/tokenStore";
+import { authClient } from "@/lib/auth-client";
 type FormValuesType = { name: string } & { record: RecordEntry };
 
 const modalStyle = {
@@ -49,8 +52,9 @@ const modalStyle = {
 
 const filter = createFilterOptions<NameOptionType>();
 const RecordFormModal = () => {
+  const { data: session } = authClient.useSession();
   const { enqueueSnackbar } = useSnackbar();
-
+  const accessToken = useTokenStore((state) => state.accessToken);
   const t = useTranslations();
   const isModalOpen = useModalStore((state) => state.isModalOpen);
   const modalPredefinedProps = useModalStore(
@@ -144,7 +148,7 @@ const RecordFormModal = () => {
   ]);
   const [savingForm, setSavingForm] = useState(false);
 
-  const saveAction = (data: FormValuesType) => {
+  const saveAction = async (data: FormValuesType) => {
     setSavingForm(true);
     updateSelectedCurrency(data.record.currency);
     const existing = doesNameExistInRecords(data.name.trim());
@@ -155,8 +159,13 @@ const RecordFormModal = () => {
     } else {
       addRecordToExistingName(data.name, { ...data.record });
     }
+
     setSavingForm(false);
     handleModalState(false);
+    // Sync changes to Google Drive
+    if (accessToken && session) {
+      await createFile(accessToken, records);
+    }
     enqueueSnackbar(t("addedToName", { name: data.name }), {
       variant: "success",
     });

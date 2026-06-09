@@ -41,13 +41,13 @@ const RecordsDiffsDialog = ({
         <div className="flex items-start justify-center gap-4">
           <div
             className="p-2 w-fit  hover:bg-green-100 rounded-sm hover:cursor-pointer ease-in-out duration-200"
-            onClick={() => handleSelect("local")}
+            onClick={() => handleSelect("cloud")}
           >
             <RecordsOverView records={cloudRecords} title={t("cloudRecords")} />
           </div>
           <div
             className="p-2 w-fit hover:bg-blue-100 rounded-sm hover:cursor-pointer ease-in-out duration-200"
-            onClick={() => handleSelect("cloud")}
+            onClick={() => handleSelect("local")}
           >
             <RecordsOverView records={localRecords} title={t("localRecords")} />
           </div>

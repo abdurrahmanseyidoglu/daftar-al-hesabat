@@ -10,16 +10,18 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { authClient } from "@/lib/auth-client";
 import { useTranslations } from "next-intl";
 import { useTokenStore } from "../stores/tokenStore";
-import { getFileIfExists, readFile } from "@/lib/google-drive";
+import { createFile, getFileIfExists, readFile } from "@/lib/google-drive";
 import { useRecordStore } from "../stores/recordStore";
 import { RecordsSourceOfTruth } from "../types/recordsSourceOfTruth";
 import RecordsDiffsDialog from "./RecordsDiffsDialog";
 import { Record } from "../schemas/record.schema";
+import { useStore } from "zustand";
 
 export default function Account() {
   const setAccessToken = useTokenStore((state) => state.setAccessToken);
   const accessToken = useTokenStore((state) => state.accessToken);
-  const recordsInStore = useRecordStore((state) => state.records);
+  const localRecords = useRecordStore((state) => state.records);
+  const setLocalStore = useRecordStore((state) => state.setRecords);
   const t = useTranslations();
   const { data: session } = authClient.useSession();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -28,14 +30,23 @@ export default function Account() {
     setAnchorEl(event.currentTarget);
   };
   const [recordMissMatchDialog, setRecordMissMatchDialog] = useState(false);
-  const [recordsSourceOfTruth, setRecordsSourceOfTruth] =
     useState<RecordsSourceOfTruth>("local");
   const [cloudRecords, setCloudRecords] = useState<Record[] | null>(null);
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-  const handleRecordsDiffClose = () => {
+  const handleRecordsDiffClose = async (
+    recordsSource: RecordsSourceOfTruth,
+  ) => {
     setRecordMissMatchDialog(false);
+    // If local => replace the cloud version, else if cloud => replace the local version
+    if (recordsSource === "local") {
+      await createFile(accessToken, localRecords);
+      console.log("Local records accepted");
+    } else if (cloudRecords && recordsSource === "cloud") {
+      setLocalStore(cloudRecords);
+      console.log("Cloud  records accepted");
+    }
   };
   const getAccessToken = async () => {
     const result = await authClient.getAccessToken({
@@ -66,7 +77,7 @@ export default function Account() {
           const id = getFileIfExist.id;
           const resp = await readFile(accessToken || "", id);
           setCloudRecords(resp.records);
-          if (true) {
+          if (JSON.stringify(resp.records) !== JSON.stringify(localRecords)) {
             setRecordMissMatchDialog(true);
           }
         }
@@ -133,7 +144,7 @@ export default function Account() {
         open={recordMissMatchDialog}
         handleRecordsDiffClose={handleRecordsDiffClose}
         cloudRecords={cloudRecords}
-        localRecords={recordsInStore}
+        localRecords={localRecords}
       />
     </>
   );

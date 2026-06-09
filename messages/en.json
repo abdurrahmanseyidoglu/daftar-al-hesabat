@@ -1,6 +1,7 @@
 {
   "syncTooltip": "Sign in with Google to unlock cross-device sync and cloud backup.",
   "login": "Login",
+  "loginGoogle": "Login with Google",
   "logout": "Logout",
   "language": "Language",
   "addAmount": "Add a new amount",

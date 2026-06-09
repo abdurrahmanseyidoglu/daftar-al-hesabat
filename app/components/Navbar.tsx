@@ -189,9 +189,6 @@ function Navbar() {
       ) : (
         <div>
           <Account />
-          <Button variant="contained" color="success">
-            Sync*
-          </Button>
         </div>
       )}
 

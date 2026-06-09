@@ -50,6 +50,7 @@ export default function EditNameModal(props: Props) {
   });
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     updateRecordOwnerName(props.name, data.updatedName.trim());
+    
     props.closeModal(false, "");
   };
 

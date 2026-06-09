@@ -1,3 +1,3 @@
-1- Create RecordsDiffsDialog, its job is to show that the local data and the cloud data are not the same and ask the user which version he wants to keep 
-2- After that make sure that each record change on records should make a sync call to drive, essentially replacing the old content with the new one (This can make the requests heavy with time, but now that much since its a json file)
-3- finish working on the sync logic
+1- Why thee is multiple files? replace file and don't add a new one.
+2- Add google sync with record update, recordOwner update, and record deletion (make a util to replace the cloud with the local and  use it everywhere)
+3- Test the workflow

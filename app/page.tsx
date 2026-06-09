@@ -10,11 +10,13 @@ import { useModalStore } from "./stores/modalStore";
 import Footer from "./components/Footer";
 import { useAppStore } from "./stores/appStore";
 import { useEffect, useState } from "react";
-import ConfirmDialog from "./components/ConfirmDialog";
 import { createFile, getFileIfExists, readFile } from "@/lib/google-drive";
 import { useTokenStore } from "./stores/tokenStore";
 import { authClient } from "@/lib/auth-client";
 import { isLoggedIn } from "@/lib/utils";
+import SignInWithGoogle from "./components/SignInWithGoogle";
+import Account from "./components/Account";
+import SignInWithGoogleIcon from "./components/SignInWithGoogleIcon";
 
 export default function HomePage() {
   const { data: session } = authClient.useSession();
@@ -49,7 +51,7 @@ export default function HomePage() {
         } else {
           const fileContent = await readFile(accessToken, result.id);
           //See if there is records in the localStorage
-          // if there is ask the user which version he wants to keep 
+          // if there is ask the user which version he wants to keep
           // if there is not accept the cloud data
           console.log(fileContent);
         }
@@ -77,24 +79,28 @@ export default function HomePage() {
         }}
       >
         {records.length === 0 && (
-          <Button
-            variant="outlined"
-            sx={{ padding: { xs: "1.5rem", md: "3rem", lg: "6rem" } }}
-            onClick={() => handleModalState(true)}
-            type="button"
-          >
-            <Typography
-              sx={{ fontSize: { xs: "1.5rem", md: "2rem", lg: "3rem" } }}
+          <div className="flex flex-col items-center gap-6">
+            <Button
+              variant="outlined"
+              sx={{ padding: { xs: "1.5rem", md: "3rem", lg: "6rem" } }}
+              onClick={() => handleModalState(true)}
+              type="button"
             >
-              {t("addAmount")}
-            </Typography>
-            <ControlPointRoundedIcon
-              sx={{
-                fontSize: { xs: "2rem", md: "3rem", lg: "4rem" },
-                marginInlineStart: 3,
-              }}
-            />
-          </Button>
+              <Typography
+                sx={{ fontSize: { xs: "1.5rem", md: "2rem", lg: "3rem" } }}
+              >
+                {t("addAmount")}
+              </Typography>
+              <ControlPointRoundedIcon
+                sx={{
+                  fontSize: { xs: "2rem", md: "3rem", lg: "4rem" },
+                  marginInlineStart: 3,
+                }}
+              />
+            </Button>
+
+            {!isLoggedIn(session) && <SignInWithGoogleIcon />}
+          </div>
         )}
         {records.length > 0 && <GlobalRecordsTable />}
         <RecordFormModal />
