@@ -10,6 +10,9 @@ import {
 import Modal from "@mui/material/Modal";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useTranslations } from "next-intl";
+import { useTokenStore } from "@/app/stores/tokenStore";
+import { saveToCloud } from "@/lib/googleDrive";
+import { authClient } from "@/lib/authClient";
 
 type Inputs = {
   updatedName: string;
@@ -35,6 +38,9 @@ const modalStyle = {
 };
 
 export default function EditNameModal(props: Props) {
+  const { data: session } = authClient.useSession();
+  const accessToken = useTokenStore((state) => state.accessToken);
+  const records = useRecordStore((state) => state.records);
   const updateRecordOwnerName = useRecordStore(
     (state) => state.updateRecordOwnerName,
   );
@@ -48,9 +54,13 @@ export default function EditNameModal(props: Props) {
       updatedName: props.name,
     },
   });
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    if (accessToken && session) {
+      const latestRecords = useRecordStore.getState().records;
+      await saveToCloud(latestRecords);
+    }
     updateRecordOwnerName(props.name, data.updatedName.trim());
-    
+
     props.closeModal(false, "");
   };
 

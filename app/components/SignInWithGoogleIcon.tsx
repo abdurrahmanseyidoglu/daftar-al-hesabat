@@ -1,5 +1,5 @@
 "use client";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/authClient";
 import { Button, Tooltip, Typography } from "@mui/material";
 import { useTranslations } from "next-intl";
 const SignInWithGoogle = () => {

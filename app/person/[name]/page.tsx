@@ -42,6 +42,9 @@ import Footer from "@/app/components/Footer";
 import Link from "next/link";
 import { useAppStore } from "@/app/stores/appStore";
 import { useLocale } from "next-intl";
+import { useTokenStore } from "@/app/stores/tokenStore";
+import { authClient } from "@/lib/authClient";
+import { saveToCloud } from "@/lib/googleDrive";
 
 declare module "@mui/x-data-grid" {
   interface ToolbarPropsOverrides {
@@ -123,7 +126,9 @@ function CustomToolbar({ searchValue, onSearchChange }: CustomToolbarProps) {
 export default function ProfilePage() {
   const { enqueueSnackbar } = useSnackbar();
   const handleModalState = useModalStore((state) => state.handleModalState);
-
+  const accessToken = useTokenStore((state) => state.accessToken);
+  const { data: session } = authClient.useSession();
+  const records = useRecordStore((state) => state.records);
   const { name } = useParams<{ name: string }>();
   const recordsOwner = decodeURI(name);
   const calculateTotalPerPerson = useRecordStore(
@@ -161,12 +166,16 @@ export default function ProfilePage() {
 
     handleModalState(true);
   };
-  const handleClose = (value: boolean) => {
+  const handleClose = async (value: boolean) => {
     setOpen(false);
     setSelectedValue(value);
     if (value) {
       const successRemove = removeRecord(recordsOwner, recordIdToDelete);
       if (successRemove) {
+        if (accessToken && session) {
+          const latestRecords = useRecordStore.getState().records;
+          await saveToCloud(latestRecords);
+        }
         enqueueSnackbar(t("deleted"), { variant: "success" });
       } else {
         enqueueSnackbar(t("wentWrong"), { variant: "error" });
@@ -174,7 +183,7 @@ export default function ProfilePage() {
       setRecordIdToDelete(null);
     } else {
       setTimeout(() => {
-        setRecordIdToDelete(null); // Wait foe the modal closing animation to finish
+        setRecordIdToDelete(null); // Wait for the modal closing animation to finish
       }, 200);
     }
   };

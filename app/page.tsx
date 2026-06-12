@@ -10,12 +10,10 @@ import { useModalStore } from "./stores/modalStore";
 import Footer from "./components/Footer";
 import { useAppStore } from "./stores/appStore";
 import { useEffect, useState } from "react";
-import { createFile, getFileIfExists, readFile } from "@/lib/google-drive";
+import { getFileIfExists, readFile, saveToCloud } from "@/lib/googleDrive";
 import { useTokenStore } from "./stores/tokenStore";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/authClient";
 import { isLoggedIn } from "@/lib/utils";
-import SignInWithGoogle from "./components/SignInWithGoogle";
-import Account from "./components/Account";
 import SignInWithGoogleIcon from "./components/SignInWithGoogleIcon";
 
 export default function HomePage() {
@@ -45,9 +43,9 @@ export default function HomePage() {
     const hasFile = async () => {
       try {
         const result = await getFileIfExists(accessToken);
-        if (result === null) {
-          const createResp = await createFile(accessToken, records);
-          console.log(createResp);
+        if (!result && accessToken && session) {
+          const latestRecords = useRecordStore.getState().records;
+          await saveToCloud(latestRecords);
         } else {
           const fileContent = await readFile(accessToken, result.id);
           //See if there is records in the localStorage

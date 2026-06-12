@@ -1,4 +1,5 @@
 import { Record } from "@/app/schemas/record.schema";
+import { authClient } from "./authClient";
 
 const fileName = "dafter-al-hesabat.json";
 
@@ -40,7 +41,7 @@ export const readFile = async (
   return handleResponse(res);
 };
 
-export const createFile = async (accessToken: string, records: Record[]) => {
+const createFile = async (accessToken: string, records: Record[]) => {
   const metadata = {
     name: fileName,
     parents: ["appDataFolder"],
@@ -75,6 +76,8 @@ export const updateFile = async (
   fileId: string,
   records: Record[],
 ) => {
+  console.log("The records are: " + JSON.stringify(records, null, 2));
+
   const res = await fetch(
     `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
     {
@@ -108,16 +111,30 @@ export const loadFromCloud = async (
   if (!file) return null;
   return readFile(accessToken, file.id);
 };
+export const getAccessToken = async () => {
+  const result = await authClient.getAccessToken({
+    providerId: "google",
+  });
 
-// handle data changes locally
-export const saveToCloud = async (
-  accessToken: string,
-  records: Record[],
-): Promise<void> => {
-  const file = await getFileIfExists(accessToken);
-  if (file) {
-    await updateFile(accessToken, file.id, records);
-  } else {
-    await createFile(accessToken, records);
+  if (result.error) {
+    console.error("Failed to get access token:", result.error);
+    return;
+  }
+  return result.data.accessToken;
+};
+// handle data saving
+export const saveToCloud = async (records: Record[]): Promise<void> => {
+  const accessToken = await getAccessToken();
+  if (accessToken) {
+    const file = await getFileIfExists(accessToken);
+    if (file) {
+      console.log("The file exists no need to create");
+
+      await updateFile(accessToken, file.id, records);
+    } else {
+      console.log("Creating a new file");
+
+      await createFile(accessToken, records);
+    }
   }
 };

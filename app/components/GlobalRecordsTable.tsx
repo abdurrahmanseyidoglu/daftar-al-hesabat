@@ -36,6 +36,9 @@ import {
   formatMoney,
   getRecordsFilteredByCurrency,
 } from "@/lib/utils";
+import { useTokenStore } from "../stores/tokenStore";
+import { saveToCloud } from "@/lib/googleDrive";
+import { authClient } from "@/lib/authClient";
 interface RowData {
   id: string;
   name: string;
@@ -98,8 +101,11 @@ function CustomToolbar({
 }
 
 export default function GlobalRecordsTable() {
+  const accessToken = useTokenStore((state) => state.accessToken);
   const storeRecords = useRecordStore((state) => state.records);
   const selectedCurrency = useRecordStore((state) => state.selectedCurrency);
+  const { data: session } = authClient.useSession();
+
   const records = useMemo(
     () => getRecordsFilteredByCurrency(selectedCurrency, storeRecords),
     [selectedCurrency, storeRecords],
@@ -118,12 +124,16 @@ export default function GlobalRecordsTable() {
     setSelectedNameToDelete(name);
   };
 
-  const handleClose = (value: boolean) => {
+  const handleClose = async (value: boolean) => {
     setOpen(false);
     setSelectedValue(value);
     if (value) {
       const successRemove = removeNameWithHisRecords(selectedNameToDelete);
       if (successRemove) {
+        if (accessToken && session) {
+          const latestRecords = useRecordStore.getState().records;
+          await saveToCloud(latestRecords);
+        }
         enqueueSnackbar(t("deleted"), { variant: "success" });
       } else {
         enqueueSnackbar(t("wentWrong"), { variant: "error" });

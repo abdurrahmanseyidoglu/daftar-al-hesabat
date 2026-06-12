@@ -34,7 +34,7 @@ import { allCurrencies } from "@/lib/currencies";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import { LanguageSwitcher } from "./LanguageSwitcher";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/authClient";
 import SignInWithGoogle from "./SignInWithGoogle";
 import Account from "./Account";
 function Navbar() {
@@ -184,13 +184,6 @@ function Navbar() {
 
       <CurrencySelector usedCurrencies={usedCurrencies} />
       <LanguageSwitcher />
-      {!isLoggedIn(session) ? (
-        <SignInWithGoogle />
-      ) : (
-        <div>
-          <Account />
-        </div>
-      )}
 
       {/* <Button variant="outlined" color="white" sx={{ py: 1, px: 4 }}>
         <p>Sync</p>
@@ -226,6 +219,13 @@ function Navbar() {
               }}
             >
               {navActions}
+              {!isLoggedIn(session) ? (
+                <SignInWithGoogle />
+              ) : (
+                <div>
+                  <Account />
+                </div>
+              )}
             </Box>
 
             {/* Mobile hamburger*/}

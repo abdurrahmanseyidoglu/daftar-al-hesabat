@@ -1,5 +1,5 @@
 "use client";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/authClient";
 import { Button, Tooltip } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { useTranslations } from "next-intl";

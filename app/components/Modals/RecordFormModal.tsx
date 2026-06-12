@@ -30,9 +30,9 @@ import { useTranslations } from "next-intl";
 import { useSnackbar } from "notistack";
 import { useParams } from "next/navigation";
 import { allCurrencies } from "@/lib/currencies";
-import { createFile } from "@/lib/google-drive";
+import { saveToCloud } from "@/lib/googleDrive";
 import { useTokenStore } from "@/app/stores/tokenStore";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/authClient";
 type FormValuesType = { name: string } & { record: RecordEntry };
 
 const modalStyle = {
@@ -147,6 +147,7 @@ const RecordFormModal = () => {
     selectedCurrency,
   ]);
   const [savingForm, setSavingForm] = useState(false);
+  const records = useRecordStore((state) => state.records);
 
   const saveAction = async (data: FormValuesType) => {
     setSavingForm(true);
@@ -159,18 +160,17 @@ const RecordFormModal = () => {
     } else {
       addRecordToExistingName(data.name, { ...data.record });
     }
-
     setSavingForm(false);
     handleModalState(false);
     // Sync changes to Google Drive
-    if (accessToken && session) {
-      await createFile(accessToken, records);
-    }
     enqueueSnackbar(t("addedToName", { name: data.name }), {
       variant: "success",
     });
+    if (accessToken && session) {
+      const latestRecords = useRecordStore.getState().records;
+      await saveToCloud(latestRecords);
+    }
   };
-  const records = useRecordStore((state) => state.records);
   const namesOptions: Array<NameOptionType> = records.map((record) => ({
     name: record.name,
   }));

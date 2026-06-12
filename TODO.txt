@@ -1,3 +1,0 @@
-1- Why thee is multiple files? replace file and don't add a new one.
-2- Add google sync with record update, recordOwner update, and record deletion (make a util to replace the cloud with the local and  use it everywhere)
-3- Test the workflow

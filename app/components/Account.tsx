@@ -7,15 +7,19 @@ import MenuItem from "@mui/material/MenuItem";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/authClient";
 import { useTranslations } from "next-intl";
 import { useTokenStore } from "../stores/tokenStore";
-import { createFile, getFileIfExists, readFile } from "@/lib/google-drive";
+import {
+  getAccessToken,
+  getFileIfExists,
+  readFile,
+  saveToCloud,
+} from "@/lib/googleDrive";
 import { useRecordStore } from "../stores/recordStore";
 import { RecordsSourceOfTruth } from "../types/recordsSourceOfTruth";
 import RecordsDiffsDialog from "./RecordsDiffsDialog";
 import { Record } from "../schemas/record.schema";
-import { useStore } from "zustand";
 
 export default function Account() {
   const setAccessToken = useTokenStore((state) => state.setAccessToken);
@@ -30,7 +34,7 @@ export default function Account() {
     setAnchorEl(event.currentTarget);
   };
   const [recordMissMatchDialog, setRecordMissMatchDialog] = useState(false);
-    useState<RecordsSourceOfTruth>("local");
+  useState<RecordsSourceOfTruth>("local");
   const [cloudRecords, setCloudRecords] = useState<Record[] | null>(null);
   const handleMenuClose = () => {
     setAnchorEl(null);
@@ -41,23 +45,13 @@ export default function Account() {
     setRecordMissMatchDialog(false);
     // If local => replace the cloud version, else if cloud => replace the local version
     if (recordsSource === "local") {
-      await createFile(accessToken, localRecords);
+      const latestRecords = useRecordStore.getState().records;
+      await saveToCloud(latestRecords);
       console.log("Local records accepted");
     } else if (cloudRecords && recordsSource === "cloud") {
       setLocalStore(cloudRecords);
       console.log("Cloud  records accepted");
     }
-  };
-  const getAccessToken = async () => {
-    const result = await authClient.getAccessToken({
-      providerId: "google",
-    });
-
-    if (result.error) {
-      console.error("Failed to get access token:", result.error);
-      return;
-    }
-    setAccessToken(result.data.accessToken);
   };
 
   useEffect(() => {
