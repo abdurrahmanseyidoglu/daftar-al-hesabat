@@ -1,28 +1,29 @@
 "use client";
 import {
-  createFile,
   deleteFile,
   getFileIfExists,
   readFile,
-} from "@/lib/google-drive";
+  saveToCloud,
+} from "@/lib/googleDrive";
 import { useTokenStore } from "../stores/tokenStore";
 import { useRecordStore } from "../stores/recordStore";
 import { Button } from "@mui/material";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/authClient";
+import { notFound } from "next/navigation";
 
 const page = () => {
+  if (process.env.NODE_ENV !== "development") {
+    notFound();
+  }
+  const { data: session } = authClient.useSession();
+
   const setAccessToken = useTokenStore((state) => state.setAccessToken);
   const accessToken = useTokenStore((state) => state.accessToken);
   let id = "";
-  const records = useRecordStore((state) => state.records);
   const handleGetFile = async () => {
-    const fileExist = await getFileIfExists(accessToken);
-    if (fileExist) {
-      id = fileExist.id;
-    } else {
-      const resp = await createFile(accessToken, records);
-      id = resp.id;
-      console.log(id);
+    if (accessToken && session) {
+      const latestRecords = useRecordStore.getState().records;
+      await saveToCloud(latestRecords);
     }
   };
   const handleDeleteFile = async () => {
