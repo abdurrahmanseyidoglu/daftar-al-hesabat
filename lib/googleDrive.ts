@@ -10,7 +10,7 @@ const authHeader = (accessToken: string) => ({
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err?.error?.message || `Drive API error: ${res.status}`);
+    console.error(err?.error?.message || `Drive API error: ${res.status}`);
   }
   if (res.status === 204) return undefined as T;
   return res.json();
