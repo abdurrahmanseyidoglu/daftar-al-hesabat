@@ -6,6 +6,9 @@ export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL,
   database: new Pool({
     connectionString: process.env.DB_CONNECTION_STRING,
+    ssl: {
+      rejectUnauthorized: false,
+    },
   }),
   socialProviders: {
     google: {
