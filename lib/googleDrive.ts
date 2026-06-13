@@ -2,10 +2,21 @@ import { Record } from "@/app/schemas/record.schema";
 import { authClient } from "./authClient";
 
 const fileName = "dafter-al-hesabat.json";
-
-const authHeader = (accessToken: string) => ({
-  Authorization: `Bearer ${accessToken}`,
-});
+export const getAccessToken = async () => {
+  const result = await authClient.getAccessToken({ providerId: "google" });
+  console.log("getAccessToken result:", JSON.stringify(result));
+  if (result.error) {
+    console.error("Failed to get access token:", result.error);
+    return;
+  }
+  return result.data.accessToken;
+};
+const authHeader = async () => {
+  const accessToken = await getAccessToken();
+  return {
+    Authorization: `Bearer ${accessToken}`,
+  };
+};
 
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
@@ -19,7 +30,7 @@ async function handleResponse<T>(res: Response): Promise<T> {
 export const getFileIfExists = async (accessToken: string) => {
   const res = await fetch(
     `https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&q=name='${fileName}'&fields=files(id,name)`,
-    { headers: authHeader(accessToken) },
+    { headers: await authHeader() },
   );
   const data = await handleResponse<{ files: { id: string; name: string }[] }>(
     res,
@@ -36,7 +47,7 @@ export const readFile = async (
 }> => {
   const res = await fetch(
     `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`,
-    { headers: authHeader(accessToken) },
+    { headers: await authHeader() },
   );
   return handleResponse(res);
 };
@@ -64,7 +75,7 @@ const createFile = async (accessToken: string, records: Record[]) => {
     `https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart`,
     {
       method: "POST",
-      headers: authHeader(accessToken),
+      headers: await authHeader(),
       body,
     },
   );
@@ -83,7 +94,7 @@ export const updateFile = async (
     {
       method: "PATCH",
       headers: {
-        ...authHeader(accessToken),
+        ...(await authHeader()),
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ records, lastSynced: new Date().toISOString() }),
@@ -97,7 +108,7 @@ export const deleteFile = async (accessToken: string, fileId: string) => {
     `https://www.googleapis.com/drive/v3/files/${fileId}`,
     {
       method: "DELETE",
-      headers: authHeader(accessToken),
+      headers: await authHeader(),
     },
   );
   return handleResponse(res);
@@ -111,19 +122,11 @@ export const loadFromCloud = async (
   if (!file) return null;
   return readFile(accessToken, file.id);
 };
-export const getAccessToken = async () => {
-  const result = await authClient.getAccessToken({ providerId: "google" });
-  console.log("getAccessToken result:", JSON.stringify(result)); 
-  if (result.error) {
-    console.error("Failed to get access token:", result.error);
-    return;
-  }
-  return result.data.accessToken;
-};
+
 // handle data saving
 export const saveToCloud = async (records: Record[]): Promise<void> => {
   const accessToken = await getAccessToken();
-  console.log("accessToken in saveToCloud:", accessToken); 
+  console.log("accessToken in saveToCloud:", accessToken);
 
   if (accessToken) {
     const file = await getFileIfExists(accessToken);
