@@ -35,6 +35,7 @@ import {
   calculateTotalForPersonRecords,
   formatMoney,
   getRecordsFilteredByCurrency,
+  isLoggedIn,
 } from "@/lib/utils";
 import { useTokenStore } from "../stores/tokenStore";
 import { saveToCloud } from "@/lib/googleDrive";
@@ -130,7 +131,7 @@ export default function GlobalRecordsTable() {
     if (value) {
       const successRemove = removeNameWithHisRecords(selectedNameToDelete);
       if (successRemove) {
-        if (accessToken && session) {
+        if (isLoggedIn(session)) {
           const latestRecords = useRecordStore.getState().records;
           await saveToCloud(latestRecords);
         }
