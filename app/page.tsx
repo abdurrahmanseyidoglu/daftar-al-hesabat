@@ -43,7 +43,7 @@ export default function HomePage() {
     const hasFile = async () => {
       try {
         const result = await getFileIfExists(accessToken);
-        if (!result && accessToken && session) {
+        if (!result && isLoggedIn(session)) {
           const latestRecords = useRecordStore.getState().records;
           await saveToCloud(latestRecords);
         } else {

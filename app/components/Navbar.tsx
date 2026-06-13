@@ -19,15 +19,7 @@ import {
 } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { useMemo, useState } from "react";
-import {
-  Accordion,
-  Avatar,
-  Divider,
-  Drawer,
-  IconButton,
-  Menu,
-  MenuItem,
-} from "@mui/material";
+import { Divider, Drawer, IconButton, Menu, MenuItem } from "@mui/material";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { allCurrencies } from "@/lib/currencies";

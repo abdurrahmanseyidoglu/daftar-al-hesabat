@@ -33,6 +33,7 @@ import { allCurrencies } from "@/lib/currencies";
 import { saveToCloud } from "@/lib/googleDrive";
 import { useTokenStore } from "@/app/stores/tokenStore";
 import { authClient } from "@/lib/authClient";
+import { isLoggedIn } from "@/lib/utils";
 type FormValuesType = { name: string } & { record: RecordEntry };
 
 const modalStyle = {
@@ -166,7 +167,7 @@ const RecordFormModal = () => {
     enqueueSnackbar(t("addedToName", { name: data.name }), {
       variant: "success",
     });
-    if (accessToken && session) {
+    if (isLoggedIn(session)) {
       const latestRecords = useRecordStore.getState().records;
       await saveToCloud(latestRecords);
     }

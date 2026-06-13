@@ -10,6 +10,7 @@ import { useRecordStore } from "../stores/recordStore";
 import { Button } from "@mui/material";
 import { authClient } from "@/lib/authClient";
 import { notFound } from "next/navigation";
+import { isLoggedIn } from "@/lib/utils";
 
 const page = () => {
   if (process.env.NODE_ENV !== "development") {
@@ -21,7 +22,7 @@ const page = () => {
   const accessToken = useTokenStore((state) => state.accessToken);
   let id = "";
   const handleGetFile = async () => {
-    if (accessToken && session) {
+    if (isLoggedIn(session)) {
       const latestRecords = useRecordStore.getState().records;
       await saveToCloud(latestRecords);
     }
