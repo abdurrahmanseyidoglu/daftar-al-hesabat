@@ -112,10 +112,8 @@ export const loadFromCloud = async (
   return readFile(accessToken, file.id);
 };
 export const getAccessToken = async () => {
-  const result = await authClient.getAccessToken({
-    providerId: "google",
-  });
-
+  const result = await authClient.getAccessToken({ providerId: "google" });
+  console.log("getAccessToken result:", JSON.stringify(result)); 
   if (result.error) {
     console.error("Failed to get access token:", result.error);
     return;
@@ -125,6 +123,8 @@ export const getAccessToken = async () => {
 // handle data saving
 export const saveToCloud = async (records: Record[]): Promise<void> => {
   const accessToken = await getAccessToken();
+  console.log("accessToken in saveToCloud:", accessToken); 
+
   if (accessToken) {
     const file = await getFileIfExists(accessToken);
     if (file) {
