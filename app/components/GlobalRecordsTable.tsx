@@ -131,11 +131,11 @@ export default function GlobalRecordsTable() {
     if (value) {
       const successRemove = removeNameWithHisRecords(selectedNameToDelete);
       if (successRemove) {
+        enqueueSnackbar(t("deleted"), { variant: "success" });
         if (isLoggedIn(session)) {
           const latestRecords = useRecordStore.getState().records;
           await saveToCloud(latestRecords);
         }
-        enqueueSnackbar(t("deleted"), { variant: "success" });
       } else {
         enqueueSnackbar(t("wentWrong"), { variant: "error" });
       }

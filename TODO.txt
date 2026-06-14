@@ -1,3 +1,0 @@
-Add missing translations if there is any
-Fix language selector when there is no records
-Make a post (Without AI)
