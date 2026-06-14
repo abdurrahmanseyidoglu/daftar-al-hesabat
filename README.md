@@ -54,8 +54,3 @@ If you run into something broken or have a suggestion, feel free to open an issu
 ## License
 
 MIT
-
-
-
-https://github.com/user-attachments/assets/708d6bbe-6fa4-4735-84d8-f54ab9cbd26f
-
