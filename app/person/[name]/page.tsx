@@ -36,7 +36,7 @@ import ConfirmDialog from "@/app/components/ConfirmDialog";
 import { useParams } from "next/navigation";
 import RecordFormModal from "@/app/components/Modals/RecordFormModal";
 import { useModalStore } from "@/app/stores/modalStore";
-import { formatDate, formatMoney } from "@/lib/utils";
+import { formatDate, formatMoney, isLoggedIn } from "@/lib/utils";
 import { useSnackbar } from "notistack";
 import Footer from "@/app/components/Footer";
 import Link from "next/link";
@@ -172,7 +172,7 @@ export default function ProfilePage() {
     if (value) {
       const successRemove = removeRecord(recordsOwner, recordIdToDelete);
       if (successRemove) {
-        if (accessToken && session) {
+        if (isLoggedIn(session)) {
           const latestRecords = useRecordStore.getState().records;
           await saveToCloud(latestRecords);
         }

@@ -166,8 +166,5 @@ export const exportSinglePersonToCSV = (
 };
 
 export const isLoggedIn = (sessionData: AuthSessionType | null): boolean => {
-  if (!sessionData) return false;
-  const { session } = sessionData ?? {};
-  if (!session?.token || !session?.userId) return false;
-  else return true;
+  return Boolean(sessionData?.session);
 };

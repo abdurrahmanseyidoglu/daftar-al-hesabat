@@ -13,6 +13,7 @@ import { useTranslations } from "next-intl";
 import { useTokenStore } from "@/app/stores/tokenStore";
 import { saveToCloud } from "@/lib/googleDrive";
 import { authClient } from "@/lib/authClient";
+import { isLoggedIn } from "@/lib/utils";
 
 type Inputs = {
   updatedName: string;
@@ -55,12 +56,11 @@ export default function EditNameModal(props: Props) {
     },
   });
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    if (accessToken && session) {
+    updateRecordOwnerName(props.name, data.updatedName.trim());
+    if (isLoggedIn(session)) {
       const latestRecords = useRecordStore.getState().records;
       await saveToCloud(latestRecords);
     }
-    updateRecordOwnerName(props.name, data.updatedName.trim());
-
     props.closeModal(false, "");
   };
 
