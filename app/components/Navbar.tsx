@@ -218,6 +218,7 @@ function Navbar() {
                   <Account />
                 </div>
               )}
+              <LanguageSwitcher />
             </Box>
 
             {/* Mobile hamburger*/}
