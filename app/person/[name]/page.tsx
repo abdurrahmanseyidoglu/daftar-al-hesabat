@@ -172,10 +172,7 @@ export default function ProfilePage() {
     if (value) {
       const successRemove = removeRecord(recordsOwner, recordIdToDelete);
       if (successRemove) {
-<<<<<<< HEAD
-=======
         enqueueSnackbar(t("deleted"), { variant: "success" });
->>>>>>> main
         if (isLoggedIn(session)) {
           const latestRecords = useRecordStore.getState().records;
           await saveToCloud(latestRecords);
