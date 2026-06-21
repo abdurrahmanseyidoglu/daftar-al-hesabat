@@ -26,6 +26,7 @@ The home page gives you the full picture: everyone you have transactions with, h
 - Supports all currencies
 - Export any page to `.csv` or `.pdf`
 - Multilanguage support
+- Option to have everything synced using Google account for multi device usage
 
 
 ## Running locally
