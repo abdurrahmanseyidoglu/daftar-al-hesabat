@@ -20,7 +20,7 @@ SSRInitialFilled.muiName = "Input";
 export default function NumberField({
   id: idProp,
   label,
-  error,  
+  error,
   helperText,
   size = "medium",
   ...other
@@ -64,7 +64,10 @@ export default function NumberField({
             onChange={props.onChange}
             onKeyUp={props.onKeyUp}
             onKeyDown={props.onKeyDown}
-            onFocus={props.onFocus}
+            onFocus={(e) => {
+              props.onFocus?.(e);
+              e.target.select();
+            }}
             slotProps={{
               input: props,
             }}

@@ -26,9 +26,10 @@ export const getRecordsFilteredByCurrency = (
   }));
 };
 export const formatMoney = (money: number) => {
-  return new Intl.NumberFormat("en-IN", { maximumSignificantDigits: 2 }).format(
-    money,
-  );
+  return new Intl.NumberFormat("en-IN", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+  }).format(money);
 };
 export const calculateTotalForPersonRecords = (
   namedRecords: RecordEntry[],
