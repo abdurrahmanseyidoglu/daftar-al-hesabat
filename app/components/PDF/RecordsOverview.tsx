@@ -22,7 +22,6 @@ const RecordsOverView = ({ records, title }: Props) => {
       numberOfColumns: record.records.length,
     };
   });
-  console.log(rows);
 
   return (
     <div>

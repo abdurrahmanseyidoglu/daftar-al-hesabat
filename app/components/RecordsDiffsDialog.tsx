@@ -23,7 +23,6 @@ const RecordsDiffsDialog = ({
   localRecords,
 }: RecordsDiffsDialogProps) => {
   const handleSelect = (value: RecordsSourceOfTruth) => {
-    console.log(value);
     handleRecordsDiffClose(value);
   };
   const t = useTranslations();

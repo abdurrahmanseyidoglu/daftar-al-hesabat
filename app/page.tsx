@@ -51,7 +51,6 @@ export default function HomePage() {
           //See if there is records in the localStorage
           // if there is ask the user which version he wants to keep
           // if there is not accept the cloud data
-          console.log(fileContent);
         }
       } catch (err) {
         console.error("Error:", err);

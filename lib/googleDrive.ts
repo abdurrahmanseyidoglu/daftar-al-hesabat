@@ -4,7 +4,6 @@ import { authClient } from "./authClient";
 const fileName = "dafter-al-hesabat.json";
 export const getAccessToken = async () => {
   const result = await authClient.getAccessToken({ providerId: "google" });
-  console.log("getAccessToken result:", JSON.stringify(result));
   if (result.error) {
     console.error("Failed to get access token:", result.error);
     return;
@@ -87,7 +86,6 @@ export const updateFile = async (
   fileId: string,
   records: Record[],
 ) => {
-  console.log("The records are: " + JSON.stringify(records, null, 2));
 
   const res = await fetch(
     `https://www.googleapis.com/upload/drive/v3/files/${fileId}?uploadType=media`,
@@ -126,16 +124,13 @@ export const loadFromCloud = async (
 // handle data saving
 export const saveToCloud = async (records: Record[]): Promise<void> => {
   const accessToken = await getAccessToken();
-  console.log("accessToken in saveToCloud:", accessToken);
 
   if (accessToken) {
     const file = await getFileIfExists(accessToken);
     if (file) {
-      console.log("The file exists no need to create");
 
       await updateFile(accessToken, file.id, records);
     } else {
-      console.log("Creating a new file");
 
       await createFile(accessToken, records);
     }

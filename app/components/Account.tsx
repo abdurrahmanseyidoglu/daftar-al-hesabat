@@ -47,10 +47,8 @@ export default function Account() {
     if (recordsSource === "local") {
       const latestRecords = useRecordStore.getState().records;
       await saveToCloud(latestRecords);
-      console.log("Local records accepted");
     } else if (cloudRecords && recordsSource === "cloud") {
       setLocalStore(cloudRecords);
-      console.log("Cloud  records accepted");
     }
   };
 
