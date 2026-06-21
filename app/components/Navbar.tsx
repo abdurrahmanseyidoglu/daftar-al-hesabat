@@ -175,7 +175,6 @@ function Navbar() {
       </Menu>
 
       <CurrencySelector usedCurrencies={usedCurrencies} />
-      <LanguageSwitcher />
 
       {/* <Button variant="outlined" color="white" sx={{ py: 1, px: 4 }}>
         <p>Sync</p>
